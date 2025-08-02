@@ -7,6 +7,9 @@ entries:
       - title: Bios are boring.
       - title: twitter
         url: https://x.com/techno_yoda
+      - title: github (rarely commiting)
+        url: https://github.com/technoyoda
+
 
   - title: all posts
     post_list:
