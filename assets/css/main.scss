@@ -3,52 +3,90 @@
 
 @import "no-style-please";
 
-// Custom computer green theme
+// Complete override for computer green theme
 html, body { 
   background: #000000 !important; 
-  color: #00ff00 !important; // Computer green
+  color: #00ff00 !important;
 }
 
 body {
-  color: #00ff00; // Computer green text
+  color: #00ff00 !important;
+  background: #000000 !important;
 }
 
-// Override the dark theme invert filter
+// Completely disable the dark theme invert behavior
 body[a="dark"] {
-  filter: none; // Remove the invert filter
-  background: #000000;
-  color: #00ff00;
+  filter: none !important;
+  background: #000000 !important;
+  color: #00ff00 !important;
   
   img {
-    filter: none;
-    &.ioda { filter: none; }
+    filter: none !important;
+    &.ioda { filter: none !important; }
   }
-  .emoji { filter: none; }
-  iframe { filter: none; }
+  .emoji { filter: none !important; }
+  iframe { filter: none !important; }
+}
+
+// Also override auto mode
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] { 
+    filter: none !important;
+    background: #000000 !important;
+    color: #00ff00 !important;
+    
+    img {
+      filter: none !important;
+      &.ioda { filter: none !important; }
+    }
+    .emoji { filter: none !important; }
+    iframe { filter: none !important; }
+  }
+}
+
+// Override light mode too for consistency
+body[a="light"] {
+  background: #000000 !important;
+  color: #00ff00 !important;
 }
 
 // Links in green
 a {
-  color: #00cc00; // Slightly darker green for links
+  color: #00cc00 !important;
   
   &:visited {
-    color: #009900; // Even darker green for visited links
+    color: #009900 !important;
   }
   
   &:hover {
-    color: #00ff00; // Bright green on hover
+    color: #00ff00 !important;
   }
 }
 
-// Code blocks
+// Code blocks with syntax highlighting
 code {
-  color: #00ff00;
-  background: #001100; // Very dark green background
+  color: #00ff00 !important;
+  background: #001100 !important;
 }
 
-div.highlighter-rouge code {
-  color: #00ff00;
-  background: #001100;
+div.highlighter-rouge code, 
+div.highlight code,
+.highlight code {
+  color: #00ff00 !important;
+  background: #001100 !important;
+}
+
+// Syntax highlighting colors (Rouge/GitHub style adapted for green)
+.highlight {
+  background: #001100 !important;
+  
+  .c, .cm, .cp, .c1, .cs { color: #00aa00 !important; } // Comments - darker green
+  .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #00ff00 !important; } // Keywords - bright green
+  .n, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv { color: #00cc00 !important; } // Names - medium green
+  .s, .sa, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss { color: #66ff66 !important; } // Strings - light green
+  .m, .mf, .mh, .mi, .mo { color: #99ff99 !important; } // Numbers - very light green
+  .o, .ow { color: #00ff00 !important; } // Operators - bright green
+  .p { color: #00cc00 !important; } // Punctuation - medium green
 }
 
 // Tables and borders
