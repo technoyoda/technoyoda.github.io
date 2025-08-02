@@ -28,13 +28,18 @@ plugins:
   - jekyll-seo-tag
   - jektex
 
-# Syntax highlighting
+# Syntax highlighting configuration
 highlighter: rouge
 markdown: kramdown
 kramdown:
+  input: GFM
   syntax_highlighter: rouge
   syntax_highlighter_opts:
     css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: false
 
 jektex:
   cache_dir: ".jektex-cache"

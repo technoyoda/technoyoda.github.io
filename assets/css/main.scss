@@ -3,108 +3,73 @@
 
 @import "no-style-please";
 
-// Complete override for computer green theme
-html, body { 
-  background: #000000 !important; 
-  color: #00ff00 !important;
-}
-
-body {
-  color: #00ff00 !important;
-  background: #000000 !important;
-}
-
-// Completely disable the dark theme invert behavior
-body[a="dark"] {
-  filter: none !important;
-  background: #000000 !important;
-  color: #00ff00 !important;
-  
-  img {
-    filter: none !important;
-    &.ioda { filter: none !important; }
-  }
-  .emoji { filter: none !important; }
-  iframe { filter: none !important; }
-}
-
-// Also override auto mode
-@media (prefers-color-scheme: dark) {
-  body[a="auto"] { 
-    filter: none !important;
-    background: #000000 !important;
-    color: #00ff00 !important;
-    
-    img {
-      filter: none !important;
-      &.ioda { filter: none !important; }
-    }
-    .emoji { filter: none !important; }
-    iframe { filter: none !important; }
-  }
-}
-
-// Override light mode too for consistency
-body[a="light"] {
-  background: #000000 !important;
-  color: #00ff00 !important;
-}
-
-// Links in green
-a {
-  color: #00cc00 !important;
-  
-  &:visited {
-    color: #009900 !important;
-  }
-  
-  &:hover {
-    color: #00ff00 !important;
-  }
-}
-
-// Code blocks with syntax highlighting
-code {
-  color: #00ff00 !important;
-  background: #001100 !important;
-}
-
-div.highlighter-rouge code, 
-div.highlight code,
-.highlight code {
-  color: #00ff00 !important;
-  background: #001100 !important;
-}
-
-// Syntax highlighting colors (Rouge/GitHub style adapted for green)
+// Enhanced syntax highlighting for code blocks
 .highlight {
-  background: #001100 !important;
+  background: #f8f8f8;
+  border: 1px solid #e1e1e8;
+  border-radius: 3px;
+  padding: 1em;
+  overflow-x: auto;
   
-  .c, .cm, .cp, .c1, .cs { color: #00aa00 !important; } // Comments - darker green
-  .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #00ff00 !important; } // Keywords - bright green
-  .n, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv { color: #00cc00 !important; } // Names - medium green
-  .s, .sa, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss { color: #66ff66 !important; } // Strings - light green
-  .m, .mf, .mh, .mi, .mo { color: #99ff99 !important; } // Numbers - very light green
-  .o, .ow { color: #00ff00 !important; } // Operators - bright green
-  .p { color: #00cc00 !important; } // Punctuation - medium green
+  // Dark mode support
+  body[a="dark"] & {
+    background: #2d2d2d;
+    border-color: #444;
+  }
+  
+  code {
+    background: transparent;
+    color: inherit;
+  }
+  
+  // Syntax highlighting colors
+  .c, .cm, .cp, .c1, .cs { color: #999988; font-style: italic; } // Comments
+  .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #000000; font-weight: bold; } // Keywords
+  .n, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv { color: #445588; } // Names
+  .s, .sa, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss { color: #dd1144; } // Strings
+  .m, .mf, .mh, .mi, .mo { color: #009999; } // Numbers
+  .o, .ow { color: #000000; font-weight: bold; } // Operators
+  .p { color: #999999; } // Punctuation
 }
 
-// Tables and borders
-table, th, td {
-  border-color: #00ff00;
+// Ensure code blocks work properly
+div.highlighter-rouge {
+  margin: 1em 0;
+  
+  code {
+    display: block;
+    padding: 1em;
+    overflow-x: auto;
+    white-space: pre;
+  }
 }
 
-blockquote {
-  border-color: #00ff00;
-  color: #00cc00;
+// Additional styling for better integration
+pre {
+  background: #f8f8f8;
+  border: 1px solid #e1e1e8;
+  border-radius: 3px;
+  padding: 1em;
+  overflow-x: auto;
 }
 
-// Target highlighting
-*:target { 
-  background: #003300; // Dark green instead of yellow
-}
-
-// HR styling
-hr:before, hr:after {
-  color: #00ff00;
+// Dark mode adjustments for syntax highlighting
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] {
+    .highlight {
+      background: #2d2d2d;
+      border-color: #444;
+      
+      .c, .cm, .cp, .c1, .cs { color: #75715e; } // Comments in dark mode
+      .k, .kc, .kd, .kn, .kp, .kr, .kt { color: #f92672; } // Keywords in dark mode
+      .n, .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv { color: #a6e22e; } // Names in dark mode
+      .s, .sa, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .sr, .s1, .ss { color: #e6db74; } // Strings in dark mode
+      .m, .mf, .mh, .mi, .mo { color: #ae81ff; } // Numbers in dark mode
+    }
+    
+    pre {
+      background: #2d2d2d;
+      border-color: #444;
+    }
+  }
 }
