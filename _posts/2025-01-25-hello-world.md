@@ -5,8 +5,6 @@ date: 2025-01-25
 categories: blog
 ---
 
-# Hello World
-
 ```python
 print("stay tuned!")
 ```
