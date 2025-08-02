@@ -3,6 +3,39 @@
 
 @import "no-style-please";
 
+// Custom styling for the Yoda image
+.yoda-avatar {
+  max-width: 200px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.3);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 255, 0, 0.5);
+  }
+}
+
+// Dark mode adjustments for the image
+body[a="dark"] .yoda-avatar {
+  box-shadow: 0 4px 15px rgba(0, 255, 0, 0.4);
+  
+  &:hover {
+    box-shadow: 0 6px 20px rgba(0, 255, 0, 0.6);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] .yoda-avatar {
+    box-shadow: 0 4px 15px rgba(0, 255, 0, 0.4);
+    
+    &:hover {
+      box-shadow: 0 6px 20px rgba(0, 255, 0, 0.6);
+    }
+  }
+}
+
 // Override the theme's code styling for better syntax highlighting
 div.highlighter-rouge {
   margin: 1em 0;
