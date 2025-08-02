@@ -2,3 +2,71 @@
 ---
 
 @import "no-style-please";
+
+// Custom computer green theme
+html, body { 
+  background: #000000 !important; 
+  color: #00ff00 !important; // Computer green
+}
+
+body {
+  color: #00ff00; // Computer green text
+}
+
+// Override the dark theme invert filter
+body[a="dark"] {
+  filter: none; // Remove the invert filter
+  background: #000000;
+  color: #00ff00;
+  
+  img {
+    filter: none;
+    &.ioda { filter: none; }
+  }
+  .emoji { filter: none; }
+  iframe { filter: none; }
+}
+
+// Links in green
+a {
+  color: #00cc00; // Slightly darker green for links
+  
+  &:visited {
+    color: #009900; // Even darker green for visited links
+  }
+  
+  &:hover {
+    color: #00ff00; // Bright green on hover
+  }
+}
+
+// Code blocks
+code {
+  color: #00ff00;
+  background: #001100; // Very dark green background
+}
+
+div.highlighter-rouge code {
+  color: #00ff00;
+  background: #001100;
+}
+
+// Tables and borders
+table, th, td {
+  border-color: #00ff00;
+}
+
+blockquote {
+  border-color: #00ff00;
+  color: #00cc00;
+}
+
+// Target highlighting
+*:target { 
+  background: #003300; // Dark green instead of yellow
+}
+
+// HR styling
+hr:before, hr:after {
+  color: #00ff00;
+}
