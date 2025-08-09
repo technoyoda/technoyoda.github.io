@@ -24,23 +24,33 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Calculate initial position based on post title
+  let initialTitleTop = 0;
+  let lastScrollY = window.scrollY;
+  
   function updateTocPosition() {
     if (postTitle && tocSidebar) {
-      const titleRect = postTitle.getBoundingClientRect();
-      const titleTop = titleRect.top + window.scrollY;
-      const currentScroll = window.scrollY;
+      const currentScrollY = window.scrollY;
+      const scrollDirection = currentScrollY - lastScrollY;
       
-      // Calculate the TOC position to follow the title
-      const minTop = 2 * 16; // 2rem in pixels
-      const titlePositionFromTop = titleTop - currentScroll;
-      
-      // If title is visible on screen, align TOC with it
-      if (titlePositionFromTop >= minTop) {
-        tocSidebar.style.top = titlePositionFromTop + 'px';
-      } else {
-        // If title is above viewport, keep TOC at minimum distance from top
-        tocSidebar.style.top = minTop + 'px';
+      // Get the title's initial position (when page loads)
+      if (initialTitleTop === 0) {
+        const titleRect = postTitle.getBoundingClientRect();
+        initialTitleTop = titleRect.top + currentScrollY;
       }
+      
+      // Calculate where TOC should be
+      const minTop = 2 * 16; // 2rem in pixels
+      const desiredTop = initialTitleTop - currentScrollY;
+      
+      // If title would be above the minimum position, stick TOC to top
+      if (desiredTop < minTop) {
+        tocSidebar.style.top = minTop + 'px';
+      } else {
+        // Otherwise, align TOC with title position
+        tocSidebar.style.top = desiredTop + 'px';
+      }
+      
+      lastScrollY = currentScrollY;
     }
   }
   
