@@ -4,7 +4,7 @@ title: The AI software engineer is probably decades away
 date: 2025-08-06
 categories: blog
 ---
-<br>
+<!-- <br> -->
 
 <!-- > This blog post is full of problems and ideas. It is not meant as a puff piece to point out that "look this stupid model cannot count R's in rigurgitating". Its about pointing out practical problems I face on a day to day basis that inhibit these models/tools from permanently replacing me at my job. I would be the happiest person ever if I can stop programming professionally and just start a bar where I can flirt with cute girls and throw crazy parties. But sadly current age tools are no where that I can just outsource it to some AI and buy myself time and bandwith to start my bar while the thing programs for me in the backgound.  -->
 
@@ -12,15 +12,20 @@ categories: blog
 
 2025 has seen a [massive capital influx](https://finance.yahoo.com/news/ai-agents-market-size-worth-144400570.html) in things like agents. A shit ton of AI startups are getting funded for **any idea that catches people's eyes**. (some dude got funded for a startup that helps people [cheat on everything](https://x.com/im_roy_lee/status/1936138361011585190)). GPT 5 come out very recently and there is so much conversation on the [interwebs](https://simonwillison.net/2025/Aug/7/gpt-5/) about how its [better](https://x.com/theo/status/1953507203979391011) / [worse](https://x.com/deedydas/status/1953701523978170817). The AI hype wave which started from early 2022 since ChatGPT enamored all of us has only grown in the last 3 years. Tech stocks seem to seriously love the promise of the AGI especially since it allows them [good excuses to layoffs](https://fortune.com/2025/08/07/summer-of-ai-layoffs-july-140-percent-spike-challenger-gray-christmas/) and it also [reduces the need for as many software engineers](https://www.forbes.com/sites/jackkelly/2024/11/01/ai-code-and-the-future-of-software-engineers/). The media [is certainly drinking the coolaid](https://www.nytimes.com/2025/03/14/technology/why-im-feeling-the-agi.html).
 
+<br>
 
 ![NASDAQ index since ChatGPT release](/assets/images/nasdaq_nov2022_chatgpt_readable.png)
 *NASDAQ growth since the promise of "AGI"*
 
+<br>
 
 All these rablings on twitter/media and from major tech companies have left me thinking that many of these people who talk about AI taking over software engineering haven't operated software that __people built over a long period of time__. Don't get me wrong, many of these people are really intelligent and talented. People who have built software before would realize that most of software engineering is not a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%) to building software. 
 
+<br>
+
 > I am not talking about writing code (ie. just programming). I am talking about building something which is shipped to users and needs to be manged and maintained. This thing is not just the code, it's also the resposibilites and effects created by the execution of that code (software engineering).
 
+<br>
 This blog article tries to shine light on many such socia-technical facets of S/W engineering that are not trivially "AI-replacable". 
 
 <!-- This includes fascets like: (1) operations , (2) management of source code , (3) communication/context-sharing, (4) debugging problems with partial visibility at scale.   -->
