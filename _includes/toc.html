@@ -30,16 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
       const titleTop = titleRect.top + window.scrollY;
       const currentScroll = window.scrollY;
       
-      // Position TOC to align with title when at the top
-      // But keep it visible as user scrolls
-      const minTop = 2; // Minimum distance from top of viewport (in rem)
-      const titleOffset = Math.max(minTop * 16, titleTop - currentScroll); // 16px = 1rem
+      // Calculate the TOC position to follow the title
+      const minTop = 2 * 16; // 2rem in pixels
+      const titlePositionFromTop = titleTop - currentScroll;
       
-      tocSidebar.style.top = Math.min(titleOffset, titleTop - currentScroll + 16) + 'px';
-      
-      // If title is above viewport, keep TOC at top
-      if (titleTop - currentScroll < minTop * 16) {
-        tocSidebar.style.top = (minTop * 16) + 'px';
+      // If title is visible on screen, align TOC with it
+      if (titlePositionFromTop >= minTop) {
+        tocSidebar.style.top = titlePositionFromTop + 'px';
+      } else {
+        // If title is above viewport, keep TOC at minimum distance from top
+        tocSidebar.style.top = minTop + 'px';
       }
     }
   }
