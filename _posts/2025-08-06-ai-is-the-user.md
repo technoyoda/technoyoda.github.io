@@ -35,38 +35,40 @@ Building software over a long time reveals a [metagame](https://www.thediff.co/a
 
 ## Challenge: Software Operations 
 
-Software operations is the most communal part of sofware development. While most of programming happens in a persons head, software operations happens in public. Operating code involves so many facets, like: version control, release cycles, QA/Testing, debugging, patching etc. All software build today is operated and built by humans for other humans. This means all the esotric build system, release/versioning patterns and even the processes to operationalize a piece of software. This is where all the chaos begins with AI. Even if the model could currently fit everything in it's context,  
+Software operations is the most communal part of sofware development. While most of programming happens in a persons head, software operations happens in public. Operating code involves so many facets, like: version control, release cycles, QA/Testing, debugging, patching etc. All software build today is operated and built by humans for other humans. This means all the esotric build system, release/versioning patterns and even the processes to operationalize a piece of software. This is where all the chaos begins with AI. Current day models are getting very good at writing code (and [math](https://deepmind.google/discover/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/)) but operations is a totally different game. If writing code is chess, then operating software is 4d-chess. In large part a lot of operations comes down to : debugging / configuring / monitoring and shipping software. Obviously there is more but majority of the things that happen for this function can be bucketed under these categories. Each category is worth it's own rabbithole but to keep the essay concise, I will only dive into a few. 
 
 
-`TODO: Add connective tissue? `
+### Debugging under partial observability 
+
+Not all bugs are exposed in a controlled environment where the bug is easy to reproduce. Such bugs are the easiest low hanging fruit bugs for AI models to solve. Most non trival bugs are the ones that are very hard to reproduce, happening under really rare conditions. These bugs have massive impact on the operations of a software and generally require the most amount of time to debug. These bugs surface all forms of red-herrings which need to be sidestepped to actually reach a real solution. 
+
+When bugs are discovered, its also not trivial to reproduce so many of them (except for when they )
 
 
-### Debugging under partial visibility 
-
-Not all bugs are exposed in a controlled environment. Users run software in the most esoteric ways and especially on infrastructure/settings that you have no control of. 
-`TODO: Explain why? `
-
-
-### Distributed Systems
+#### Distributed Systems
 
 When you work on large enough systems that have and insane number of moving parts, it starts becoming more and more complicated for arbitrary autonomous systems to start debugging what went wrong. `TODO: Explain why? `
 
 ### Monitoring and Tail Events 
 
-What happens when your monitoring solution goes down? Even if AI's figured out things for me the "who's watching the watcher problem" just never ceases to go away. `TODO: Explain why?`
+_Personal opinion:_ Monitoring and alerting are the most challenging parts of operating software (especially as systems scale). This part of software operations is largely a human endeavor since its evolution happens reactively rather than proactively. While some monitoring is built proactively for new features, most monitoring evolves reactively as unexpected issues reveal gaps in our observability. 
+
+A large part of software operations depends on monitoring systems behaving correctly, as this enables developers to make informed decisions about when and how to intervene with patches or fixes. But what happens when your monitoring solution goes down? The perpertual problem of "who's watching the watcher problem" just never ceases to go away. This means that AI systems trying to 
+
 
 ### Configurational Complexity
 
 There is a very important distinction between configurations and settings.
 
-> In software, "settings" generally refer to individual options that can be adjusted to modify an application's behavior, while configurations are collections of settings that define the overall setup and structure of a system or application. Settings are usually user-facing and changeable, while configurations can be more fundamental and might involve system-level setups. Settings are adjusted at runtime. Configurations are done during setup and vastly alter the behavior of the software at runtime.
+> In software, "settings" generally refer to individual options that can be adjusted to modify an application's behavior, while configurations are collections of settings that define the overall setup and structure of a system or application. Settings are usually user-facing and changeable, where as configurations can be more fundamental involving even actions taken by users in the real-world. Settings are adjusted at runtime. Configurations are mostly done during setup and can vastly alter the behavior of the software at runtime.
 
-As a system becomes more and more configurable, it inherantly starts off a [configuration complexity clock](https://mikehadlow.blogspot.com/2012/05/configuration-complexity-clock.html). Having tons of configurations come at a tradeoff with cognitive load. Your can make something infinitely parameterizable but that just means the operator needs to fully aware impact of each parameter. The larger the configrations grow, the more likely it is to end up in a combinatorial explosion where each combination cannot be fully tested because of various reasons like:
+As a system becomes more and more configurable, it inherantly starts off a [configuration complexity clock](https://mikehadlow.blogspot.com/2012/05/configuration-complexity-clock.html). Having tons of configurations come at a tradeoff with cognitive load. You can make something infinitely parameterizable but that just means the operator needs to fully aware impact of each parameter. The larger the configrations grow, the more likely it is to end up in a combinatorial explosion ($O(2^n)$) where each combination cannot be fully tested because of various reasons like:
 
-- Time to test is super high
+- Time to verify is impractical
 - certain configurations require special access to special objects/services that are non trivial to setup 
-- certains configurations may need a 
+- certains configurations may need specific constraints to be in place in order to work. 
 
+Certain systems inherently require a lot of configurations to setup. But it also means that models operating and building these systems need to be able to foresee the impacts and effects of setting different combinations of configurations. Couple the configurational explosion with an evolving codebase and you land on an extreamely computationally expensive problem where the models need the forsight to predict the effects different configurations might have in the real world functioning of an application. 
 
 ## Challenge: Version Control 
 
@@ -74,7 +76,7 @@ All programmers who develop well-used software (especially in open source) have 
 
 Personally, I am a stickler for version control since I started working on open source software (it makes [complete sense why linus built something like git when working with opensource software](https://youtu.be/4XpnKHJAok8?t=1027)). My biggest pet peeve is when people are not intentional about their commits. A commit message like `updated buggy_file.py` or things like `fix: bug in foo module` gets me really triggered. Secretly I am fucking judging them thinking "bro, 1 year later when I blame that line of code, I will have absolutely no understanding of **WHY** someone made a certain change". Now don't get me wrong. I dont care if the context is not in the message but in the PRs related to it but there needs to be some paper-trail that I can dig up without tapping people's shoulders. 
 
-Now imagine having a coworker who gives no fucks about the preservation of history. Who shamelessly moves files around all the time making history really hard to keep track of. A coworker, who on a whim starts refactoring the code base. A coworker who writes code in a way where a "addition" only diff becomes a diff with mixed additions and removals. A coworker who won't remember why they made a certain change when prompted. This is the current state of AI "Agents" who type code. Many people have told me that you need to just add these things to the prompt but its not enough. And trust me I have tried. And it doesnt work most of the time. It's same as trying to [make these things stop using em-dashes](https://x.com/chipro/status/1952131790061326593). No matter how much you try (even with prompting), these things don't budge on how they want to do things (some call this an alignment problem but as a user I don't care what problem it's called. I want it to do my thing in the fewest possible steps). The models do write great code! They write like a decently smart programmer when prompted concisely and accurately (with enough context) but they don't have the foresight of someone who writes code like art (I hate equating using titles like "Staff Engineer" to make a point 🤮. Most titles are there to placate one's ego, not qualify one's capability). 
+Now imagine having a coworker who gives no fucks about the preservation of history. Who shamelessly moves files around all the time making history really hard to keep track of. A coworker, who on a whim starts refactoring the code base. A coworker who writes code in a way where a "addition" only diff becomes a diff with mixed additions and removals. A coworker who won't remember why they made a certain change when prompted. This is the current state of AI "Agents" who type code. Many people have told me that you need to just add these things to the prompt but its not enough. And trust me I have tried. And it doesnt work most of the time. It's same as trying to [make these things stop using em-dashes](https://x.com/chipro/status/1952131790061326593). No matter how much you try (even with prompting), these things won't change their style of doing things (some call this an alignment problem). The models do write great code! They write like a decently smart programmer when prompted concisely and accurately (with enough context) but they don't have the foresight of someone who writes code with intention (I hate equating using titles like "Staff Engineer" here to make a point 🤮. Most titles are there to placate one's ego, not qualify one's capability). 
 
 ### Dependency Hell
 
@@ -96,8 +98,34 @@ Currently we there is no such system that runs and evolves fully autonomously. S
 
 ## What I Learned 
 
-The current theory is that most of these models [learn in context](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html). This means that when these models are provided with a concise and accurate context about the thing you desire, these models have a decently high likihood to solve your problem with fewest interactions. In context learning also implies that the models are spunges at runtime. They absorb what you tell them and the quality of what they respond is purely dependent on what you said. Based on this idea, I learnt a few tricks that make my life soooo much easier. 
 
-### Git Patches Are Your Friend. 
+### Git Patches Are Your Friend.
 
-One of the biggest cheat-code I learned when trying to make language models write software to my whim is to provide it with a good patch file that contains the diff of how something was done. All the file changes and a commit message that has enough context to explain what it should end up changing. Cursor's symbolic linking of files and objects in a code base are game-changer for making a model make changes to code that might span over multiple files and needs similar changes for the thing you are trying to build. It takes work to create that good clean initial patch but once it's created, it acts like your blueprint to create more such patches to integrate newer such functionality at much faster speeds. The beauty of a git patch is that the blue print is already laid out and the model just needs to follow what you want to do. 
+The current theory is that most of these models [learn in context](https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html). This means that when these models are provided with a concise and accurate context about the thing you desire, these models have a decently high likihood to solve your problem with fewest interactions. In context learning also implies that the models are spunges at runtime. They absorb what you tell them and the quality of what they respond is purely dependent on what you said. Based on this idea, One of the biggest cheat-code I learned is using good patch files that contains an accurate diff of how something was done. All the file changes and a commit message that has enough context to explain what it should end up changing. Cursor's ["symbolic selection"](https://docs.cursor.com/en/context/@-symbols/overview) of files and objects in a code base are game-changer for making a model make changes to code that might span over multiple files and needs similar changes for the thing you are trying to build. It takes work to create that good clean initial patch but once it's created, it acts like your blueprint to create more such patches to integrate newer such functionality at much faster speeds. The beauty of a git patch is that the blue print is already laid out and the model just needs to follow what you want to do. You are only providing the goal state with slightly different objectives. It is also a quick way to align the model to your preferences strongly instead of giving it room for ambiguity. 
+
+
+### Being more intentional about what I write.
+
+Since I started programming a lot more with Cursor, my style of programming and the way my mind works when I am programming have completely changed. Before 2023 the meta process when writing code was: 
+
+1) Write down why I am solving the problem 
+2) From the why, derive how I gonna solve it (involves gathering context) 
+3) Write the code 
+4) Test the code and if not satisfied start again from (2) / (3)
+5) write tests for your code and go back to (4)
+
+Now after using cursor religious for the last 6+ months, my meta process has changed:
+
+1) Write down why I am solving the problem 
+2) From the why, derive how I gonna solve it (involves gathering context)
+    - This can even mean finding git patches 
+    - this can even mean finding relvant docs files for different APIs used in the code with exact versions
+    - this can even mean linking memos in markdown 
+    - this can even mean I provide the blueprint of the exact functions etc. 
+3) Feed all the context to cursor and make it only write code (max 3 back and forths prompting).
+    - Scope the code written by it to < 500/800 lines. 
+    - Reject a lot of useless stuff it creates. 
+4) Read all the code and modify a few places for how i want to handle different cases. 
+5) Test the code myself and if not satisfied start again from (4). If satisfied make cursor write tests for so start from (2). 
+
+I spend a lot of time thinking so that I am more precise about what I am trying to achieve. I think a lot more about how I want to architect something, what ways I want to scope an abstraction and how different parts of code I want to use. I leave very little room for ambibuity. I always attempt to see if I can make cursor 1 shot the thing. The emotion cursor ellicits when I one-shot a problem exactly how I want is the same as winning a boss fight in a video game. Satisfaction and fun. When I want to build something very large (> 800 lines), I will make cursor build very precise chunks of a whole but I will keep a full track of the whole.
