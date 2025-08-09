@@ -21,7 +21,7 @@ categories: blog
 
 All these rablings on twitter/media and from major tech companies have left me thinking that many of these people who talk about AI taking over software engineering _haven't operated software that they built_. Don't get me wrong, many of these people are really intelligent and talented; but people who have built software in teams would realize that most of software engineering is not just a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%). 
 
-Building software over a long time reveals a [metagame](https://www.thediff.co/archive/the-factorio-mindset/): at the start your focus might be on _how to get what you want_ but as you get better the focus shifts towards _why you need something_ over how you will get it. The beauty of this emergent metagame is that it makes you aware of certain challenges that you just won't know about when you are new to the game or peaking at it from the outside. The intention behind this essay is to point out some of the challenges that make it quite non-trivial to just plugin an autonomous machine that just builds stuff for people. 
+Building software over a long time reveals a [metagame](https://www.thediff.co/archive/the-factorio-mindset/): at the start your focus might be on _how to get what you want_ but as you get better the focus shifts towards _why you need something_ over how you will get it. As you advance the levels of this metagame there are certain challenges that emerge which won't be well known to newcomers or outsiders. The intention behind this essay is to point out some of the challenges that make it quite non-trivial to just plugin an autonomous machine that just builds and runs stuff. 
 
 <br>
 
