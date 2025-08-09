@@ -1,6 +1,6 @@
 ---
 layout: post
-title: AI Is Just Another User
+title: The AI software engineer is probably decades away
 date: 2025-08-06
 categories: blog
 ---
@@ -9,9 +9,9 @@ categories: blog
 
 <br>
 
-GPT 5 has just come out and there is so much conversation on the interwebs about how its better/worse at coding. 2025 has seen a massive capital boom in things like agents. A shit ton of startups are getting funded for **any idea** they can pull out of thier ass.  Some fucker goes viral on twitter telling people to [cheat on everything gets funded serious](https://x.com/im_roy_lee/status/1936138361011585190) `$`. But no matter how much `$` YC and A16Z puts in these numb nuts, most of them have never built software with others to understand that an arbitrary product cannot be trivially integrated with humans to just replace the human software engineer. 
+GPT 5 has just come out and there is so much conversation on the [interwebs](https://simonwillison.net/2025/Aug/7/gpt-5/) about how its [better](https://x.com/theo/status/1953507203979391011) / [worse](https://x.com/deedydas/status/1953701523978170817). 2025 has seen a [massive capital influx](https://finance.yahoo.com/news/ai-agents-market-size-worth-144400570.html) in things like agents. A shit ton of startups are getting funded for **any idea** they can pull out of thier ass.  Some fucker goes viral on twitter telling people to [cheat on everything gets serious funding](https://x.com/im_roy_lee/status/1936138361011585190) `$`. But no matter how much `$` YC and A16Z puts in these numb nuts, most of them have never built software with others to understand that an arbitrary product cannot be trivially integrated with humans to just replace other human software engineers. 
 
-All these rablings on twitter leave me thinking that most of these people who talk about AI taking over software engineering haven't operated software that they built over a long period of time. Don't get me wrong, many of these people are really intelligent and talented but it seems that they haven't actully **built and operated** software that is used everyday, downloaded millions of times and is consumed by engineers outside their own organization. If they had done these things before then would realize that most of software engineering is not a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%) to building software communally. This blog article tries to shine light on many such socia-technical facets of S/W engineering that are not trivially "AI-replacable". 
+All these rablings on twitter leave me thinking that most of these people who talk about AI taking over software engineering haven't operated software that they built __over a long period of time__. Don't get me wrong, many of these people are really intelligent and talented but it seems that they haven't **built and operated** software that is used everyday, downloaded millions of times and is consumed by engineers outside their own organization. If they had done these things before then would realize that most of software engineering is not a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%) to building software communally. This blog article tries to shine light on many such socia-technical facets of S/W engineering that are not trivially "AI-replacable". 
 
 <!-- This includes fascets like: (1) operations , (2) management of source code , (3) communication/context-sharing, (4) debugging problems with partial visibility at scale.   -->
 
@@ -56,3 +56,8 @@ This is the current state of AI "Agents" who type code. Many people have told me
 ## Dependency Hell
 
 Every API exposed and used by piece of software are [fare game for all users.](https://xkcd.com/1172/)  
+
+
+## What are we missing?
+
+TODO: Give qualitative ideas about what might be missing and where are the key gaps in the  
