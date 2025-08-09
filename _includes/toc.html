@@ -23,42 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  // Calculate initial position based on post title and move with scroll direction
-  let initialScrollY = window.scrollY;
-  let initialTocTop = 0; // TOC top relative to viewport at load, aligned with title
-  const MIN_TOP = 2 * 16; // 2rem in px
-
-  function measureInitial() {
-    const titleRect = postTitle.getBoundingClientRect();
-    initialTocTop = Math.max(MIN_TOP, titleRect.top);
-    // Set initial top immediately
-    tocSidebar.style.top = initialTocTop + 'px';
-  }
-
-  function updateTocPosition() {
-    if (!(postTitle && tocSidebar)) return;
-
-    const currentScrollY = window.scrollY;
-    const delta = currentScrollY - initialScrollY; // positive when scrolling down
-
-    // Move TOC in the same direction as scroll
-    let nextTop = initialTocTop + delta;
-    if (nextTop < MIN_TOP) nextTop = MIN_TOP;
-    tocSidebar.style.top = nextTop + 'px';
-  }
-  
-  // Initial positioning
-  setTimeout(() => { measureInitial(); updateTocPosition(); }, 100);
-  
-  // Update position on scroll
-  let scrollTimeout;
-  window.addEventListener('scroll', function() {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(updateTocPosition, 10);
-  });
-  
-  // Update position on resize
-  window.addEventListener('resize', () => { measureInitial(); updateTocPosition(); });
+  // No manual positioning needed - CSS sticky handles this
   
   let tocHTML = '';
   let currentLevel = 0;
