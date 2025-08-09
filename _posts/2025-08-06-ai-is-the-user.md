@@ -19,28 +19,30 @@ categories: blog
 
 <br>
 
-All these rablings on twitter/media and from major tech companies have left me thinking that many of these people who talk about AI taking over software engineering haven't operated software that _they built over a long period of time_. Don't get me wrong, many of these people are really intelligent and talented; but people who have built software used by others would realize that most of software engineering is not just a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%) to building software. Building software over a long time reveals a [metagame](https://www.thediff.co/archive/the-factorio-mindset/): at the start your focus might be on _how to get what you want_ but as you get better the focus shifts towards _why you need something_ over how you will get it.  
+All these rablings on twitter/media and from major tech companies have left me thinking that many of these people who talk about AI taking over software engineering _haven't operated software that they built_. Don't get me wrong, many of these people are really intelligent and talented; but people who have built software in teams would realize that most of software engineering is not just a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%). 
+
+Building software over a long time reveals a [metagame](https://www.thediff.co/archive/the-factorio-mindset/): at the start your focus might be on _how to get what you want_ but as you get better the focus shifts towards _why you need something_ over how you will get it. The beauty of this emergent metagame is that it makes you aware of certain challenges that you just won't know about when you are new to the game or peaking at it from the outside. The intention behind this essay is to point out some of the challenges that make it quite non-trivial to just plugin an autonomous machine that just builds stuff for people. 
 
 <br>
 
 > I want to make a clear distinction here between programming and software engineering. Programming is about writing code. Software engineering is not just the code, it's also the resposibilites created by the execution of that code.
 
 <br>
-This blog article tries to shine light on many such socia-technical facets of S/W engineering that are not trivially "AI-replacable". 
+
 
 <!-- This includes fascets like: (1) operations , (2) management of source code , (3) communication/context-sharing, (4) debugging problems with partial visibility at scale.   -->
 
 
-## Software Operations 
+## Challenge: Software Operations 
 
 Software operations is the most communal part of sofware development. While most of programming happens in a persons head, the operation of that piece of code happens out in public with many other people in picture. Operating code involves so many facets, few of them being like: 
 
-- version control 
+- Version control 
 - Release cycles 
 - QA / Testing and Verifications
 - Patching hot fixes and figuring out what breaks the current systems. 
 
-No matter how capable AI's become, eventually they have to interact and talk to other humans since ALL of the software running in the world today is not opearted (or even fully built) by AI. Its operated and built by humans for other humans (internally and externally). This means all the esotric build system, release patterns and even the processes that follow the operationalization of that software. 
+No matter how capable AI's become, eventually they have to interact and talk to other humans since ALL of the software running in the world today is not opearted (or even fully built) by AI. Its operated and built by humans for other humans. This means all the esotric build system, release patterns and even the processes that follow the operationalization of that software. 
 
 ### Debugging under partial visibility 
 
@@ -58,7 +60,7 @@ What happens when your monitoring solution goes down? Even if AI's figured out t
 > There is a world where I see that we have **AI programmers** but I yet dont see a world in the next decade where we have **AI Software Engineer**. Core distinction between an AI programmer and Software engineer is that the programmer is that just **writes and tests some code** but the software engineer operates the code they write. They make "mangement" decisions about shipping, identifying what to build and talking to people to understand why something needs to be built. 
 <br>
 
-## Version Control 
+## Challenge: Version Control 
 
 Writing software that is used by a lot of people is an artistic endaevor. Especially when other people are "using" your software for further building new things. As the software ages and gets used more, the ripple effect of each change is a loooot more. Its like constructing a building where each brick has been intentionally placed. Each brick has an explaination of why it's present for future workers to know what they should do in case the building starts becoming shaky because of it.
 
@@ -68,12 +70,23 @@ Now imagine having a coworker who gives no fucks about the preservation of histo
 
 This is the current state of AI "Agents" who type code. Many people have told me that you need to just add these things to the prompt but its not enough. And trust me I have tried. And it doesnt work most of the time. It's same as trying to [make these things stop using em-dashes](https://x.com/chipro/status/1952131790061326593). No matter how much you try (even with prompting), these things don't budge on how they want to do things (some call this an alignment problem but as a user I don't care what problem it's called. I want it to do X in the fewest steps possible). They write really pretty code! They write like a decently smart programmer when prompted concisely and accurately (with enough context) but they don't have the foresight of someone who writes code like art (I hate equating using titles like "Staff Engineer" to make a point 🤮. Most titles are there to placate one's ego, not qualify one's capability). 
 
-## Dependency Hell
+### Dependency Hell
 
 Every API exposed and used by a piece of software are fare game for all users ([Relevant XKCD](https://xkcd.com/1172/)). `TODO: Give explaination of this`
 
 
-## What are is the Alternative?
+## What would it need to have a fully capable S/W Engineer?
+
+I fundamentally believe that if there will ever be an "AGI", then it would mean that it literally writes all it's own source code. It would manage it's own versioning and it would also own it's own operations. 
+
+
+<br>
+
+![Quadrants of Code](/assets/images/quadsofcode.jpg)
+*What is missing for the true AI S/W engineer*
+
+<br>
+
 
 `TODO:` Give qualitative ideas about what might be missing and where are the key gaps in the  
 
