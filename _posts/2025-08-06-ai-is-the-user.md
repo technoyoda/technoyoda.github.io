@@ -6,7 +6,7 @@ categories: blog
 ---
 <br>
 > This blog post is full of problems and ideas. It is not meant as a puff piece to point out that "look this stupid model cannot count R's in rigurgitating". Its about pointing out practical problems I face on a day to day basis that inhibit these models/tools from permanently replacing me at my job. I would be the happiest person ever if I can stop programming professionally and just start a bar where I can flirt with cute girls and throw crazy parties. But sadly current age tools are no where that I can just outsource it to some AI and buy myself time and bandwith to start my bar while the thing programs for me in the backgound. 
-
+<br>
 
 GPT 5 has just come out and there is so much conversation on the interwebs about how its better/worse at coding. 2025 has seen a massive capital boom in things like agents. A shit ton of startups are getting funded for **any idea** they can pull out of thier ass.  Some fucker goes viral on twitter telling people to [cheat on everything gets funded serious](https://x.com/im_roy_lee/status/1936138361011585190) `$`. But no matter how much `$` YC and A16Z puts in these numb nuts, most of them have never built software with others to understand that an arbitrary product cannot be trivially integrated with humans to just replace the human software engineer. 
 
@@ -40,8 +40,9 @@ When you work on large enough systems that have and insane number of moving part
 
 What happens when your monitoring solution goes down? Even if AI's figured out things for me the "who's watching the watcher problem" just never ceases to go away. TODO: Explain why?
 
+<br>
 > There is a world where I see that we have **AI programmers** but I yet dont see a world in the next decade where we have **AI Software Engineer**. Core distinction between an AI programmer and Software engineer is that the programmer is that just **writes and tests some code** but the software engineer operates the code they write. They make "mangement" decisions about shipping, identifying what to build and talking to people to understand why something needs to be built. 
-
+<br>
 
 ### Version Control 
 
@@ -51,7 +52,7 @@ I am a stickler for version control. Its my biggest pet peeve when people are no
 
 Now imagine having a coworker who gives no fucks about the preservation of history. Who shamelessly moves files around all the time making history really hard to keep track of. A coworker, who on a whim starts refactoring the code base. A coworkers who writes code in a way where a "addition" only diff becomes a diff with mixed additions and removals. 
 
-This is the current state of AI "Agents" who type code. Many people have told me that you need to just add these things to the prompt but its not enough. And trust me I have tried. They write really pretty code! They write like a decently smart programmer when prompted concisely and accurately (with enough context) but they don't have the foresight of someone who writes code like art (I hate equating such things to titles like "Staff Engineer" 🤮). 
+This is the current state of AI "Agents" who type code. Many people have told me that you need to just add these things to the prompt but its not enough. And trust me I have tried. They write really pretty code! They write like a decently smart programmer when prompted concisely and accurately (with enough context) but they don't have the foresight of someone who writes code like art (I hate equating using titles like "Staff Engineer" to make a point 🤮. Most titles are there to placate one's ego, not qualify one's capability). 
 
 ### Dependency Hell
 
