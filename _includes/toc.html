@@ -23,39 +23,32 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
   
-  // Calculate initial position based on post title
-  let initialTitleTop = 0;
-  let lastScrollY = window.scrollY;
-  
+  // Calculate initial position based on post title and move with scroll direction
+  let initialScrollY = window.scrollY;
+  let initialTocTop = 0; // TOC top relative to viewport at load, aligned with title
+  const MIN_TOP = 2 * 16; // 2rem in px
+
+  function measureInitial() {
+    const titleRect = postTitle.getBoundingClientRect();
+    initialTocTop = Math.max(MIN_TOP, titleRect.top);
+    // Set initial top immediately
+    tocSidebar.style.top = initialTocTop + 'px';
+  }
+
   function updateTocPosition() {
-    if (postTitle && tocSidebar) {
-      const currentScrollY = window.scrollY;
-      const scrollDirection = currentScrollY - lastScrollY;
-      
-      // Get the title's initial position (when page loads)
-      if (initialTitleTop === 0) {
-        const titleRect = postTitle.getBoundingClientRect();
-        initialTitleTop = titleRect.top + currentScrollY;
-      }
-      
-      // Calculate where TOC should be
-      const minTop = 2 * 16; // 2rem in pixels
-      const desiredTop = initialTitleTop - currentScrollY;
-      
-      // If title would be above the minimum position, stick TOC to top
-      if (desiredTop < minTop) {
-        tocSidebar.style.top = minTop + 'px';
-      } else {
-        // Otherwise, align TOC with title position
-        tocSidebar.style.top = desiredTop + 'px';
-      }
-      
-      lastScrollY = currentScrollY;
-    }
+    if (!(postTitle && tocSidebar)) return;
+
+    const currentScrollY = window.scrollY;
+    const delta = currentScrollY - initialScrollY; // positive when scrolling down
+
+    // Move TOC in the same direction as scroll
+    let nextTop = initialTocTop + delta;
+    if (nextTop < MIN_TOP) nextTop = MIN_TOP;
+    tocSidebar.style.top = nextTop + 'px';
   }
   
   // Initial positioning
-  setTimeout(updateTocPosition, 100);
+  setTimeout(() => { measureInitial(); updateTocPosition(); }, 100);
   
   // Update position on scroll
   let scrollTimeout;
@@ -65,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Update position on resize
-  window.addEventListener('resize', updateTocPosition);
+  window.addEventListener('resize', () => { measureInitial(); updateTocPosition(); });
   
   let tocHTML = '';
   let currentLevel = 0;
