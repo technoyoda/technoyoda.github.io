@@ -219,16 +219,28 @@ body[a="dark"] {
       .o { color: #f92672; }
     }
     
+    // Force light theme for TOC in auto dark mode too
     .toc-container {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
+      background: #ffffff !important;
+      border: 1px solid #e1e1e8 !important;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .toc-header h3 {
+      color: #333333 !important;
     }
     
     .toc-link {
-      color: rgba(255, 255, 255, 0.7);
+      color: #333333 !important;
       
-      &:hover, &.active {
-        color: #ffffff;
+      &:hover {
+        background: #f5f5f5 !important;
+        color: #000000 !important;
+      }
+      
+      &.active {
+        background: #e8e8e8 !important;
+        color: #000000 !important;
       }
     }
   }
@@ -236,33 +248,46 @@ body[a="dark"] {
 
 // Table of Contents and Post Layout Styling
 .post-container {
-  display: flex;
-  gap: 2rem;
-  max-width: 1200px;
+  position: relative;
+  max-width: 640px; // Keep main content width same as theme
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
 }
 
 .post-content {
-  flex: 1;
-  min-width: 0; // Prevents flex item from overflowing
+  width: 100%;
 }
 
 .post-sidebar {
-  flex: 0 0 250px;
-  position: sticky;
-  top: 2rem;
+  position: fixed;
+  right: 2rem;
+  top: 6rem;
+  width: 280px;
   height: fit-content;
-  max-height: calc(100vh - 4rem);
+  max-height: calc(100vh - 8rem);
   overflow-y: auto;
+  z-index: 100;
+}
+
+// Hide TOC on smaller screens where there's no room
+@media (max-width: 1200px) {
+  .post-sidebar {
+    display: none;
+  }
+  
+  .post-container {
+    max-width: 640px;
+    padding: 0 2rem;
+  }
 }
 
 .toc-container {
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #ffffff !important;
+  border: 1px solid #e1e1e8 !important;
   border-radius: 8px;
   padding: 1rem;
   font-size: 0.9rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .toc-header h3 {
@@ -292,21 +317,21 @@ body[a="dark"] {
 .toc-link {
   display: block;
   padding: 0.25rem 0.5rem;
-  color: rgba(0, 0, 0, 0.7);
+  color: #333333 !important;
   text-decoration: none;
   border-radius: 4px;
   transition: all 0.2s ease;
   line-height: 1.3;
   
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: rgba(0, 0, 0, 0.9);
+    background: #f5f5f5 !important;
+    color: #000000 !important;
     text-decoration: none;
   }
   
   &.active {
-    background: rgba(0, 0, 0, 0.08);
-    color: rgba(0, 0, 0, 1);
+    background: #e8e8e8 !important;
+    color: #000000 !important;
     font-weight: 500;
   }
   
@@ -344,43 +369,31 @@ h6:hover .heading-link {
   }
 }
 
-// Dark mode adjustments for TOC
+// Dark mode adjustments for TOC - Force light theme for TOC
 body[a="dark"] {
   .toc-container {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: #ffffff !important;
+    border: 1px solid #e1e1e8 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .toc-header h3 {
+    color: #333333 !important;
   }
   
   .toc-link {
-    color: rgba(255, 255, 255, 0.7);
+    color: #333333 !important;
     
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.9);
+      background: #f5f5f5 !important;
+      color: #000000 !important;
     }
     
     &.active {
-      background: rgba(255, 255, 255, 0.15);
-      color: #ffffff;
+      background: #e8e8e8 !important;
+      color: #000000 !important;
     }
   }
 }
 
-// Responsive design for TOC
-@media (max-width: 768px) {
-  .post-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .post-sidebar {
-    position: static;
-    flex: none;
-    max-height: none;
-    order: -1; // Show TOC above content on mobile
-  }
-  
-  .toc-container {
-    margin-bottom: 1rem;
-  }
-}
+// Remove the mobile responsive TOC since we're hiding it on smaller screens
