@@ -4,9 +4,9 @@ title: The AI software engineer is probably decades away
 date: 2025-08-06
 categories: blog
 ---
-<!-- <br> -->
+<br>
 
-<!-- > This blog post is full of problems and ideas. It is not meant as a puff piece to point out that "look this stupid model cannot count R's in rigurgitating". Its about pointing out practical problems I face on a day to day basis that inhibit these models/tools from permanently replacing me at my job. I would be the happiest person ever if I can stop programming professionally and just start a bar where I can flirt with cute girls and throw crazy parties. But sadly current age tools are no where that I can just outsource it to some AI and buy myself time and bandwith to start my bar while the thing programs for me in the backgound.  -->
+> This essay is about pointing out practical problems that inhibit current day AI models/tools from permanently replacing me at my job. I would be the happiest person ever if I can stop programming professionally and let AI do all the work. I would love to start a bar where I can flirt with cute girls and throw crazy parties. But sadly current age tools are no where close to such autonomy that my bar becomes a reality. 
 
 <br>
 
@@ -40,27 +40,32 @@ Software operations is the most communal part of sofware development. While most
 
 ### Debugging under partial observability 
 
-Not all bugs are exposed in a controlled environment where the bug is easy to reproduce. Such bugs are the easiest low hanging fruit bugs for AI models to solve. Most non trival bugs are the ones that are very hard to reproduce, happening under really rare conditions. These bugs have massive impact on the operations of a software and generally require the most amount of time to debug. These bugs surface all forms of red-herrings which need to be sidestepped to actually reach a real solution. 
+Not all bugs are exposed in a controlled environment where the bug is easy to reproduce. Such bugs are the easiest low hanging fruit bugs for AI models to solve. Most non trival bugs are the ones that are very hard to reproduce, happening under really rare conditions. These bugs have massive impact on the operations of a software and generally require the most amount of time to debug. These bugs surface all forms of red-herrings which need to be sidestepped to reach the real cause. When such bugs are discovered, they are not trivial to reproduce. Reproducing these bugs is hard because :
 
-When bugs are discovered, its also not trivial to reproduce so many of them (except for when they )
+- they may setting up special and expensive environments which don't gaurentee determinism. 
+- they might need dependencies that are opaque (example: someone gives you a binary with no source)
+- they might need multiple external conditions to align (example: DB under large write load AND external service not accessible AND cache is also un-reachable)
+- there might be a lot of red-herrings caused because of the bug that make it hard to track where it comes from. 
 
+These types of bugs appear more often in distributed systems, where thorough monitoring and observability are crucial for tracking down the root cause. 
+<br>
 
-#### Distributed Systems
+> _Personal opinion:_ Monitoring and alerting are the most challenging parts of operating software (especially as systems scale). This part of software operations is largely a human endeavor since its evolution happens reactively rather than proactively. While some monitoring is built proactively for new features, most monitoring evolves reactively as unexpected issues reveal gaps in our observability. 
 
-When you work on large enough systems that have and insane number of moving parts, it starts becoming more and more complicated for arbitrary autonomous systems to start debugging what went wrong. `TODO: Explain why? `
+<br>
 
-### Monitoring and Tail Events 
-
-_Personal opinion:_ Monitoring and alerting are the most challenging parts of operating software (especially as systems scale). This part of software operations is largely a human endeavor since its evolution happens reactively rather than proactively. While some monitoring is built proactively for new features, most monitoring evolves reactively as unexpected issues reveal gaps in our observability. 
-
-A large part of software operations depends on monitoring systems behaving correctly, as this enables developers to make informed decisions about when and how to intervene with patches or fixes. But what happens when your monitoring solution goes down? The perpertual problem of "who's watching the watcher problem" just never ceases to go away. This means that AI systems trying to 
+A large part of software operations for distributed systems depends on monitoring systems behaving correctly, as this enables developers to make informed decisions about when and how to intervene with patches or fixes. But what happens when your monitoring solution goes down? The perpertual problem of "who's watching the watcher problem" just never ceases to go away. This means that AI systems trying to run fully autonomously, there would still be a need for "some human" in the loop (the last level of watcher)
 
 
 ### Configurational Complexity
 
 There is a very important distinction between configurations and settings.
 
+<br>
+
 > In software, "settings" generally refer to individual options that can be adjusted to modify an application's behavior, while configurations are collections of settings that define the overall setup and structure of a system or application. Settings are usually user-facing and changeable, where as configurations can be more fundamental involving even actions taken by users in the real-world. Settings are adjusted at runtime. Configurations are mostly done during setup and can vastly alter the behavior of the software at runtime.
+
+<br>
 
 As a system becomes more and more configurable, it inherantly starts off a [configuration complexity clock](https://mikehadlow.blogspot.com/2012/05/configuration-complexity-clock.html). Having tons of configurations come at a tradeoff with cognitive load. You can make something infinitely parameterizable but that just means the operator needs to fully aware impact of each parameter. The larger the configrations grow, the more likely it is to end up in a combinatorial explosion ($O(2^n)$) where each combination cannot be fully tested because of various reasons like:
 
@@ -108,24 +113,24 @@ The current theory is that most of these models [learn in context](https://trans
 
 Since I started programming a lot more with Cursor, my style of programming and the way my mind works when I am programming have completely changed. Before 2023 the meta process when writing code was: 
 
-1) Write down why I am solving the problem 
-2) From the why, derive how I gonna solve it (involves gathering context) 
-3) Write the code 
-4) Test the code and if not satisfied start again from (2) / (3)
-5) write tests for your code and go back to (4)
+1. Write down why I am solving the problem 
+2. From the why, derive how I gonna solve it (involves gathering context) 
+3. Write the code 
+4. Test the code and if not satisfied start again from (2) / (3)
+5. write tests for your code and go back to (4)
 
 Now after using cursor religious for the last 6+ months, my meta process has changed:
 
-1) Write down why I am solving the problem 
-2) From the why, derive how I gonna solve it (involves gathering context)
+1. Write down why I am solving the problem 
+2. From the why, derive how I gonna solve it (involves gathering context)
     - This can even mean finding git patches 
     - this can even mean finding relvant docs files for different APIs used in the code with exact versions
     - this can even mean linking memos in markdown 
     - this can even mean I provide the blueprint of the exact functions etc. 
-3) Feed all the context to cursor and make it only write code (max 3 back and forths prompting).
+3. Feed all the context to cursor and make it only write code (max 3 back and forths prompting).
     - Scope the code written by it to < 500/800 lines. 
     - Reject a lot of useless stuff it creates. 
-4) Read all the code and modify a few places for how i want to handle different cases. 
-5) Test the code myself and if not satisfied start again from (4). If satisfied make cursor write tests for so start from (2). 
+4. Read all the code and modify a few places for how i want to handle different cases. 
+5. Test the code myself and if not satisfied start again from (4). If satisfied make cursor write tests for so start from (2). 
 
 I spend a lot of time thinking so that I am more precise about what I am trying to achieve. I think a lot more about how I want to architect something, what ways I want to scope an abstraction and how different parts of code I want to use. I leave very little room for ambibuity. I always attempt to see if I can make cursor 1 shot the thing. The emotion cursor ellicits when I one-shot a problem exactly how I want is the same as winning a boss fight in a video game. Satisfaction and fun. When I want to build something very large (> 800 lines), I will make cursor build very precise chunks of a whole but I will keep a full track of the whole.
