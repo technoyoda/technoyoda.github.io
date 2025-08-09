@@ -4,12 +4,18 @@ layout: default
 
 {%-include back_link.html-%}
 
-<article>
-  <p class="post-meta">
-    <time datetime="{{ page.date }}">{{ page.date | date: site.theme_config.date_format }}</time>
-  </p>
+<div class="post-container">
+  <div class="post-sidebar">
+    {%-include toc.html-%}
+  </div>
   
-  <h1>{{ page.title }}</h1>
+  <article class="post-content">
+    <p class="post-meta">
+      <time datetime="{{ page.date }}">{{ page.date | date: site.theme_config.date_format }}</time>
+    </p>
+    
+    <h1>{{ page.title }}</h1>
 
-  {{ content }}
-</article>
+    {{ content }}
+  </article>
+</div>
