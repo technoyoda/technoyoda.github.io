@@ -6,6 +6,7 @@ categories: blog
 ---
 <br>
 > This blog post is full of problems and ideas. It is not meant as a puff piece to point out that "look this stupid model cannot count R's in rigurgitating". Its about pointing out practical problems I face on a day to day basis that inhibit these models/tools from permanently replacing me at my job. I would be the happiest person ever if I can stop programming professionally and just start a bar where I can flirt with cute girls and throw crazy parties. But sadly current age tools are no where that I can just outsource it to some AI and buy myself time and bandwith to start my bar while the thing programs for me in the backgound. 
+
 <br>
 
 GPT 5 has just come out and there is so much conversation on the interwebs about how its better/worse at coding. 2025 has seen a massive capital boom in things like agents. A shit ton of startups are getting funded for **any idea** they can pull out of thier ass.  Some fucker goes viral on twitter telling people to [cheat on everything gets funded serious](https://x.com/im_roy_lee/status/1936138361011585190) `$`. But no matter how much `$` YC and A16Z puts in these numb nuts, most of them have never built software with others to understand that an arbitrary product cannot be trivially integrated with humans to just replace the human software engineer. 
