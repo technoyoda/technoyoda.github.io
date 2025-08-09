@@ -10,7 +10,7 @@ categories: blog
 
 <br>
 
-2025 seems to be the year of agents. Alteast thats what [money flows are pointing to](https://finance.yahoo.com/news/ai-agents-market-size-worth-144400570.html). A shit ton of AI startups are getting funded for **any idea that catches people's eyes**. (some dude got funded for a startup that helps people [cheat on everything](https://x.com/im_roy_lee/status/1936138361011585190)). [GPT 5 come out very recently](https://x.com/OpenAI/status/1953498900230250850) and there is so much conversation on the [interwebs](https://simonwillison.net/2025/Aug/7/gpt-5/) about how its [better](https://x.com/theo/status/1953507203979391011) / [worse](https://x.com/deedydas/status/1953701523978170817). The AI hype wave which started from late 2022 (since ChatGPT enamored all of us) has only grown in the last 3 years. Tech stocks seem to seriously love the promise of the AGI especially since it gives them a [good excuses for layoffs](https://fortune.com/2025/08/07/summer-of-ai-layoffs-july-140-percent-spike-challenger-gray-christmas/) and it also [reduces the need for as many software engineers](https://www.forbes.com/sites/jackkelly/2024/11/01/ai-code-and-the-future-of-software-engineers/). The media [is certainly drinking the coolaid](https://www.nytimes.com/2025/03/14/technology/why-im-feeling-the-agi.html) and the markets are certainly "Feeling the AGI".
+2025 seems to be the year of agents. Alteast thats what [money flows are pointing to](https://finance.yahoo.com/news/ai-agents-market-size-worth-144400570.html). A shit ton of AI startups are getting funded for **any idea that catches people's eyes**. (some dude got funded for a startup that helps people [cheat on everything](https://x.com/im_roy_lee/status/1936138361011585190)). [GPT 5 come out very recently](https://x.com/OpenAI/status/1953498900230250850) and there is so much conversation on the [interwebs](https://simonwillison.net/2025/Aug/7/gpt-5/) about how its [better](https://x.com/theo/status/1953507203979391011) / [worse](https://x.com/deedydas/status/1953701523978170817). The AI hype wave which started from late 2022 (since ChatGPT enamored all of us) has only grown in the last 3 years. Tech stocks seem to seriously love the promise of the AGI especially since it gives them a [good excuse for layoffs](https://fortune.com/2025/08/07/summer-of-ai-layoffs-july-140-percent-spike-challenger-gray-christmas/) and it also [reduces the need for as many software engineers](https://www.forbes.com/sites/jackkelly/2024/11/01/ai-code-and-the-future-of-software-engineers/). The media [is certainly drinking the coolaid](https://www.nytimes.com/2025/03/14/technology/why-im-feeling-the-agi.html) and the markets are certainly "Feeling the AGI".
 
 <br>
 
@@ -19,9 +19,9 @@ categories: blog
 
 <br>
 
-Reading all these rablings on twitter/media and from major tech companies about AI replacing developers, I suspect many of these voices have never had to _debug, maintain, or scale the software they've built in production._ Don't get me wrong, many of these people are really intelligent and talented; but people who have built software in teams would realize that most of software engineering is not just a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%). 
+Reading all these rablings from the media and major tech companies about AI replacing developers, I suspect many of these voices have never had to _debug, maintain, or scale the software they've built._ Don't get me wrong, many of these people are really intelligent and talented; but people who have built software in teams would realize that most of software engineering is not just a technical endeavor. Its rather a socio-technical endaevor. There is a very strong human element (I would say 70%). 
 
-Building software over a long time reveals a [metagame](https://www.thediff.co/archive/the-factorio-mindset/): at the start your focus might be on _how to get what you want_ but as you get better the focus shifts towards _why you need something_ over how you will get it. As you advance the levels of this metagame there are certain challenges that emerge which won't be well known to newcomers or outsiders. The intention behind this essay is to point out some of the challenges that make it non-trivial to just plugin an autonomous machine that just builds and runs stuff for you.
+Building software over a long time reveals a [metagame](https://www.thediff.co/archive/the-factorio-mindset/): at the start your focus might be on _how to get what you want_ but as you get better the focus shifts towards _why you need something_ instead of how you will get it. As you advance the levels of this metagame, it shines light on certain challenges which might not be well known to newcomers or outsiders. The intention behind this essay is to point out some of the challenges that make it non-trivial to just plugin an autonomous machine that just builds and runs stuff for you.
 
 <br>
 
@@ -35,14 +35,9 @@ Building software over a long time reveals a [metagame](https://www.thediff.co/a
 
 ## Challenge: Software Operations 
 
-Software operations is the most communal part of sofware development. While most of programming happens in a persons head, the operation of that piece of code happens out in public with many other people in picture. Operating code involves so many facets, few of them being like: 
+Software operations is the most communal part of sofware development. While most of programming happens in a persons head, software operations happens in public. Operating code involves so many facets, like: version control, release cycles, QA/Testing, debugging, patching etc. All software build today is operated and built by humans for other humans. This means all the esotric build system, release/versioning patterns and even the processes to operationalize a piece of software. This is where all the chaos begins with AI. Even if the model could currently fit everything in it's context,  
 
-- Version control 
-- Release cycles 
-- QA / Testing and Verifications
-- Patching hot fixes and figuring out what breaks the current systems. 
 
-No matter how capable AI's become, eventually they have to interact and talk to other humans since ALL of the software running in the world today is not opearted (or even fully built) by AI. Its operated and built by humans for other humans. This means all the esotric build system, release patterns and even the processes that follow the operationalization of that software. 
 `TODO: Add connective tissue? `
 
 
@@ -59,16 +54,12 @@ When you work on large enough systems that have and insane number of moving part
 ### Monitoring and Tail Events 
 
 What happens when your monitoring solution goes down? Even if AI's figured out things for me the "who's watching the watcher problem" just never ceases to go away. `TODO: Explain why?`
-<!-- 
-<br>
-> There is a world where I see that we have **AI programmers** but I yet dont see a world in the next decade where we have **AI Software Engineer**. Core distinction between an AI programmer and Software engineer is that the programmer is that just **writes and tests some code** but the software engineer operates the code they write. They make "mangement" decisions about shipping, identifying what to build and talking to people to understand why something needs to be built. 
-<br> -->
 
 ### Configurational Complexity
 
 There is a very important distinction between configurations and settings.
 
-> In software, settings generally refer to individual options that can be adjusted to modify an application's behavior, while configurations are collections of settings that define the overall setup and structure of a system or application. Settings are usually user-facing and changeable, while configurations can be more fundamental and might involve system-level setups. Settings are adjusted at runtime. Configurations are done during setup and vastly alter the behavior of the software at runtime.
+> In software, "settings" generally refer to individual options that can be adjusted to modify an application's behavior, while configurations are collections of settings that define the overall setup and structure of a system or application. Settings are usually user-facing and changeable, while configurations can be more fundamental and might involve system-level setups. Settings are adjusted at runtime. Configurations are done during setup and vastly alter the behavior of the software at runtime.
 
 As a system becomes more and more configurable, it inherantly starts off a [configuration complexity clock](https://mikehadlow.blogspot.com/2012/05/configuration-complexity-clock.html). Having tons of configurations come at a tradeoff with cognitive load. Your can make something infinitely parameterizable but that just means the operator needs to fully aware impact of each parameter. The larger the configrations grow, the more likely it is to end up in a combinatorial explosion where each combination cannot be fully tested because of various reasons like:
 
@@ -97,7 +88,7 @@ Every API exposed and used by a piece of software are fare game for all users ([
 
 ## What would we need to have a fully autonomous AI S/W Engineer?
 
-I fundamentally believe that if there will ever be an "AGI", then it would mean that it literally writes all it's own source code. It would manage it's own versioning and it would also own it's own operations. It would be a self sustaining system that needs the humans for enacting some decisions in the world but it would wholy and solely manage it's own upgrade/maintenance and even it's own source code. Currently we live in a world where don't have anything that runs fully autonomously. Something that talks to you and is fully in control of it's own systems and the systems it's running. 
+I fundamentally believe that if there will ever be an "AGI", then it would mean that it literally writes/manages/operates all it's own source code. It would be a self sustaining system that needs the humans for enacting some decisions in the world but it would wholy and solely manage it's own upgrade/maintenance and even it's own source code.
 
 <br>
 
@@ -106,7 +97,7 @@ I fundamentally believe that if there will ever be an "AGI", then it would mean 
 
 <br>
 
-
+Currently we there is no such system that runs and evolves fully autonomously. Something that talks to you and is fully in control of it's own systems and the new systems it builds. This kind a system in current world constraints feels like a pipe dream but a world where [AI augmenting a human (like an Iron man suit)](https://www.youtube.com/watch?v=LCEmiRjPEtQ) feels way more achievable in the shorter term (next decade) 
 
 ## What I Learned 
 
