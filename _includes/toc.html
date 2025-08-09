@@ -15,11 +15,47 @@ document.addEventListener('DOMContentLoaded', function() {
   // Generate table of contents
   const tocList = document.getElementById('toc-list');
   const headings = document.querySelectorAll('article h1, article h2, article h3, article h4, article h5, article h6');
+  const tocSidebar = document.querySelector('.post-sidebar');
+  const postTitle = document.querySelector('article h1');
   
   if (headings.length === 0) {
     document.querySelector('.toc-container').style.display = 'none';
     return;
   }
+  
+  // Calculate initial position based on post title
+  function updateTocPosition() {
+    if (postTitle && tocSidebar) {
+      const titleRect = postTitle.getBoundingClientRect();
+      const titleTop = titleRect.top + window.scrollY;
+      const currentScroll = window.scrollY;
+      
+      // Position TOC to align with title when at the top
+      // But keep it visible as user scrolls
+      const minTop = 2; // Minimum distance from top of viewport (in rem)
+      const titleOffset = Math.max(minTop * 16, titleTop - currentScroll); // 16px = 1rem
+      
+      tocSidebar.style.top = Math.min(titleOffset, titleTop - currentScroll + 16) + 'px';
+      
+      // If title is above viewport, keep TOC at top
+      if (titleTop - currentScroll < minTop * 16) {
+        tocSidebar.style.top = (minTop * 16) + 'px';
+      }
+    }
+  }
+  
+  // Initial positioning
+  setTimeout(updateTocPosition, 100);
+  
+  // Update position on scroll
+  let scrollTimeout;
+  window.addEventListener('scroll', function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(updateTocPosition, 10);
+  });
+  
+  // Update position on resize
+  window.addEventListener('resize', updateTocPosition);
   
   let tocHTML = '';
   let currentLevel = 0;

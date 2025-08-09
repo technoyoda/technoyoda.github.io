@@ -261,12 +261,13 @@ body[a="dark"] {
 .post-sidebar {
   position: fixed;
   right: 2rem;
-  top: 6rem;
+  top: 2rem;
   width: 280px;
   height: fit-content;
-  max-height: calc(100vh - 8rem);
+  max-height: calc(100vh - 4rem);
   overflow-y: auto;
   z-index: 100;
+  transition: transform 0.3s ease;
 }
 
 // Hide TOC on smaller screens where there's no room
