@@ -457,4 +457,126 @@ body.wide-mode {
   }
 }
 
+// Tooltip annotations (<tip t="..." s="...">word</tip>)
+tip {
+  position: relative;
+  display: inline;
+  border-bottom: 1.5px dotted currentColor;
+  cursor: help;
+}
+
+.tip-popup {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5em 0.75em;
+  background: #1a1a1a;
+  color: #f0f0f0;
+  border-radius: 6px;
+  font-size: 0.82em;
+  line-height: 1.4;
+  width: max-content;
+  max-width: 280px;
+  white-space: normal;
+  text-align: left;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 1000;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1a1a1a;
+  }
+}
+
+.tip-sub {
+  display: block;
+  margin-top: 0.3em;
+  padding-top: 0.3em;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.9em;
+  opacity: 0.7;
+}
+
+.tip-link {
+  display: block;
+  margin-top: 0.3em;
+  padding-top: 0.3em;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #7eb8ff !important;
+  text-decoration: none;
+  font-size: 0.9em;
+
+  &:hover {
+    text-decoration: underline;
+    color: #a8d0ff !important;
+  }
+}
+
+tip:hover .tip-popup,
+tip:focus .tip-popup {
+  opacity: 1;
+}
+
+tip:hover .tip-popup.has-link,
+tip:focus .tip-popup.has-link {
+  pointer-events: auto;
+}
+
+tip .tip-popup.has-link {
+  margin-bottom: 0;
+  bottom: calc(100% + 6px);
+}
+
+// Invert tooltip colors in dark mode so they stay readable after the filter
+body[a="dark"] {
+  .tip-popup {
+    background: #e8e8e8;
+    color: #111;
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+
+    &::after { border-top-color: #e8e8e8; }
+  }
+
+  .tip-sub {
+    border-top-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .tip-link {
+    color: #1a5ea0 !important;
+    border-top-color: rgba(0, 0, 0, 0.15);
+    &:hover { color: #0d4a8a !important; }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] {
+    .tip-popup {
+      background: #e8e8e8;
+      color: #111;
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+
+      &::after { border-top-color: #e8e8e8; }
+    }
+
+    .tip-sub {
+      border-top-color: rgba(0, 0, 0, 0.15);
+    }
+
+    .tip-link {
+      color: #1a5ea0 !important;
+      border-top-color: rgba(0, 0, 0, 0.15);
+      &:hover { color: #0d4a8a !important; }
+    }
+  }
+}
+
 // Remove the mobile responsive TOC since we're hiding it on smaller screens

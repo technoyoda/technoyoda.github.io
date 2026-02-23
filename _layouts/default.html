@@ -20,6 +20,40 @@
       {%-include google_analytics.html-%}
     {%-endif-%}
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('tip[t]').forEach(function(el) {
+        var popup = document.createElement('span');
+        popup.className = 'tip-popup';
+        var hasLink = el.hasAttribute('href');
+        if (hasLink) popup.classList.add('has-link');
+
+        popup.textContent = el.getAttribute('t');
+
+        var sub = el.getAttribute('s');
+        if (sub) {
+          var s = document.createElement('span');
+          s.className = 'tip-sub';
+          s.textContent = sub;
+          popup.appendChild(s);
+        }
+
+        if (hasLink) {
+          var a = document.createElement('a');
+          a.className = 'tip-link';
+          a.href = el.getAttribute('href');
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.textContent = el.getAttribute('link-text') || 'Read more \u2192';
+          popup.appendChild(a);
+        }
+
+        el.setAttribute('tabindex', '0');
+        el.appendChild(popup);
+      });
+    });
+    </script>
+
     {% if page.custom_js %}
       {% for js_file in page.custom_js %}
         <script type="text/javascript" src="{{ site.baseurl }}/assets/js/{{ js_file }}.js"></script>
