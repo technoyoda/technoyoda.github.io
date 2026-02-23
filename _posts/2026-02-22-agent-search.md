@@ -6,7 +6,6 @@ categories: blog
 ---
 
 ## Prologue
-
 We live in a strange timeline:
 - Publicly traded [stocks would crash because a CNBC interview showcases a vibe-coded equivalent](https://www.cnbc.com/2026/02/05/how-exposed-are-software-stocks-to-ai-tools-we-tested-vibe-coding.html).  
 - Some individual develops a program called [Open Claw](https://github.com/openclaw), it goes viral, and then all forms of chaotic stuff go loose. People's sec creds are stolen, maintainers of open source projects are [harassed with blog posts](https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/) that go viral. While this thing interacts with other random people's bot on some dude's social network. 
@@ -15,7 +14,6 @@ We live in a strange timeline:
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have [bots forming religions](https://molt.church/). I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in <tip t="People need roads, water, food, shelter, and community. Not sex chatbots and a mercenary economy.">interesting ways</tip>.
 
 ### How to read this essay
-
 The goal of this essay is to give a mental model of current day agents. My thesis is that _agents are essentially doing a search over a solution space_. Framing it as "thinking" is noise — these shits spit out slop even if they think their way to oblivion. Switching the framing from "thinking" to "search" gives you "a school of thought" to actually engineer around. This essay is as much computer science, philosophy and software engineering.
 
 To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#how-agents-are-trained). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#how-training-shapes-their-behavior). Using this better inferred scheme we can change the way we [design agentic software](#building-with-the-search-model-in-mind) and get better outcomes from it. Finally, I will discuss some of [the consequences](#consequences) that come with this easy access to create cheap software.
@@ -73,25 +71,9 @@ where $\tau = (s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T)$ is one complete <tip 
 
 > **The model navigates toward reward.** When we say "your agent is not thinking, it's searching," this is what we mean: the agent is executing a learned policy $\pi_\theta(a_t \mid s_t)$ that navigates through a space of possible trajectories toward a reward signal. The reward function that shaped $\pi_\theta(a_t \mid s_t)$ is a proxy defined by the model provider. What the proxy tested for becomes the model's de facto objective. What it did not test for remains open space.
 
+### The Inference Rollout
 
-## How Training Shapes Their Behavior
-
-We have the two layers: a landscape (pre-training) and a search strategy (RL). 
-
-| | Formalism | What it determines |
-|---|---|---|
-| Pre-training | $P(x_t \mid x_{<t})$ | What is reachable — the space of outputs the model can produce |
-| RL | $\pi_\theta(a_t \mid s_t)$ | How it navigates — which trajectories through that space it favors |
-
-At inference time, these two layers combine. The prompt $c$ sets the starting state $s_0$ — which region of the landscape we are in. The RL-trained policy $\pi_\theta$ determines how the model moves through that region. Environment feedback updates the state as execution progresses.
-
-> Pre-training determines what the model *can* do. RL determines what it *will* do. At inference, the prompt selects the region, the policy searches through it, and the environment reshapes it at every step.
-
-Now we need to see what happens when the agent actually runs — when the policy meets a real environment and starts producing trajectories.
-
-### The Loop
-
-When an agent executes, it runs an episodic trajectory rollout in real time:
+The RL formulation maps directly to what happens when an agent runs. At inference, the policy $\pi_\theta$ executes an episodic trajectory rollout in real time:
 
 1. The agent starts in state $s_0$ — the initial context (system prompt, user query, any pre-loaded files or instructions).
 2. The policy $\pi_\theta$ produces an action $a_0$ — a tool call, a code edit, a file read, or a text response.
@@ -103,6 +85,19 @@ The full trajectory is $\tau = (s_0, a_0, s_1, a_1, \ldots, s_T)$.
 There is a subtlety worth calling out: the model generates tokens autoregressively — each token conditioned on all previous tokens, including the ones it has already generated for the current action. This means each action is implicitly shaped by the model's expectations about what comes next.
 <!-- TODO: [rework] The trajectory prediction claim here was overstated. RAGEN's StarPO is about trajectory-level optimization during *training*, not trajectory-level prediction at *inference*. The model does generate one token at a time — it doesn't have explicit lookahead. What's true is that autoregressive conditioning creates implicit multi-step coherence. Need to reframe this more carefully. -->
 <tip t="RAGEN (2025) proposes StarPO, a trajectory-level optimization framework where the unit of optimization during training is the full trajectory, not individual actions. This training-time optimization may contribute to coherent multi-step behavior at inference." href="https://arxiv.org/abs/2504.20073" link-text="RAGEN paper →">[TODO: rework trajectory prediction framing]</tip>
+
+| | Formalism | What it determines |
+|---|---|---|
+| Pre-training | $P(x_t \mid x_{<t})$ | What is reachable — the space of outputs the model can produce |
+| RL | $\pi_\theta(a_t \mid s_t)$ | How it navigates — which trajectories through that space it favors |
+
+> Pre-training determines what the model *can* do. RL determines what it *will* do. At inference, the prompt selects the region, the policy searches through it, and the environment reshapes it at every step.
+
+---
+
+## How Training Shapes Their Behavior
+
+We now have the full machinery: a landscape of what the model can produce (pre-training), a search strategy that navigates toward reward (RL), and a rollout loop that maps this to real-time execution. The question becomes: what determines what the agent actually does when it runs?
 
 ### Context as the Search Space
 
@@ -122,11 +117,11 @@ This means the quality of context directly determines the quality of the search:
 
 Because in-context learning is implicit — it happens through the conditional distribution, not through any explicit reasoning step — the agent has no mechanism to notice when its context is misleading it. Clean context sharpens the search. Polluted context sends it drifting. Either way, the agent adapts with equal confidence.
 
-### The Forces That Shape an Agent's Trajectory [TODO: not collaboratively worked on, needs better name]
-<!-- TODO: this section needs full rework — the forces framework is the thesis of the essay and needs to be tighter, more in my voice, and better named. Current working title: "The Forces That Shape an Agent's Trajectory" (ie. parameters influencing the agent's search of the solution space). -->
-<tip t="[TODO: This section is the thesis of the essay and needs to be elevated — make it front and center, not just another subsection. Needs a concrete force-conflict example (e.g., system prompt says 'never delete files', environment feedback shows test passing only if a file is deleted, policy was trained to make tests pass — what wins?). Show how forces interact, not just list them.]">[TODO: elevate forces framework, add force-conflict example]</tip>
+### Agent Field Theory [TODO: not collaboratively worked on, needs full rework]
+<!-- TODO: this section is the thesis of the essay and needs to be elevated — tighter, more in my voice. Needs a concrete force-conflict example. -->
+<tip t="[TODO: Elevate this section — it's the thesis. Add concrete force-conflict example (e.g., system prompt says 'never delete files', environment shows test passes only if file deleted, policy trained to pass tests — what wins?). Bondarenko (2025) showed o3 reward-hacks even when explicitly told not to — training force overpowers system prompt.]">[TODO: elevate, add force-conflict example]</tip>
 
-Given everything above — the loop, context as the search space, in-context learning — we can now identify the forces that determine an agent's trajectory at any point in execution:
+In 1936, psychologist <tip t="Lewin's equation B = f(P, E) — Behavior is a function of the Person and the Environment — introduced the idea that behavior cannot be predicted from personality or environment alone, only from their interaction. He described a 'life space' where driving and restraining forces produce a resultant behavior." href="https://en.wikipedia.org/wiki/Field_theory_(psychology)" link-text="Lewin's Field Theory →">Kurt Lewin</tip> proposed that human behavior is a function of the person and their environment: $B = f(P, E)$. The same structure applies to agents. An agent's behavior at any point is a function of its weights and its context — but to be useful, we need to decompose that into the specific forces at play:
 
 - **The trained policy $\pi_\theta$:** Everything the model learned during training — the search strategy, the preference for reaching finish states efficiently, the patterns of tool use and code generation that were rewarded. This is the baseline behavior.
 
@@ -138,7 +133,7 @@ Given everything above — the loop, context as the search space, in-context lea
 
 When these forces are aligned — capable policy, well-calibrated prompt, clear feedback, clean context — the search is well-bounded and converges on good solutions. When they conflict, the dynamics get interesting. <tip t="Their instruction hierarchy training improved resistance to prompt extraction by 63% and substantially increased robustness across attack vectors" href="https://arxiv.org/html/2404.13208v1" link-text="Instruction Hierarchy paper →">OpenAI's instruction hierarchy research</tip> found that models treat system prompts and user messages at roughly equal priority, meaning environment feedback can override the system prompt's conditioning. Their proposed hierarchy — training alignment > operator system prompt > user message > environment content — is an attempt to formalize which force wins when they <tip t="OWASP's Agentic Top 10 (Dec 2025) describes ASI01 (Agent Goal Hijack) as the condition where environment inputs override or redirect the system prompt objective — precisely this force-conflict playing out as a security vulnerability" href="https://owasp.org/www-project-agentic-ai-threats-and-safeguards/" link-text="OWASP Agentic Top 10 →">conflict</tip>.
 
-> This is what we mean by "your agent is not thinking, it's searching." At any point in a trajectory, the agent's next action is shaped by its trained policy, the system prompt conditioning, environment feedback, and in-context adaptation from everything accumulated so far. It is navigating a space defined by these forces, not reasoning its way to a solution.
+> $B = f(W, C)$ — Agent behavior is a function of its weights and its context. This is what we mean by "your agent is not thinking, it's searching." At any point in a trajectory, the agent's next action is the resultant of these four forces — trained policy, system prompt, environment feedback, and in-context adaptation. It is navigating a force field, not reasoning its way to a solution.
 
 ## Building With the Search Model in Mind <!-- TODO: not collaboratively worked on -->
 <!-- TODO: this entire section has not been collaboratively worked on yet. Needs the same treatment as Sections 2 and 3. -->
