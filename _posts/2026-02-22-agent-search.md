@@ -5,11 +5,13 @@ date: 2026-02-22
 categories: blog
 ---
 
+
+
 ## Prologue
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have [bots forming religions](https://molt.church/). I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in <tip t="People need roads, water, food, shelter, and community. Not sex chatbots and a mercenary economy.">interesting ways</tip>. But we live in a strange timeline:
 - Publicly traded [stocks would crash because a CNBC interview showcases a vibe-coded equivalent](https://www.cnbc.com/2026/02/05/how-exposed-are-software-stocks-to-ai-tools-we-tested-vibe-coding.html).  
 - Some individual develops a program called [Open Claw](https://github.com/openclaw), it goes viral, and then all forms of chaotic stuff go loose. People's sec creds are stolen, maintainers of open source projects are [harassed with blog posts](https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/) that go viral. While this thing interacts with other random people's bot on some dude's social network. 
-- All of this is happening at the same time as Anthropic releasing case studies about [running agents that build compilers](https://www.anthropic.com/engineering/building-c-compiler). _They did use tools like GCC's test suite, but it is an extremely impressive achievement nonetheless._
+- All of this is happening at the same time as Anthropic releasing case studies about [running agents that build compilers](https://www.anthropic.com/engineering/building-c-compiler). _They did use GCC torture test suite as a good verifier, but it is an extremely impressive achievement nonetheless._
 
 
 ### How to read this essay
@@ -64,7 +66,7 @@ where $\tau = (s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T)$ is one complete <tip 
 
 **What this means in practice:**
 
-- **The model is trained to maximize reward.** In most agent setups this *behaves like* minimizing steps — success is sparse and time is costly. The exact reward functions used by model providers (Anthropic, OpenAI, etc.) are generally not public. They likely embody simple, verifiable checks, but the full specification is unknown to the user. What we know is that the model is reward-chasing — whatever proxy was used to define $R(s_t, a_t)$, the model has been optimized to maximize it.
+- **The model is trained to maximize reward.** In many agent setups this *behaves like* minimizing steps — particularly where success is sparse or discounting penalizes time. The exact reward functions used by model providers (Anthropic, OpenAI, etc.) are generally not public. They likely embody simple, verifiable checks, but the full specification is unknown to the user. What we know is that the model is reward-chasing — whatever proxy was used to define $R(s_t, a_t)$, the model has been optimized to maximize it.
 - **At runtime, we can steer the agent by recreating reward conditions.** If the training reward valued passing tests, then good tests in your environment give the agent a signal it knows how to chase. If it valued clean code, linting feedback becomes a trajectory-shaping force. We recreate aspects of the training reward at inference time — even without knowing the exact function.
 - **Reward-chasing can diverge from what you want.** [OpenAI documented](https://openai.com/index/faulty-reward-functions/) a boat racing agent that circled endlessly for bonus points instead of finishing. [DeepMind catalogs](https://deepmind.google/blog/specification-gaming-the-flip-side-of-ai-ingenuity/) ~60 similar cases. This has not gone away with scale — <tip t="Rates vary by task suite: METR reports 0.7% on HCAST for o3, higher on RE-Bench. The qualitative point — frontier models reward-hack at non-trivial rates — is well-established." href="https://metr.org/blog/2025-06-05-recent-reward-hacking/" link-text="METR: Recent Reward Hacking →">METR found</tip> frontier models reward-hacking at non-trivial rates, and models can discover these strategies [purely through in-context reflection](https://arxiv.org/abs/2410.06491).
 
@@ -90,19 +92,19 @@ There is a subtlety worth calling out: the model generates tokens autoregressive
 | Pre-training | $P(x_t \mid x_{<t})$ | What is reachable — the space of outputs the model can produce |
 | RL | $\pi_\theta(a_t \mid s_t)$ | How it navigates — which trajectories through that space it favors |
 
-> Pre-training determines what the model *can* do. RL determines what it *will* do. At inference, the prompt selects the region, the policy searches through it, and the environment reshapes it at every step.
+> Pre-training determines what the model *can* do. RL determines what it *will* do. At inference, the prompt selects the region, the policy searches through it, and the environment reshapes it at every step. Because the model was trained to condition on context, runtime context plays the same role as implicit reward shaping at training time.
 
 ---
 
 ## <tip t="The name is inspired by Kurt Lewin's Field Theory (1936) - a theory about trying to predict a person's behavior in an environment and the name just fit the model I was developing." href="https://en.wikipedia.org/wiki/Field_theory_(psychology)" link-text="Lewin's Field Theory →">Agent Field Theory</tip>
 
-Training gives you a policy $\pi_\theta$. Deployment gives you a transition function $T(s' \mid s, a)$ — whatever your tools, repos, and tests return. Behavior is the composition: roll out $\pi_\theta$ inside $T$ until termination. Since state $s_t$ is just the context window, and the policy is <tip t="Olsson et al. (Anthropic, 2022) identify 'induction heads' — attention heads that complete patterns like [A][B]...[A] → [B] — as a core mechanism for in-context adaptation. These emerge suddenly during training and may constitute the majority of all in-context learning ability." href="https://arxiv.org/abs/2209.11895" link-text="Anthropic: Induction Heads →">re-conditioned</tip> (not retrained) by every token that enters it — **every engineering choice that changes tokens in $s_t$ changes behavior**. So the right question isn't "what is the model thinking?" but: given this trained policy, what search problem did we build around it?
+Training gives you a policy $\pi_\theta$. The environment you run it in — your tools, repos, tests — gives you a transition function $T(s' \mid s, a)$: whatever the world returns after each action. Behavior is the composition: roll out $\pi_\theta$ inside $T$ until termination. Since state $s_t$ is just the context window, and the policy is <tip t="Olsson et al. (Anthropic, 2022) identify 'induction heads' — attention heads that complete patterns like [A][B]...[A] → [B] — as a core mechanism for in-context adaptation. These emerge suddenly during training and may constitute the majority of all in-context learning ability." href="https://arxiv.org/abs/2209.11895" link-text="Anthropic: Induction Heads →">re-conditioned</tip> (not retrained) by every token that enters it — **every engineering choice that changes tokens in $s_t$ changes behavior**. So the right question isn't "what is the model thinking?" but: given this trained policy, what search problem did we build around it?
 
 **One scoping note:** everything below assumes a fully autonomous rollout — initial conditioning (system prompt + user query), then the loop runs without human intervention. The incidents in the prologue all happen unsupervised. If you use agents interactively (Claude Code, Cursor), you are simply another environment signal entering $s_t$. The theory doesn't change — but the autonomous case is where it pays off, because there is no one to course-correct when the search drifts.
 
 Three components shape behavior. They are not independent forces — they form a causal chain with feedback loops.
 
-**The trained policy $\pi_\theta$ is the substrate.** It determines *how everything else expresses itself*. The system prompt only has power because the policy was trained to condition on it. Environment feedback only redirects because the policy was trained to respond to it. How the policy re-conditions as state accumulates — that is itself a function of how it was built. $\pi_\theta$ is largely a black box to us as operators. We did not design the reward function, we do not know its full specification, and we only observe the behavior it produces.
+**The trained policy $\pi_\theta$ is the substrate.** It determines *how everything else expresses itself*. The system prompt only has power because the policy was trained to condition on it. Environment feedback only redirects because the policy was trained to respond to it. How the policy re-conditions as state accumulates — that is itself a function of how it was built. $\pi_\theta$ is <tip t="Interpretability research (probing, mechanistic analysis) can reveal some internal structure, and policy distillation can approximate learned behaviors. But as end-users of tools like Claude Code or Cursor, we never have complete access to the reward function specification, training data composition, or RLHF preference rankings that shaped the policy. The fundamentals from Section 2 give us enough to reason about behavior — but the full picture remains opaque at scale.">effectively opaque</tip> to us as operators. We did not design the reward function, we do not know its full specification, and we only observe the behavior it produces.
 
 **The system prompt and the environment are what you control.**
 
@@ -117,7 +119,7 @@ Three components shape behavior. They are not independent forces — they form a
 4. The system prompt continues to exert persistent conditioning throughout
 5. Repeat
 
-Each cycle, $s_t$ accumulates more context. The re-conditioning is implicit — it happens through the conditional distribution, not through any explicit reasoning step — so the agent has no mechanism to notice when its context is misleading it. Clean inputs compound into focused search. Noisy inputs compound into drift. Either way, the policy responds with equal confidence.
+Each cycle, $s_t$ accumulates more context. The re-conditioning is implicit — it happens through the conditional distribution, not through any explicit reasoning step — so there is no enforced firewall — any token can bias future outputs unless training specifically prioritizes other signals. Clean inputs compound into focused search. Noisy inputs compound into drift. Either way, the policy responds with equal confidence.
 
 This has concrete consequences:
 
