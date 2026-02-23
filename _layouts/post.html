@@ -16,6 +16,32 @@ layout: default
     
     <h1>{{ page.title }}</h1>
 
+    <button class="wide-toggle" id="wide-toggle" title="Toggle wide layout" aria-label="Toggle wide layout">
+      <span class="wide-toggle-icon" id="wide-toggle-icon">&#x21C4;</span>
+    </button>
+
     {{ content }}
   </article>
 </div>
+
+<script>
+(function() {
+  var btn = document.getElementById('wide-toggle');
+  var icon = document.getElementById('wide-toggle-icon');
+  var isWide = localStorage.getItem('wide-mode') === 'true';
+
+  function apply(wide) {
+    document.body.classList.toggle('wide-mode', wide);
+    icon.innerHTML = wide ? '&#x21C0;' : '&#x21C4;';
+    btn.title = wide ? 'Collapse to narrow layout' : 'Expand to wide layout';
+  }
+
+  apply(isWide);
+
+  btn.addEventListener('click', function() {
+    isWide = !isWide;
+    localStorage.setItem('wide-mode', isWide);
+    apply(isWide);
+  });
+})();
+</script>

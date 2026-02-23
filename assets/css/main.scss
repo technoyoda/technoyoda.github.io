@@ -398,4 +398,57 @@ body[a="dark"] {
   }
 }
 
+// Wide mode toggle button
+.wide-toggle {
+  display: none; // hidden by default, shown on wide screens
+  background: none;
+  border: 1px solid #888;
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+  margin-bottom: 1rem;
+
+  &:hover {
+    opacity: 1;
+    border-color: currentColor;
+  }
+}
+
+@media (min-width: 900px) {
+  .wide-toggle {
+    display: inline-block;
+  }
+}
+
+// Wide mode: expand content area
+body.wide-mode {
+  .w {
+    max-width: 960px;
+    transition: max-width 0.3s ease;
+  }
+
+  .post-container {
+    max-width: 960px;
+    transition: max-width 0.3s ease;
+  }
+}
+
+// Smooth transition back to narrow
+.w,
+.post-container {
+  transition: max-width 0.3s ease;
+}
+
+// Adjust sidebar position in wide mode on very wide screens
+@media (min-width: 1500px) {
+  body.wide-mode .post-sidebar {
+    margin-right: -320px;
+  }
+}
+
 // Remove the mobile responsive TOC since we're hiding it on smaller screens
