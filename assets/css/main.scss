@@ -219,13 +219,7 @@ body[a="dark"] {
       .o { color: #f92672; }
     }
     
-    // Force light theme for word count and TOC in auto dark mode too
-    .word-count-container {
-      background: #ffffff !important;
-      border: 1px solid #e1e1e8 !important;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
+    // Force light theme for TOC in auto dark mode too
     .toc-container {
       background: #ffffff !important;
       border: 1px solid #e1e1e8 !important;
@@ -277,8 +271,8 @@ body[a="dark"] {
   z-index: 100;
 }
 
-// Hide TOC on smaller screens where there's no room
-@media (max-width: 1200px) {
+// Hide TOC on screens where the sidebar would cause overflow
+@media (max-width: 1400px) {
   .post-sidebar {
     display: none;
   }
@@ -289,29 +283,10 @@ body[a="dark"] {
   }
 }
 
-// Word count box
-.word-count-container {
-  background: #ffffff !important;
-  border: 1px solid #e1e1e8 !important;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  margin-bottom: 0.75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.word-count-label {
-  color: #666 !important;
-  font-weight: 500;
-}
-
-.word-count-value {
-  color: #333 !important;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+// Inline word count beside date
+.word-count-inline {
+  margin-left: 0.75em;
+  opacity: 0.6;
 }
 
 .toc-container {
@@ -404,12 +379,6 @@ h6:hover .heading-link {
 
 // Dark mode adjustments - Force light theme for sidebar widgets
 body[a="dark"] {
-  .word-count-container {
-    background: #ffffff !important;
-    border: 1px solid #e1e1e8 !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  }
-
   .toc-container {
     background: #ffffff !important;
     border: 1px solid #e1e1e8 !important;

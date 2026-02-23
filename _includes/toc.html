@@ -1,9 +1,3 @@
-<!-- Word Count -->
-<div class="word-count-container" id="word-count-box">
-  <span class="word-count-label">Word count</span>
-  <span class="word-count-value" id="word-count-value">&mdash;</span>
-</div>
-
 <!-- Table of Contents Generator -->
 <div class="toc-container">
   <div class="toc-header">
@@ -18,13 +12,13 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Word count
+  // Word count (inline beside date)
   var article = document.querySelector('article.post-content');
   if (article) {
     var text = article.textContent || '';
     var words = text.trim().split(/\s+/).filter(function(w) { return w.length > 0; }).length;
-    var el = document.getElementById('word-count-value');
-    if (el) el.textContent = words.toLocaleString();
+    var el = document.getElementById('word-count-inline');
+    if (el) el.textContent = '[' + words.toLocaleString() + ' words]';
   }
 
   // Generate table of contents
