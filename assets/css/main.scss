@@ -579,4 +579,16 @@ body[a="dark"] {
   }
 }
 
+// <written-by> attribution tag — highlighted block under headings
+written-by {
+  display: block;
+  margin: -0.3em 0 1.2em 0;
+  padding: 0.35em 0.7em;
+  font-size: 0.82em;
+  font-style: italic;
+  border-left: 3px solid currentColor;
+  opacity: 0.65;
+  line-height: 1.5;
+}
+
 // Remove the mobile responsive TOC since we're hiding it on smaller screens

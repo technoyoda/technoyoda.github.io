@@ -63,6 +63,29 @@ You can annotate words directly in heading titles. The Table of Contents will di
 
 Result: The <tip t="Key-Value cache stores previously computed attention keys and values so they don't need to be recomputed at each generation step" s="Critical optimization for autoregressive decoding" href="https://arxiv.org/abs/1911.02150" link-text="Multi-Query Attention paper →">KV cache</tip> is essential for fast inference.
 
+## Written-By Tag
+
+<written-by>A highlighted attribution or note block that sits under a heading.</written-by>
+
+Place a `<written-by>` tag right after a heading to add a highlighted annotation. Use it for attribution, status notes, collaboration credits, or any metadata.
+
+```html
+## The Search at Inference Time
+<written-by>TODO: not collaboratively worked on</written-by>
+
+## Reinforcement Learning
+<written-by>Based on conversations with Alex and Sam</written-by>
+
+## Some Other Section
+<written-by>Drafted Feb 2026 — needs review</written-by>
+```
+
+You can put any text inside, including links and inline formatting:
+
+```html
+<written-by>Co-written with [Jane](https://jane.dev) — **draft**</written-by>
+```
+
 ## Quick Reference
 
 | Attribute | Required | Description |
