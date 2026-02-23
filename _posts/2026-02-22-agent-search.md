@@ -16,13 +16,13 @@ More than ten years ago, we were barely able to recognize cats with DL (deep lea
 ### How to read this essay
 The goal of this essay is to give a mental model of current day agents. My thesis is that _agents are essentially doing a search over a solution space_. Framing it as "thinking" is noise — these shits spit out slop even if they think their way to oblivion. Switching the framing from "thinking" to "search" gives you "a school of thought" to actually engineer around. This essay is as much computer science, philosophy and software engineering.
 
-To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#how-the-search-space-gets-built). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#the-search-at-inference-time). Using this better inferred scheme we can change the way we [design agentic software](#building-with-the-search-model-in-mind) and get better outcomes from it. Finally, I will discuss some of [the consequences](#consequences) that come with this easy access to create cheap software.
+To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#how-agents-are-trained). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#how-training-shapes-their-behavior). Using this better inferred scheme we can change the way we [design agentic software](#building-with-the-search-model-in-mind) and get better outcomes from it. Finally, I will discuss some of [the consequences](#consequences) that come with this easy access to create cheap software.
 
 ---
 
-## How the Search Space Gets Built
+## How Agents Are Trained
 
-In order to understand how to build software around agents, there are certain properties of the mathematical framing of these systems — and the behaviors that emerge because of those framings — that are worth internalizing. This section lays out the simplest root formalisms and then draws inferences from them. Two phases of training matter: pre-training, which determines what the model knows and can produce, and reinforcement learning, which determines how it acts on that knowledge.
+This section lays out the simplest root formalisms and then draws inferences from them. Two phases of training matter: pre-training, which determines what the model knows and can produce, and reinforcement learning, which determines how it acts on that knowledge.
 <!-- todo: [simplify-at-end] -->
 
 ### Pre-Training: The Landscape
@@ -72,7 +72,7 @@ where $\tau = (s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T)$ is one complete <tip 
 > **The model navigates toward reward.** When we say "your agent is not thinking, it's searching," this is what we mean: the agent is executing a learned policy $\pi_\theta(a_t \mid s_t)$ that navigates through a space of possible trajectories toward a reward signal. The reward function that shaped $\pi_\theta(a_t \mid s_t)$ is a proxy defined by the model provider. What the proxy tested for becomes the model's de facto objective. What it did not test for remains open space.
 
 
-## The Search at Inference Time
+## How Training Shapes Their Behavior
 
 We have the two layers: a landscape (pre-training) and a search strategy (RL). 
 
