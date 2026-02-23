@@ -4,7 +4,9 @@ title: Your Agent Is Not Thinking, It's Searching
 date: 2025-11-14
 categories: blog
 ---
+# Your Agent Is Not Thinking, It's Searching
 
+## Prologue
 We live in a strange timeline:
 - Publicly traded [stocks would crash because a CNBC interview showcases a vibe-coded equivalent](https://www.cnbc.com/2026/02/05/how-exposed-are-software-stocks-to-ai-tools-we-tested-vibe-coding.html).  
 - Some individual develops a program called [Open Claw](https://github.com/openclaw), it goes viral, and then all forms of chaotic stuff go loose. People's sec creds are stolen, maintainers of open source projects are [harassed with blog posts](https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/) that go viral. While this thing interacts with other random people's bot on some dude's social network. 
@@ -13,6 +15,7 @@ We live in a strange timeline:
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have [bots forming religions](https://molt.church/). I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in interesting ways. 
 <!-- footnote; people need roads water food shelter and community. not sex chatbots and a mercenary economy -->
 
+### How to read this essay
 The goal of this essay is to give a mental model of current day agents. My thesis is that _agents are essentially doing a search over a solution space_. Framing it as "thinking" is noise — these shits spit out slop even if they think their way to oblivion. Switching the framing from "thinking" to "search" gives you "a school of thought" to actually engineer around. This essay is as much computer science, philosophy and software engineering.
 
 To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#how-the-search-space-gets-built). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#the-search-at-inference-time). Using this better inferred scheme we can change the way we [design agentic software](#building-with-the-search-model-in-mind) and get better outcomes from it. Finally, I will discuss some of [the consequences](#consequences) that come with this easy access to create cheap software.
