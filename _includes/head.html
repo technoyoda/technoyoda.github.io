@@ -17,5 +17,15 @@
   <link rel="shortcut icon" type="image/x-icon" href="{{ site.favicon | relative_url }}" />
   <link rel="stylesheet" href="{{ "/assets/css/main.css" | relative_url }}" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.css" integrity="sha384-OH8qNTHoMMVNVcKdKewlipV4SErXqccxxlg6HC9Cwjr5oZu2AdBej1TndeCirael" crossorigin="anonymous">
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Ez8gy6WqHo5MZtvfRPd+3uC/YHQhSJGymkr8ZEI" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd8OVJynSv3bpIZGHUPDQ1s3HW7aUjYFMR1Tn2nQCSdL3pNJDHHb8T7Ph0Zw" crossorigin="anonymous"
+		onload="renderMathInElement(document.body, {
+			delimiters: [
+				{left: '$$', right: '$$', display: true},
+				{left: '$', right: '$', display: false}
+			],
+			ignoredClasses: ['katex-display', 'katex'],
+			throwOnError: false
+		});"></script>
 
 </head>
