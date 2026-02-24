@@ -213,11 +213,12 @@ Stale logs, orphaned config, artifacts from previous runs — these will enter t
 
 Tests, linters, and build outputs are environment observations that enter the context window and reshape the field. They are the inference-time equivalent of the RL training reward.
 
-- **Strong tests produce strong gradients.** The agent can course-correct because the signal is clear.
+- **Strong tests produce clear signal.** The agent can course-correct because the feedback is unambiguous.
 - **Weak tests produce weak signal.** The agent optimizes for passing weak tests — and succeeds, which is worse than failing.
 - **Absent feedback produces blind search.** As <tip t="Fireworks AI: 'most RL bugs are actually environment or integration bugs.' The feedback infrastructure matters as much as the model." href="https://fireworks.ai/blog/best-practices-for-multi-turn-RL" link-text="Fireworks: Best Practices for Multi-Turn RL →">Fireworks AI put it</tip>, "most RL bugs are actually environment or integration bugs."
 
-<tip t="16 parallel agents built a 100K-line C compiler in Rust that compiled the Linux kernel. The task was decomposed so each file compilation had a clear success criterion: match GCC's output." href="https://www.anthropic.com/engineering/building-c-compiler" link-text="Anthropic: Building a C Compiler →">Anthropic's compiler project</tip> is the clearest example: each file compilation was a scoped task with a strong verifier (match GCC's output). Tight scope plus clear pass/fail signal. The search converged.
+Anthropic's <tip t="16 parallel agents built a 100K-line C compiler in Rust that compiled the Linux kernel. The task was decomposed so each file compilation had a clear success criterion: match GCC's output." href="https://www.anthropic.com/engineering/building-c-compiler" link-text="Anthropic: Building a C Compiler →">'s compiler project</tip> is the clearest example: each file compilation was a scoped task with a strong verifier (match GCC's output). Tight scope plus clear pass/fail signal. The search converged.
+
 
 #### Permissions: Hard Walls on the Search Space
 
