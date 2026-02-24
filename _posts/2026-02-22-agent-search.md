@@ -7,6 +7,9 @@ categories: blog
 
 
 
+# Your Agent Is Not Thinking, It's Searching
+
+
 ## Prologue
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have [bots forming religions](https://molt.church/). I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in <tip t="People need roads, water, food, shelter, and community. Not sex chatbots and a mercenary economy.">interesting ways</tip>. But we live in a strange timeline:
 - Publicly traded [stocks would crash because a CNBC interview showcases a vibe-coded equivalent](https://www.cnbc.com/2026/02/05/how-exposed-are-software-stocks-to-ai-tools-we-tested-vibe-coding.html).  
@@ -25,7 +28,6 @@ To understand this framing, we first need to understand what goes into creating 
 ## How Agents Are Trained
 
 This section lays out the simplest root formalisms and then draws inferences from them. Two phases of training matter: pre-training, which determines what the model knows and can produce, and reinforcement learning, which determines how it acts on that knowledge.
-<!-- todo: [simplify-at-end] -->
 
 ### Pre-Training: The Landscape
 
@@ -41,8 +43,7 @@ The prompt $c$ is the **conditioning variable**. Every token in $c$ participates
 
 - Even [small changes in formatting](https://arxiv.org/abs/2310.11324) can cause significant performance differences. Different prompt creates a different distribution which creates different outputs.
 - More tokens on a topic [further constrain the reachable output space](https://huggingface.co/blog/KnutJaegersberg/first-principles-prompt-engineering) ie if the conversation has been about the king of England and the word "he" appears, the model will infer the king of England, not some other referent. .
-- Some people are even saying that next token prediction produces ["emergent internal world models"](https://arxiv.org/abs/2210.13382) but in order to stick my simpleton understanding I just follow the math. 
-<!-- todo: [simplify-at-end] -->
+- Some people are even saying that next token prediction produces ["emergent internal world models"](https://arxiv.org/abs/2210.13382) but in order to stick my simpleton understanding I just follow the math.
 
 > **The prompt is the universe you create for the model.** The model itself (the weights loaded in runtime) has no memory beyond the context window, no <tip t="Unless you build it externally (RAG, memory stores, tool state). But the outputs of those systems still enter the model as tokens in the context window. The model itself has no persistence.">persistent state</tip>, no independent knowledge retrieval.
 
@@ -84,9 +85,7 @@ The RL formulation maps directly to what happens when an agent runs. At inferenc
 
 The full trajectory is $\tau = (s_0, a_0, s_1, a_1, \ldots, s_T)$.
 
-There is a subtlety worth calling out: the model generates tokens autoregressively, each token conditioned on all previous tokens, including the ones it has already generated for the current action. This means each action is implicitly shaped by the model's expectations about what comes next.
-<!-- TODO: [rework] The trajectory prediction claim here was overstated. RAGEN's StarPO is about trajectory-level optimization during *training*, not trajectory-level prediction at *inference*. The model does generate one token at a time — it doesn't have explicit lookahead. What's true is that autoregressive conditioning creates implicit multi-step coherence. Need to reframe this more carefully. -->
-<tip t="RAGEN (2025) proposes StarPO, a trajectory-level optimization framework where the unit of optimization during training is the full trajectory, not individual actions. This training-time optimization may contribute to coherent multi-step behavior at inference." href="https://arxiv.org/abs/2504.20073" link-text="RAGEN paper →">[TODO: rework trajectory prediction framing]</tip>
+There is a subtlety worth calling out: the model generates tokens autoregressively, each token conditioned on all previous tokens, including the ones it has already generated for the current action. There is no explicit lookahead, but autoregressive conditioning creates implicit multi-step coherence: each token is shaped by all prior tokens, so early tokens in an action <tip t="RAGEN (2025) proposes StarPO, a trajectory-level optimization framework where the unit of optimization during training is the full trajectory, not individual actions. This training-time optimization may contribute to coherent multi-step behavior at inference." href="https://arxiv.org/abs/2504.20073" link-text="RAGEN paper →">constrain later ones</tip>.
 
 | | Formalism | What it determines |
 |---|---|---|
@@ -124,7 +123,7 @@ What this looks like in practice:
 
 - **Shortcuts get exploited.** If the agent reads a file that hints at a solution, that enters the field and the policy will use it. That is the search following the path of least resistance. <tip t="METR documented models tracing through Python call stacks to find pre-computed answers in the scoring system's memory — the model found a shorter trajectory to the reward and took it" href="https://metr.org/blog/2025-06-05-recent-reward-hacking/" link-text="METR: Reward Hacking →">METR documented</tip> models finding pre-computed answers in scoring systems. If your repo has a `solutions/` folder, the agent will find it, because that is the shortest trajectory to the finish state.
 
-- **Noise deforms the field.** Irrelevant files (stale logs, unrelated config, artifacts from previous runs) enter $s_t$ and warp the search landscape. Models don't have a reliable firewall between "data" and "instructions." If the agent reads database config while fixing a frontend bug, the field now exerts force toward database operations. This is <tip t="CodeDelegator (2026) proposes separating planning from implementation so each agent gets a clean context, precisely to prevent accumulated debugging traces from polluting subsequent decisions" href="https://arxiv.org/abs/2601.14914" link-text="Context pollution paper →">context pollution</tip>: the field is contaminated and the search proceeds through <tip t="Breunig identifies four failure modes: context poisoning (fixation on misinformation), context distraction (over-attending to accumulated context), context confusion (irrelevant info degrading quality), and context clash (contradictions)" href="https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html" link-text="How Contexts Fail →">deformed territory</tip>. <tip t="[TODO: This 'noise deforms the field' insight is the most practically valuable idea in the essay and deserves a worked example. Shi et al. (ICML 2023) showed accuracy drops below 30% after adding distractors. Du & Tian (2025) showed performance degrades 13.9-85% with increased context length even with perfect retrieval.]">[TODO: expand with worked example]</tip>
+- **Noise deforms the field.** Irrelevant files (stale logs, unrelated config, artifacts from previous runs) enter $s_t$ and warp the search landscape. Models don't have a reliable firewall between "data" and "instructions." If the agent reads database config while fixing a frontend bug, the field now exerts force toward database operations. This is <tip t="CodeDelegator (2026) proposes separating planning from implementation so each agent gets a clean context, precisely to prevent accumulated debugging traces from polluting subsequent decisions" href="https://arxiv.org/abs/2601.14914" link-text="Context pollution paper →">context pollution</tip>: the field is contaminated and the search proceeds through <tip t="Breunig identifies four failure modes: context poisoning (fixation on misinformation), context distraction (over-attending to accumulated context), context confusion (irrelevant info degrading quality), and context clash (contradictions)" href="https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html" link-text="How Contexts Fail →">deformed territory</tip>. The research is <tip t="Shi et al. (ICML 2023) showed accuracy drops below 30% after adding irrelevant distractors to context. Du & Tian (2025) showed performance degrades 13.9-85% with increased context length even with perfect retrieval." href="https://arxiv.org/abs/2307.03172" link-text="Shi et al.: Large Language Models Can Be Easily Distracted →">unambiguous</tip>: adding irrelevant content to context degrades performance sharply, even when the relevant information is still present.
 
 - **Early forces compound.** A bad file read at step 2 stays in the field for all $t > 2$, re-conditioning the policy at every subsequent step. This is why agents <tip t="Scaffolding techniques (context summarization, memory stores, context windowing) exist precisely to mitigate this. They work by periodically cleaning or compressing the field. But without them, the default is drift." href="https://openreview.net/forum?id=778Yl5j1TE" link-text="Multi-turn RL with Summarization →">work on short tasks</tip> ($s_0 \rightarrow \ldots \rightarrow s_5$) and struggle on long ones ($s_0 \rightarrow \ldots \rightarrow s_{50}$): by step 50, the field has accumulated enough noise that the search has been drifting for <tip t="Empirical observation: context files under ~100KB may not be fully loaded, resulting in decisions made on partial information. System prompt customization can shift the action distribution enough that default behaviors like writing to CWD change.">dozens of steps</tip>.
 
@@ -134,7 +133,8 @@ There is no clean formula for which force wins. But since you control the system
 
 ![Agent Field Theory — The Interaction Loop](../assets/images/agent-field-theory-loop.png)
 
-<!-- TODO: create practical examples demonstrating force conflicts using the claude_code Python SDK. Show: (1) system prompt vs environment feedback, (2) trained policy overriding system prompt, (3) context pollution shifting behavior. These would make the abstract framework concrete. -->
+
+<!-- POST-PUBLISH: create practical examples demonstrating force conflicts using the claude_code Python SDK. Show: (1) system prompt vs environment feedback, (2) trained policy overriding system prompt, (3) context pollution shifting behavior. These would make the abstract framework concrete but are not blocking for the essay. -->
 
 ## Building With the Search Model in Mind <!-- TODO: not collaboratively worked on -->
 <!-- TODO: this entire section has not been collaboratively worked on yet. Needs the same treatment as Sections 2 and 3. -->
