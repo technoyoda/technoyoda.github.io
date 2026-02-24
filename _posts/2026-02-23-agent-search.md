@@ -5,8 +5,6 @@ date: 2026-02-22
 categories: blog
 ---
 
-
-
 ## Prologue
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have <tip t="Molt Church: an AI-generated religion created by autonomous agents" href="https://molt.church/" link-text="Molt Church →">bots forming religions</tip>. I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in <tip t="People need roads, water, food, shelter, and community. Not sex chatbots and a mercenary economy.">interesting ways</tip>. But we live in a strange timeline:
 - A publicly traded company <tip t="CNBC reporters used Claude Code to build a monday.com clone in under an hour for $5-15 in compute. Monday.com stock dropped 21% in the days following." href="https://www.cnbc.com/2026/02/05/how-exposed-are-software-stocks-to-ai-tools-we-tested-vibe-coding.html" link-text="CNBC: Vibe-Coding Test →">lost a fifth of its market cap</tip> after a CNBC segment showed its product vibe-coded in under an hour.  
@@ -18,11 +16,11 @@ This very quick progress has also created a lot of mysticism around AI. For this
 ### How to read this essay
 The goal of this essay is to give a mental model of what constitutes a current day AI agent. As agents take on longer tasks (multi-hour runs, autonomous deployments, overnight builds) we need a way to reason about how their behavior evolves over time. The underlying technology is non-deterministic. The goal of this framework is to create as much determinism as possible despite that: to understand what shapes agent behavior, what degrades it, and what you can control.
 
-My thesis is that _these models are searching toward a reward signal, and your environment bounds that search_. Framing it as "thinking" is noise. These models spit out slop even if they think their way to oblivion. <tip t="'Search' here means policy-driven exploration over action sequences under feedback — not tree search or classical planning. This is an engineering lens, not a metaphysical claim.">When search is the mental model</tip>, the design questions change. You stop asking "did I give it good enough instructions?" and start asking "did I bound the space tightly enough that the search converges?" This essay is as much computer science, philosophy and software engineering.
+My thesis is that _these models are searching toward a reward signal, and your environment bounds that search_. Framing it as "thinking" is noise. These models spit out slop even if they think their way to oblivion. <tip t="'Search' here means policy-driven exploration over action sequences under feedback — not tree search or classical planning. This is an engineering lens, not a metaphysical claim.">When search is the mental model</tip>, the design questions change. You stop asking "did I give it good enough instructions?" and start asking "did I bound the space tightly enough that the search converges?" This essay is as much computer science and philosophy as it is software engineering.
 
 To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#heading-3). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#heading-7). Using this better inferred scheme we can change the way we [design agentic software](#heading-9) and get better outcomes from it. Finally, I will discuss some of [the consequences](#heading-16) that come with this easy access to create cheap software.
 
-> I have used the help of AI to write this blog. I work full time and only get to work on these on the weekend. The beauty is that a lot of principals laid out in this blog were used to help create this contents of this blog. 
+> I have used the help of AI to write this blog. I work full time and only get to work on these on the weekend. The beauty is that a lot of principles laid out in this blog were used to help create the content of this blog. 
 
 ---
 <!-- heading-3 -->
@@ -219,7 +217,7 @@ Tests, linters, and build outputs are environment observations that enter the co
 - **Weak tests produce weak signal.** The agent optimizes for passing weak tests — and succeeds, which is worse than failing.
 - **Absent feedback produces blind search.** As <tip t="Fireworks AI: 'most RL bugs are actually environment or integration bugs.' The feedback infrastructure matters as much as the model." href="https://fireworks.ai/blog/best-practices-for-multi-turn-RL" link-text="Fireworks: Best Practices for Multi-Turn RL →">Fireworks AI put it</tip>, "most RL bugs are actually environment or integration bugs."
 
-Anthropic's <tip t="16 parallel agents built a 100K-line C compiler in Rust that compiled the Linux kernel. The task was decomposed so each file compilation had a clear success criterion: match GCC's output." href="https://www.anthropic.com/engineering/building-c-compiler" link-text="Anthropic: Building a C Compiler →">'s compiler project</tip> is the clearest example: each file compilation was a scoped task with a strong verifier (match GCC's output). Tight scope plus clear pass/fail signal. The search converged.
+Anthropic's <tip t="16 parallel agents built a 100K-line C compiler in Rust that compiled the Linux kernel. The task was decomposed so each file compilation had a clear success criterion: match GCC's output." href="https://www.anthropic.com/engineering/building-c-compiler" link-text="Anthropic: Building a C Compiler →">compiler project</tip> is the clearest example: each file compilation was a scoped task with a strong verifier (match GCC's output). Tight scope plus clear pass/fail signal. The search converged.
 
 #### Permissions: Hard Walls on the Search Space
 
