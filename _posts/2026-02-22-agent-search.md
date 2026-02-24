@@ -7,9 +7,6 @@ categories: blog
 
 
 
-# Your Agent Is Not Thinking, It's Searching
-
-
 ## Prologue
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have [bots forming religions](https://molt.church/). I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in <tip t="People need roads, water, food, shelter, and community. Not sex chatbots and a mercenary economy.">interesting ways</tip>. But we live in a strange timeline:
 - Publicly traded [stocks would crash because a CNBC interview showcases a vibe-coded equivalent](https://www.cnbc.com/2026/02/05/how-exposed-are-software-stocks-to-ai-tools-we-tested-vibe-coding.html).  
