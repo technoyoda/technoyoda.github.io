@@ -63,7 +63,7 @@ The policy is optimized to maximize $J(\theta)$, the expected cumulative reward 
 
 $$J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^{T} R(s_t, a_t) \right]$$
 
-where $\tau = (s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T)$ is one complete <tip t="RL methods (PPO, GRPO, etc.) keep the tuned policy close to the original so it doesn't forget what it learned. RL reshapes behavior within the landscape, it does not escape it." s="This constraint is why the 'landscape + search strategy' framing holds — RL is always tethered to what pre-training produced.">episode</tip>. This is the search: the policy explores trajectories through action space, steered by reward.
+where $\tau = (s_0, a_0, s_1, a_1, \ldots, s_T)$ is one complete <tip t="RL methods (PPO, GRPO, etc.) keep the tuned policy close to the original so it doesn't forget what it learned. RL reshapes behavior within the landscape, it does not escape it." s="This constraint is why the 'landscape + search strategy' framing holds — RL is always tethered to what pre-training produced.">episode</tip>. This is the search: the policy explores trajectories through action space, steered by reward.
 
 **For coding agents**, the reward $R(s_t, a_t)$ is typically a verifier, meaning trivially verifiable signals like: did the tests pass? Is the code syntactically correct? Did the linter pass? Did the agent take actions in a sensible order?
 
