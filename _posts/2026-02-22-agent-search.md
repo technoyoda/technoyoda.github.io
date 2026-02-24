@@ -260,7 +260,7 @@ The framework above is descriptive: it explains what agents are doing now. The f
 
 ### Less Is More & the Mythical Man-Month
 
-- Brooks' Law applies to agents: adding more agents to a task doesn't scale linearly because each agent's output enters other agents' context windows as tokens, compounding noise.
+- Brooks' Law applies to agents: adding more agents to a task doesn't scale linearly because each agent's output enters other agents' context windows as tokens, distorting field and compounding noise.
 - Sequential multi-agent tasks degrade for the same reason long single-agent tasks do — context pollution across agents. <tip t="DeepMind tested 180 agent configurations and found sequential tasks degraded 39-70% vs a single agent." href="https://arxiv.org/abs/2512.08296" link-text="DeepMind: Multi-Agent Degradation →">Independent, scoped tasks with clear verifiers parallelize well; sequential handoffs don't.</tip> <tip t="Rasheed et al. (ICLR 2025) found 79% of multi-agent failures stemmed from coordination, not individual agent capability." href="https://arxiv.org/abs/2503.13657" link-text="Rasheed et al.: Multi-Agent Failures →">The bottleneck is coordination, not capability.</tip>
 - Brownfield is structurally harder than greenfield. Larger codebases produce larger environments, more noise can enter the context window, and the field is harder to keep focused. Greenfield works because the environment is clean.
 
