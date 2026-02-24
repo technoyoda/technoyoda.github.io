@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Your Agent Is Not Thinking, It's Searching
+title: Agents are not thinking, they are searching
 date: 2026-02-22
 categories: blog
 ---
