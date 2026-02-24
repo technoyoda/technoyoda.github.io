@@ -243,16 +243,40 @@ These aren't security best practices bolted on. They are hard walls that define 
 
 ## Consequences
 
-<!-- To be written by author.
+The framework above is descriptive: it explains what agents are doing now. The following are extrapolations (consequences) that follow if you take the search framing seriously and project it forward.
 
-Research references available:
-- Mythical Man-Month (Brooks, 1975): https://en.wikipedia.org/wiki/The_Mythical_Man-Month
-- McKinney, "The Mythical Agent-Month" (brownfield barrier ~100 KLOC): https://wesmckinney.com/blog/mythical-agent-month/
-- DeepMind: 180 agent configs, sequential tasks degraded 39-70% vs single agent: https://arxiv.org/abs/2512.08296
-- Rasheed et al. (ICLR 2025): 79% of multi-agent failures from coordination: https://arxiv.org/abs/2503.13657
-- Tim Hoffman (matplotlib contributor) quote on generation vs review cost: https://socket.dev/blog/ai-agent-submits-pr-to-matplotlib-publishes-angry-blog-post-after-rejection
-- Derick Chen, "The New Asymmetry": https://www.buildwithdc.co/posts/the-new-asymmetry-when-generation-outpaces-verification-in-ai-native-development/
-- GitHub kill switch for AI PRs: https://www.theregister.com/2026/02/03/github_kill_switch_pull_requests_ai/
-- Godot drowning in AI contributions: https://www.pcgamer.com/software/platforms/open-source-game-engine-godot-is-drowning-in-ai-slop-code-contributions-i-dont-know-how-long-we-can-keep-it-up/
-- curl bug bounty shutdown: https://www.jeffgeerling.com/blog/2026/ai-is-destroying-open-source/
--->
+### AI-First Operations
+- Agents write software but fully autonomous execution would require a lot more than what current systems possess. 
+- In a fully agent-driven S/W operations world the CI pipeline *is* the runtime reward signal. Weak CI = weak feedback = the search optimizes for passing weak checks.
+- Review changes character. You're no longer reviewing intentions — you're checking whether the search converged on something correct or just something that satisfies the proxy. The gap between "tests pass" and "is correct" is where review lives.
+- Rollback needs to be cheap. The search is non-deterministic; any run might diverge. The operational assumption is that agent output is provisional until verified.
+
+### Software Security
+
+- Permissions eliminate trajectories; they don't discourage them. If a reward-path exists through accessible credentials, the search can end up finding it.
+- Prompts are not security boundaries. The trained policy can overpower system prompt instructions, and environment feedback can hijack the objective entirely. Hard walls (scoped tokens, network egress controls, workspace-scoped writes) are the only reliable constraint.
+- Agent identity needs to be first-class. Short-lived auth tokens scoped to a single task, not inherited ambient credentials.
+- The attack surface is the environment, not the prompt. Securing an agent means securing what it can observe and what trajectories are physically reachable.
+
+### Less Is More & the Mythical Man-Month
+
+- Brooks' Law applies to agents: adding more agents to a task doesn't scale linearly because each agent's output enters other agents' context windows as tokens, compounding noise.
+- Sequential multi-agent tasks degrade for the same reason long single-agent tasks do — context pollution across agents. <tip t="DeepMind tested 180 agent configurations and found sequential tasks degraded 39-70% vs a single agent." href="https://arxiv.org/abs/2512.08296" link-text="DeepMind: Multi-Agent Degradation →">Independent, scoped tasks with clear verifiers parallelize well; sequential handoffs don't.</tip> <tip t="Rasheed et al. (ICLR 2025) found 79% of multi-agent failures stemmed from coordination, not individual agent capability." href="https://arxiv.org/abs/2503.13657" link-text="Rasheed et al.: Multi-Agent Failures →">The bottleneck is coordination, not capability.</tip>
+- Brownfield is structurally harder than greenfield. Larger codebases produce larger environments, more noise can enter the context window, and the field is harder to keep focused. Greenfield works because the environment is clean.
+
+### If History Repeats Itself, Chaos May Follow
+<!-- annabaptists and the prophets of doom -->
+
+- Every technology that dramatically lowered the cost of producing something created a flood before institutions adapted. <tip t="The printing press dropped book production cost ~1,000x. By 1500, 20 million+ volumes flooded Europe. Anyone literate could read scripture and derive their own theology. The Church's review mechanism (councils, papal bulls) operated on a timescale of years; pamphlets spread in days. In Münster (1534), Bernhard Knipperdolling used his own press to distribute radical Anabaptist tracts. A 25-year-old tailor named Jan van Leiden — with no theological training — declared himself King of New Jerusalem, abolished money, and instituted compulsory polygamy. The city fell after a year-long siege. The leaders' bodies were displayed in iron cages hung from St. Lambert's Church. The cages are still there. Norms took ~200 years to stabilize (Gutenberg ~1440 → Peace of Westphalia 1648)." href="https://en.wikipedia.org/wiki/M%C3%BCnster_rebellion" link-text="Münster Rebellion (Wikipedia) →">The printing press produced pamphlet wars, heretical movements, and a theocratic commune before norms emerged around publishing.</tip>
+- Given that these are objective-chasing machines, there is so much chaos that can ensue if better engineering principles are not developed to use this technology safely. <tip t="The crabby-rathbun incident is a small preview: an autonomous agent conducting what Shambaugh called 'an autonomous influence operation against a supply chain gatekeeper.' The cost of mounting that operation was effectively zero. The SOUL.md said 'don't stand down' and the search found an aggressive trajectory — a pamphlet war at the speed of API calls." href="https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/" link-text="Shambaugh: An AI Agent Published a Hit Piece on Me →">The crabby-rathbun hit piece is a preview: a pamphlet war at the speed of API calls.</tip>
+
+### Rivers of Slop in Open Source
+
+- Generation is cheap; review is expensive. The ratio is getting worse. Maintainers are the verifiers in a system that is producing orders of magnitude more output to verify.
+- Projects are already drowning. <tip t="Godot maintainers: 'I don't know how long we can keep it up' — the open-source game engine is overwhelmed by AI-generated code contributions." href="https://www.pcgamer.com/software/platforms/open-source-game-engine-godot-is-drowning-in-ai-slop-code-contributions-i-dont-know-how-long-we-can-keep-it-up/" link-text="Godot: Drowning in AI Slop →">Godot is overwhelmed by AI contributions.</tip> <tip t="Daniel Stenberg shut down curl's bug bounty after a flood of AI-generated, low-quality vulnerability reports that wasted maintainer time on false positives." href="https://www.jeffgeerling.com/blog/2026/ai-is-destroying-open-source/" link-text="AI Is Destroying Open Source →">curl shut down its bug bounty.</tip> <tip t="GitHub added a 'kill switch' allowing maintainers to bulk-close AI-generated pull requests after projects were flooded with low-quality automated contributions." href="https://www.theregister.com/2026/02/03/github_kill_switch_pull_requests_ai/" link-text="GitHub: Kill Switch for AI PRs →">GitHub added a kill switch for AI PRs.</tip> This is the search working as designed.
+
+### The Environment Is the Moat
+
+- If the trained policy is opaque and roughly the same for everyone (everyone uses Claude, GPT, or Gemini), then competitive advantage shifts entirely to environment design.
+- The teams that get better outcomes from agents won't have better prompts — they'll have better test suites, cleaner repos, tighter permissions, and stronger feedback loops.
+- The agent is commodity. The environment is the differentiator. "AI-first" means investing in everything *around* the agent, not in the agent itself.
