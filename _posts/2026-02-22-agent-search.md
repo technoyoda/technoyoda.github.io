@@ -175,7 +175,7 @@ Since you control the system prompt and the environment, and you cannot change t
 
 The trained policy is a choice you make upfront (Claude, GPT, Gemini), but once you pick it, $\pi_\theta$ is fixed for the rollout. Everything after that choice is about shaping the field: engineering the context window and the environment so that the space of reachable behaviors narrows toward what you want.
 
-![Engineering the Search — Bounding the trajectory space](../assets/images/search-space.png)
+![Engineering the Search — Bounding the trajectory space](../assets/images/search-tree.png)
 
 ### The Prompt Shapes the Field
 
