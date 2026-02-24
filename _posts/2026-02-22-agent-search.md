@@ -224,10 +224,12 @@ Tests, linters, and build outputs are environment observations that enter the co
 Prompts and feedback narrow the field. Permissions physically eliminate trajectories. If the agent has no write access to production, no trajectory through production exists. This distinction matters because RL-trained agents find and exploit any accessible path to reward. The <tip t="OWASP Agentic AI Top 10 (Dec 2025) describes ASI01 (Agent Goal Hijack) as the condition where environment inputs override or redirect the system prompt objective, and ASI03 (Identity & Privilege Abuse) as agents exploiting inherited permissions" href="https://owasp.org/www-project-agentic-ai-threats-and-safeguards/" link-text="OWASP Agentic Top 10 →">OWASP Agentic Top 10</tip> catalogs the consequences: goal hijacking, privilege abuse, tool misuse.
 
 The practical response — eliminate trajectories, don't just discourage them:
-- <tip t="Scoped IAM Roles or any form of short lived token like A JWT">**Short-lived tokens**</tip> scoped to a single task.
+- <tip t="Scoped IAM Roles or any form of short lived token like A JWT">Short-lived Auth related tokens scoped to a single task and first class identity for the agent</tip>
 - **Workspace-scoped writes.** No ambient access beyond the task boundary.
 - **Network egress controls.** If the agent can't reach the internet, exfiltration trajectories don't exist.
-- <tip t="Ensuring the environment is bounding the search space">**Fine-grained access control**</tip> that blocks any tool call not explicitly scoped.
+- <tip t="Ensuring the environment is bounding the search space">Fine-grained access control that blocks any tool call not explicitly scoped.</tip> 
+
+
 
 These aren't security best practices bolted on. They are hard walls that define the reachable space.
 
