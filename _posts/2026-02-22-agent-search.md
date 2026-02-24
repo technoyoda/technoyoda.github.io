@@ -151,8 +151,6 @@ Since you control the system prompt and the environment, and you cannot change t
 
 ![Agent Field Theory — The Interaction Loop](../assets/images/agent-field-theory-loop.png)
 
-![Search Tree — Trajectories through the action space](../assets/images/search-tree.png)
-
 <!-- POST-PUBLISH: create practical examples demonstrating force conflicts using the claude_code Python SDK. Show: (1) system prompt vs environment feedback, (2) trained policy overriding system prompt, (3) context pollution shifting behavior. These would make the abstract framework concrete but are not blocking for the essay. -->
 
 ## Engineering the Search
