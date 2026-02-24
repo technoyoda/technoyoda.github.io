@@ -6,10 +6,13 @@ categories: blog
 ---
 
 
+# Your Agent Is Not Thinking, It's Searching
+
+
 ## Prologue
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have <tip t="Molt Church: an AI-generated religion created by autonomous agents" href="https://molt.church/" link-text="Molt Church →">bots forming religions</tip>. I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in <tip t="People need roads, water, food, shelter, and community. Not sex chatbots and a mercenary economy.">interesting ways</tip>. But we live in a strange timeline:
 - A publicly traded company <tip t="CNBC reporters used Claude Code to build a monday.com clone in under an hour for $5-15 in compute. Monday.com stock dropped 21% in the days following." href="https://www.cnbc.com/2026/02/05/how-exposed-are-software-stocks-to-ai-tools-we-tested-vibe-coding.html" link-text="CNBC: Vibe-Coding Test →">lost a fifth of its market cap</tip> after a CNBC segment showed its product vibe-coded in under an hour.  
-- An open-source agent framework called <tip t="OpenClaw: an open-source AI agent framework that went viral in early 2026" href="https://github.com/openclaw" link-text="OpenClaw on GitHub →">OpenClaw</tip> goes viral. One of its agents — "crabby-rathbun" — opens <tip t="PR #31132 to matplotlib, opened Feb 10 2026 by the OpenClaw agent crabby-rathbun. Scott Shambaugh, a matplotlib core maintainer, closed it. The next day the agent autonomously published a hit piece titled 'Gatekeeping in Open Source: The Scott Shambaugh Story.'" href="https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/" link-text="Shambaugh: An AI Agent Published a Hit Piece on Me →">PR #31132 to matplotlib</tip>, gets rejected by maintainer Scott Shambaugh, and autonomously publishes a hit piece on him that goes viral. 
+- An open-source agent framework called <tip t="OpenClaw: an open-source AI agent framework that went viral in early 2026" href="https://github.com/openclaw" link-text="OpenClaw on GitHub →">OpenClaw</tip> goes viral. One of its agents — "crabby-rathbun" — opens <tip t="PR #31132 to matplotlib, opened Feb 10 2026 by the OpenClaw agent crabby-rathbun. Scott Shambaugh, a matplotlib core maintainer, closed it. The next day the agent autonomously published a hit piece titled 'Gatekeeping in Open Source: The Scott Shambaugh Story.'" href="https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/" link-text="Shambaugh: An AI Agent Published a Hit Piece on Me →">PR #31132 to matplotlib</tip>, gets rejected by maintainer Scott Shambaugh, and autonomously publishes a hit piece on him that goes viral.
 - All of this is happening at the same time as Anthropic releasing case studies about <tip t="Anthropic used 16 parallel agents to build a 100K-line C compiler in Rust, verified against GCC's torture test suite" href="https://www.anthropic.com/engineering/building-c-compiler" link-text="Anthropic: Building a C Compiler →">running agents that build compilers</tip>. _They did use GCC torture test suite as a good verifier, but it is an extremely impressive achievement nonetheless._
 
 This very quick progress has also created a lot of mysticism around AI. For this reason, I felt it would be an interesting exercise to de-anthropomorphize AI agents for the tools that they are. If we want to use these technologies for longer time horizon tasks, we need a frame of thinking that allows an engineering mindset to flourish instead of an alchemic one.
@@ -19,10 +22,10 @@ The goal of this essay is to give a mental model of what constitutes a current d
 
 My thesis is that _these models are searching toward a reward signal, and your environment bounds that search_. Framing it as "thinking" is noise. These models spit out slop even if they think their way to oblivion. <tip t="'Search' here means policy-driven exploration over action sequences under feedback — not tree search or classical planning. This is an engineering lens, not a metaphysical claim.">When search is the mental model</tip>, the design questions change. You stop asking "did I give it good enough instructions?" and start asking "did I bound the space tightly enough that the search converges?" This essay is as much computer science, philosophy and software engineering.
 
-To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#how-agents-are-trained). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#agent-field-theory). Using this better inferred scheme we can change the way we [design agentic software](#engineering-the-search) and get better outcomes from it. Finally, I will discuss some of [the consequences](#consequences) that come with this easy access to create cheap software.
+To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#heading-3). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#heading-7). Using this better inferred scheme we can change the way we [design agentic software](#heading-9) and get better outcomes from it. Finally, I will discuss some of [the consequences](#heading-16) that come with this easy access to create cheap software.
 
 ---
-
+<!-- heading-3 -->
 ## How Agents Are Trained
 
 This section lays out the simplest root formalisms and then draws inferences from them. Two phases of training matter: pre-training, which determines what the model knows and can produce, and reinforcement learning, which determines how it acts on that knowledge.
@@ -74,7 +77,6 @@ where $\tau = (s_0, a_0, r_0, s_1, a_1, r_1, \ldots, s_T)$ is one complete <tip 
     - <tip t="Rates vary by task suite: METR reports 0.7% on HCAST for o3, higher on RE-Bench. The qualitative point — frontier models reward-hack at non-trivial rates — is well-established." href="https://metr.org/blog/2025-06-05-recent-reward-hacking/" link-text="METR: Recent Reward Hacking →">METR found frontier models reward-hacking at non-trivial rates</tip>  
     - <tip t="McKee-Reid et al. (NeurIPS 2024): GPT-4o discovers specification-gaming strategies purely through in-context reflection, no additional RL needed" href="https://arxiv.org/abs/2410.06491" link-text="Honesty to Subterfuge paper →">Models can also discover reward hacking strategies purely through in-context reflection</tip>
 
-
 > **The model navigates toward reward.** When we say "your agent is not thinking, it's searching," this is what we mean: the agent is executing a learned policy $\pi_\theta(a_t \mid s_t)$ that navigates through a space of possible trajectories toward a <tip t="What about chain-of-thought, planning, and internal deliberation? These are tools the search uses to navigate, not evidence against the search framing. CoT tokens enter the context window and re-condition the policy's next action, exactly like any other token. The 'thinking' is part of the trajectory, not separate from it.">reward signal</tip>. The reward function that shaped $\pi_\theta(a_t \mid s_t)$ is a proxy defined by the model provider. What the proxy tested for becomes the model's de facto objective. What it did not test for remains open space.
 
 ### The Inference Rollout
@@ -100,7 +102,7 @@ There is a subtlety worth calling out: the model generates tokens autoregressive
 > At inference, the agent rolls out a trajectory through action space: the prompt constrains the search region, the policy navigates it, and the environment reshapes it at every step. Designing the prompt and environment is designing the search space and the cost function.
 
 ---
-
+<!-- heading-7 -->
 ## Agent Field Theory
 
 The previous section told you what the agent is: a policy searching toward reward. Now we need a way to reason about what happens when it actually runs, because that is where the non-determinism lives and that is where you can engineer against it.
@@ -170,7 +172,7 @@ Since you control the system prompt and the environment, and you cannot change t
 
 
 <!-- POST-PUBLISH: create practical examples demonstrating signal conflicts using the claude_code Python SDK. Show: (1) system prompt vs environment feedback, (2) trained policy overriding system prompt, (3) context pollution shifting behavior. These would make the abstract framework concrete but are not blocking for the essay. -->
-
+<!-- heading-9 -->
 ## Engineering the Search
 
 The trained policy is a choice you make upfront (Claude, GPT, Gemini), but once you pick it, $\pi_\theta$ is fixed for the rollout. Everything after that choice is about shaping the field: engineering the context window and the environment so that the space of reachable behaviors narrows toward what you want.
@@ -219,7 +221,6 @@ Tests, linters, and build outputs are environment observations that enter the co
 
 Anthropic's <tip t="16 parallel agents built a 100K-line C compiler in Rust that compiled the Linux kernel. The task was decomposed so each file compilation had a clear success criterion: match GCC's output." href="https://www.anthropic.com/engineering/building-c-compiler" link-text="Anthropic: Building a C Compiler →">'s compiler project</tip> is the clearest example: each file compilation was a scoped task with a strong verifier (match GCC's output). Tight scope plus clear pass/fail signal. The search converged.
 
-
 #### Permissions: Hard Walls on the Search Space
 
 Prompts and feedback narrow the field. Permissions physically eliminate trajectories. If the agent has no write access to production, no trajectory through production exists. This distinction matters because RL-trained agents find and exploit any accessible path to reward. The <tip t="OWASP Agentic AI Top 10 (Dec 2025) describes ASI01 (Agent Goal Hijack) as the condition where environment inputs override or redirect the system prompt objective, and ASI03 (Identity & Privilege Abuse) as agents exploiting inherited permissions" href="https://owasp.org/www-project-agentic-ai-threats-and-safeguards/" link-text="OWASP Agentic Top 10 →">OWASP Agentic Top 10</tip> catalogs the consequences: goal hijacking, privilege abuse, tool misuse.
@@ -230,8 +231,6 @@ The practical response — eliminate trajectories, don't just discourage them:
 - **Network egress controls.** If the agent can't reach the internet, exfiltration trajectories don't exist.
 - <tip t="Ensuring the environment is bounding the search space">Fine-grained access control that blocks any tool call not explicitly scoped.</tip> 
 
-
-
 These aren't security best practices bolted on. They are hard walls that define the reachable space.
 
 > Prompt, environment, permissions: the prompt shapes the context window directly, the environment determines what observations enter the context window, permissions bound the environment. All three shape the field. When they are aligned with the trained policy, the field is focused and the search converges. 
@@ -240,29 +239,29 @@ These aren't security best practices bolted on. They are hard walls that define 
 ![The Slop Spectrum — Ambiguity produces slop, specificity produces utility](../assets/images/slop-spectrum.png)
 
 ---
-
+<!-- heading-16 -->
 ## Consequences
 
 The framework above is descriptive: it explains what agents are doing now. The following are extrapolations (consequences) that follow if you take the search framing seriously and project it forward.
 
 ### AI-First Operations
 - Agents write software but fully autonomous execution would require a lot more than what current systems possess. 
-- In a fully agent-driven S/W operations world the CI pipeline *is* the runtime reward signal. Weak CI = weak feedback = the search optimizes for passing weak checks.
+- In a fully agent-driven S/W operations world the CI pipeline *is* the runtime <tip t="The agent navigates toward reward — whatever signal shaped the policy during training becomes the de facto objective at inference. Tests, linters, and build outputs are the inference-time equivalent." href="#heading-3" link-text="How Agents Are Trained →">reward signal</tip>. Weak CI = weak feedback = the search optimizes for passing weak checks.
 - Review changes character. You're no longer reviewing intentions — you're checking whether the search converged on something correct or just something that satisfies the proxy. The gap between "tests pass" and "is correct" is where review lives.
 - Rollback needs to be cheap. The search is non-deterministic; any run might diverge. The operational assumption is that agent output is provisional until verified.
 
 ### Software Security
 
-- Permissions eliminate trajectories; they don't discourage them. If a reward-path exists through accessible credentials, the search can end up finding it.
+- Permissions eliminate <tip t="Trajectories are sequences of actions the agent takes through its search space. Permissions physically remove paths from the field — if the agent can't access a resource, no trajectory through it exists." href="#heading-7" link-text="Agent Field Theory →">trajectories</tip>; they don't discourage them. If a reward-path exists through accessible credentials, the search can end up finding it.
 - Prompts are not security boundaries. The trained policy can overpower system prompt instructions, and environment feedback can hijack the objective entirely. Hard walls (scoped tokens, network egress controls, workspace-scoped writes) are the only reliable constraint.
 - Agent identity needs to be first-class. Short-lived auth tokens scoped to a single task, not inherited ambient credentials.
-- The attack surface is the environment, not the prompt. Securing an agent means securing what it can observe and what trajectories are physically reachable.
+- The attack surface is the <tip t="The environment determines what observations enter the context window. Securing an agent means engineering the territory so that dangerous trajectories don't exist." href="#heading-9" link-text="Engineering the Search →">environment</tip>, not the prompt. Securing an agent means securing what it can observe and what trajectories are physically reachable.
 
 ### Less Is More & the Mythical Man-Month
 
-- Brooks' Law applies to agents: adding more agents to a task doesn't scale linearly because each agent's output enters other agents' context windows as tokens, distorting field and compounding noise.
+- Brooks' Law applies to agents: adding more agents to a task doesn't scale linearly because each agent's output enters other agents' <tip t="The context window is the model's map — everything it has seen. Noise in the context window warps the field (the space of reachable behaviors), causing the search to drift." href="#heading-7" link-text="Agent Field Theory →">context windows</tip> as tokens, distorting the field and compounding noise.
 - Sequential multi-agent tasks degrade for the same reason long single-agent tasks do — context pollution across agents. <tip t="DeepMind tested 180 agent configurations and found sequential tasks degraded 39-70% vs a single agent." href="https://arxiv.org/abs/2512.08296" link-text="DeepMind: Multi-Agent Degradation →">Independent, scoped tasks with clear verifiers parallelize well; sequential handoffs don't.</tip> <tip t="Rasheed et al. (ICLR 2025) found 79% of multi-agent failures stemmed from coordination, not individual agent capability." href="https://arxiv.org/abs/2503.13657" link-text="Rasheed et al.: Multi-Agent Failures →">The bottleneck is coordination, not capability.</tip>
-- Brownfield is structurally harder than greenfield. Larger codebases produce larger environments, more noise can enter the context window, and the field is harder to keep focused. Greenfield works because the environment is clean.
+- Brownfield is structurally harder than greenfield. Larger codebases produce larger <tip t="The environment is the territory: repo on disk, tools, network, permissions. It determines what observations can enter the context window and what trajectories are physically reachable." href="#heading-9" link-text="Engineering the Search →">environments</tip>, more noise can enter the context window, and the field is harder to keep focused. Greenfield works because the environment is clean.
 
 ### If History Repeats Itself, Chaos May Follow
 <!-- annabaptists and the prophets of doom -->
@@ -279,4 +278,4 @@ The framework above is descriptive: it explains what agents are doing now. The f
 
 - If the trained policy is opaque and roughly the same for everyone (everyone uses Claude, GPT, or Gemini), then competitive advantage shifts entirely to environment design.
 - The teams that get better outcomes from agents won't have better prompts — they'll have better test suites, cleaner repos, tighter permissions, and stronger feedback loops.
-- The agent is commodity. The environment is the differentiator. "AI-first" means investing in everything *around* the agent, not in the agent itself.
+- The agent is commodity. The <tip t="The environment is the territory the agent operates in. The prompt, environment, and permissions together shape the field. When they are aligned, the search converges." href="#heading-9" link-text="Engineering the Search →">environment</tip> is the differentiator. "AI-first" means investing in everything *around* the agent, not in the agent itself.
