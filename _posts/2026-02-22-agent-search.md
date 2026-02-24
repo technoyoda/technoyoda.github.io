@@ -22,6 +22,8 @@ My thesis is that _these models are searching toward a reward signal, and your e
 
 To understand this framing, we first need to understand what goes into creating these agents, ie. [pre-training and reinforcement learning](#heading-3). The mathematical properties of pre-training and RL help us infer how this [joint interplay will work in practice](#heading-7). Using this better inferred scheme we can change the way we [design agentic software](#heading-9) and get better outcomes from it. Finally, I will discuss some of [the consequences](#heading-16) that come with this easy access to create cheap software.
 
+> I have used the help of AI to write this blog. I work full time and only get to work on these on the weekend. The beauty is that a lot of principals laid out in this blog were used to help create this contents of this blog. 
+
 ---
 <!-- heading-3 -->
 ## How Agents Are Trained
