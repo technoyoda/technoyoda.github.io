@@ -12,10 +12,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Word count (inline beside date)
+  // Word count (inline beside date), excluding tips and metadata tags
   var article = document.querySelector('article.post-content');
   if (article) {
-    var text = article.textContent || '';
+    var clone = article.cloneNode(true);
+    clone.querySelectorAll('.tip-popup, tip, written-by').forEach(function(el) { el.remove(); });
+    var text = clone.textContent || '';
     var words = text.trim().split(/\s+/).filter(function(w) { return w.length > 0; }).length;
     var el = document.getElementById('word-count-inline');
     if (el) el.textContent = '[' + words.toLocaleString() + ' words]';
