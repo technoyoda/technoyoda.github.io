@@ -133,7 +133,7 @@ What this looks like in practice:
 
 There is no clean formula for which force wins. But since you control the system prompt and the environment, and you cannot change the trained policy, the engineering question becomes: how do you shape the field so the search converges, and build guardrails for when it doesn't? That is what the next section is about.
 
-![Agent Field Theory — The Interaction Loop](diagrams/agent-field-theory-loop.png)
+![Agent Field Theory — The Interaction Loop](../assets/images/agent-field-theory-loop.png)
 
 <!-- POST-PUBLISH: create practical examples demonstrating force conflicts using the claude_code Python SDK. Show: (1) system prompt vs environment feedback, (2) trained policy overriding system prompt, (3) context pollution shifting behavior. These would make the abstract framework concrete but are not blocking for the essay. -->
 
