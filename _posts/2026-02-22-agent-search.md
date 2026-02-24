@@ -107,7 +107,7 @@ There is a subtlety worth calling out: the model generates tokens autoregressive
 
 The previous section told you what the agent is: a policy searching toward reward. Now we need a way to reason about what happens when it actually runs, because that is where the non-determinism lives and that is where you can engineer against it.
 
-The search doesn't happen in a <tip t="Everything below assumes a fully autonomous rollout: the agent receives initial conditioning (system prompt + user query), then the loop runs without human intervention. The incidents in the prologue all happen unsupervised. If you use agents interactively (Claude Code, Cursor), you are simply another environment signal entering $s_t$. The theory doesn't change, but the autonomous case is where it pays off, because there is no one to course-correct when the search drifts.">vacuum</tip>. To reason about what happens at runtime, we need three concepts:
+The search doesn't happen in a <tip t="Everything below assumes a fully autonomous rollout: the agent receives initial conditioning (system prompt + user query), then the loop runs without human intervention. The incidents in the prologue all happen unsupervised. If you use agents interactively (Claude Code, Cursor), you are simply another environment signal entering $s_t$. The theory doesn't change, but the autonomous case is where it pays off, because there is no one to course-correct when the search drifts.">vacuum</tip>. To reason about what happens at runtime, we introduce three logical concepts:
 
 | Term | Definition |
 |---|---|
