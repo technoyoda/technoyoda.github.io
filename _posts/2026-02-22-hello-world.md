@@ -1,7 +1,7 @@
 ---
 layout: post
 title: why this exists ?
-date: 2025-08-05
+date: 2026-02-22
 categories: blog
 ---
 
