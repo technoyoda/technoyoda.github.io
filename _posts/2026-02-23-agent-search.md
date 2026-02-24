@@ -119,6 +119,13 @@ In more detail:
 
 > **The field** is the space of reachable behaviors the agent can take from its current position: the <tip t="Kurt Lewin, Principles of Topological Psychology (1936). Lewin's 'field theory' described behavior as emerging from the total situation — the person and their environment — not from personality or stimulus alone. The 'life space' is the totality of facts that determine behavior at a given moment. Person = trained policy, Environment = prompt + feedback + accumulated context, Behavior = next action, Life space = search space at step t." href="https://en.wikipedia.org/wiki/Field_theory_(psychology)" link-text="Lewin's Field Theory (Wikipedia) →">forecastable futures</tip>. It is determined by two things: the agent's context window ($s_t$ from the previous section, every token it has accumulated) and the trained policy that interprets those tokens. Every observation that enters the context window reshapes the field. A precise prompt narrows it. Noise warps it. Permissions bound it from outside by limiting what the environment can feed into the context window.
 
+<figure>
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="../assets/images/AgentFieldTheory.mp4" type="video/mp4">
+  </video>
+  <figcaption>Agent Field Theory — The field of reachable behavior shifts as new observations enter the context window</figcaption>
+</figure>
+
 The same system prompt produces one field in a clean context and a different field when the context is polluted with stale logs. Not because the prompt changed, but because the space of likely behaviors shifted.
 
 **The trained policy $\pi_\theta$ is <tip t="Interpretability research (probing, mechanistic analysis) can reveal some internal structure, and policy distillation can approximate learned behaviors. But as end-users of tools like Claude Code or Cursor, we never have complete access to the reward function specification, training data composition, or RLHF preference rankings that shaped the policy. The fundamentals from Section 2 give us enough to reason about behavior, but the full picture remains opaque at scale.">opaque</tip>.** You did not design the reward function, you do not know its full specification, and you can only observe the behavior it produces. The policy determines how every signal in the context window gets interpreted, but it is the one thing you cannot change at runtime.
