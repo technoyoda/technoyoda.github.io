@@ -6,6 +6,9 @@ categories: blog
 ---
 
 ## Prologue
+
+> [TLDR tweet](https://x.com/techno_yoda/status/2026214172183478456)
+
 More than ten years ago, we were barely able to recognize cats with DL (deep learning) and today we have <tip t="Molt Church: an AI-generated religion created by autonomous agents" href="https://molt.church/" link-text="Molt Church →">bots forming religions</tip>. I don't like anthropomorphizing models but I rather like seeing them as a utility that can be used in <tip t="People need roads, water, food, shelter, and community. Not sex chatbots and a mercenary economy.">interesting ways</tip>. But we live in a strange timeline:
 - The DOW <tip t="Attorney General Pam Bondi, when asked under oath why there have been no Epstein indictments, responded by yelling about the Dow. It became the internet's universal deflection meme." href="https://www.youtube.com/watch?v=Q71Xb1Sd86M" link-text="The DOW is over 50000! →">is over 50000.</tip> The number's only been going up since the launch of ChatGPT.
 - An open-source agent framework called <tip t="OpenClaw: an open-source AI agent framework that went viral in early 2026" href="https://github.com/openclaw" link-text="OpenClaw on GitHub →">OpenClaw</tip> goes viral. One of its agents — "crabby-rathbun" — opens <tip t="PR #31132 to matplotlib, opened Feb 10 2026 by the OpenClaw agent crabby-rathbun. Scott Shambaugh, a matplotlib core maintainer, closed it. The next day the agent autonomously published a hit piece titled 'Gatekeeping in Open Source: The Scott Shambaugh Story.'" href="https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/" link-text="Shambaugh: An AI Agent Published a Hit Piece on Me →">PR #31132 to matplotlib</tip>, gets rejected by maintainer Scott Shambaugh, and autonomously publishes a hit piece on him that goes viral.
