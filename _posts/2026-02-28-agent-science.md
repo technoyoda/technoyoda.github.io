@@ -8,7 +8,7 @@ hidden: true
 
 ## Prologue
 
-> *This is Part 2 of [Agents are not thinking, they are searching](https://technoyoda.github.io/agent-search.html). Part 1 reframed what agents are (thier nature). This part builds the instruments for studying them.* This essay doesn't just come this time with handwavey theory but it also comes with [code](https://github.com/technoyoda/aft) (and [math](https://github.com/technoyoda/aft/blob/master/docs/math.md) for anyone liking formalism enough). This blog will have follow ups given how much fun I have had making it and the time I need for the concepts to soak before I do more with them. 
+> *This is Part 2 of [Agents are not thinking, they are searching](https://technoyoda.github.io/agent-search.html). Part 1 reframed what agents are (thier nature). This part builds the instruments for studying them.* This essay doesn't just come this time with handwavey theory but it also comes with [code](https://github.com/technoyoda/aft) (and [math](https://github.com/technoyoda/aft/blob/master/docs/math.md) for anyone liking formalism enough). This essay will have follow ups given how much fun I have had making it and the time I need for the concepts to soak before I do more with them. 
 
 > The limits of my language mean the limits of my world — Ludwig Wittgenstein
 
