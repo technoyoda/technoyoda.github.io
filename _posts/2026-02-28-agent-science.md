@@ -758,9 +758,9 @@ The previous essay told us the `Field` exists. That the prompt narrows it, the e
 
 ## What this enables
 
-This vocabulary is not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library we built is one expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
+This vocabulary is not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
 
-The [tutorials](./tutorials) that accompany this essay put the vocabulary to work on real tasks. They walk through the full cycle: define `measure()` and `state()` from a real engineering question, run K trajectories, build the `Field`, read the metrics, diagnose the problem, intervene, and compare.
+The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that accompany this essay put the vocabulary to work on real situations to provide insight into usage patterns. They walk through the full cycle: define `measure()` and `state()` from a real engineering question, run K trajectories, build the `Field`, read the metrics, diagnose the problem, intervene, and compare.
 
 The vocabulary:
 
