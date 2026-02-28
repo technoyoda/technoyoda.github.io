@@ -111,7 +111,7 @@ Eight dimensions here. Each answers a different facet of "what did the agent do?
 
 These eight did not come from staring at the trajectory format. They came from the engineering question: *is my agent fixing bugs reliably, and if not, why not?* The question determined the dimensions. The dimensions determined $\varphi$.
 
-<details>
+<details markdown="1">
 <summary><b>Choosing dimensions backwards, from a decision</b></summary>
 
 Decision: **should I make my prompt more specific, or give the agent more turns?**
@@ -129,7 +129,7 @@ Four dimensions. They came from the decision, not the data format. **Always work
 
 </details>
 
-<details>
+<details markdown="1">
 <summary><b>Two different $\varphi$, same data, two different fields</b></summary>
 
 Ten trajectories from a code-fixing agent. Two `Field` subclasses.
@@ -212,7 +212,7 @@ The `variance()` vector tells us *where* the spread lives. In the example above,
 
 But width alone is ambiguous. High width could mean the task has many valid strategies (the search space is wide and that is fine) or the prompt is vague and the behavioral variation reflects an underconstrained search (the search space is wide and that is a problem). We need to know whether the variation matters for outcomes.
 
-<details>
+<details markdown="1">
 <summary><b>Width comparison between two prompts</b></summary>
 
 Two prompts for the same bug-fixing task. The vague one: "fix the bugs in this file." The concise one: "handle the division-by-zero in `divide()`, the empty-list case in `average()`, and the index error in `first_element()`."
@@ -271,7 +271,7 @@ Convergence is scoped to the `Field` we built. If our $\varphi$ misses a critica
 
 If convergence is high, we may be done. There is variation (width told us that), but it does not affect outcomes. If convergence is low, something in the behavioral space we are measuring is unstable, and we need to find *what*. That is the next question.
 
-<details>
+<details markdown="1">
 <summary><b>Pass rate vs convergence</b></summary>
 
 From the prompt ablation experiment above:
@@ -309,7 +309,7 @@ Separation points at the problem. `num_messages` (-3.0) is the loudest signal: s
 
 But separation only tells us *that* dimensions differ. It does not tell us what to do about it. If `num_messages` separates the groups, should we give fewer messages (constrain the search) or more (expand the budget)? We need to know the direction.
 
-<details>
+<details markdown="1">
 <summary><b>Reading a separation chart</b></summary>
 
 ```python
@@ -356,7 +356,7 @@ This is where the diagnostic becomes an intervention. Negative skew on `num_edit
 
 Here, every skew signal is negative. The failures are not struggling from lack of resources. They are doing too much. The intervention is to constrain, not expand.
 
-<details>
+<details markdown="1">
 <summary><b>Reading skew on each flagged dimension</b></summary>
 
 **Negative skew on `num_edits`** (-1.0): Every trajectory that made 3 edits succeeded. Every trajectory that made 4 edits failed. Perfect negative correlation. The failing trajectories made an extra edit, likely revising their first fix or introducing a regression they then attempted to repair.
@@ -366,7 +366,7 @@ Here, every skew signal is negative. The failures are not struggling from lack o
 **Weak skew on `num_reads`** (-0.36): Reading more files has a slight negative correlation with success. Not the bottleneck. Do not optimize it.
 
 </details>
-<details>
+<details markdown="1">
 <summary><b>Visualizing skew</b></summary>
 
 ```python
@@ -459,7 +459,7 @@ The state says "the trajectory is editing but has not fixed the bugs." The measu
 
 Behavioral variation within a state ("during editing, did the trajectory fix the function or the test inputs?") is captured by `measure()`, not by subdividing `state()`. State stays coarse and linear. Measurement stays high-dimensional and detailed.
 
-<details>
+<details markdown="1">
 <summary><b>How state() labels a trajectory at each step</b></summary>
 
 A single trajectory, 12 steps. The `Field` calls `state(trajectory, t)` for `t` in `range(12)`:
@@ -485,7 +485,7 @@ A different trajectory might fix all three bugs in a single edit, jumping from `
 
 </details>
 
-<details>
+<details markdown="1">
 <summary><b>state() is also a hypothesis</b></summary>
 
 Just as `measure()` is our hypothesis about which behavioral properties matter, `state()` is our hypothesis about which states matter.
@@ -563,7 +563,7 @@ Notice that `start` and `diagnosed` are identical (K=20 both). Every trajectory 
 
 But the horizon chain shows *narrowing*. It does not distinguish whether that narrowing is healthy (good trajectories converging on a strategy) or problematic (failures diverging from successes). Both look like width dropping and K shrinking. To separate these two stories, we need one more tool.
 
-<details>
+<details markdown="1">
 <summary><b>Horizons are composable with the diagnostic chain</b></summary>
 
 Every horizon is a `Field`. The diagnostic chain works inside it:
@@ -583,7 +583,7 @@ Different horizons reveal different stories. Separation at `"editing"` flags `bu
 
 </details>
 
-<details>
+<details markdown="1">
 <summary><b>Grouping fine-grained states at query time</b></summary>
 
 When `state()` returns fine-grained labels, group them at query time:
@@ -597,7 +597,7 @@ h = field.horizon(["debugging:core_files", "debugging:tests", "debugging:logs"])
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>Visualizing horizons</summary>
 
 ```python
@@ -694,7 +694,7 @@ At the `editing` horizon (K=19): Haiku trajectories average 28 messages vs the s
 
 The diagnosis is now grounded in a stable reference. Haiku's problem at `editing` is not resource starvation. It uses 55% more messages and 60% more tool calls than what successful execution looks like. But it addresses fewer bugs. The trajectories are editing the wrong things: call sites and test inputs instead of function definitions.
 
-<details>
+<details markdown="1">
 <summary><b>The baseline is a property of the task, not the model</b></summary>
 
 The baseline does not have to come from Sonnet. It can come from any source of successful trajectories measured through the same `Field`: a different model, a curated set of golden runs, even human-operated traces. What matters is that you have enough successful trajectories to define a stable corridor in the behavioral space your `Field` prescribes.
@@ -710,7 +710,7 @@ The practical workflow:
 
 </details>
 
-<details>
+<details markdown="1">
 <summary><b>What shifts between horizons</b></summary>
 
 At `complete_fix` (K=14), the centroid gap changes character. The `bugs_addressed` gap disappears (by definition, all 14 addressed all 3 bugs). But the `num_messages` gap *grows* to +12.5, and a new gap appears: `num_edits` at +0.79. Even the Haiku trajectories that produced correct fixes needed an extra edit and 12 more messages to get there.
