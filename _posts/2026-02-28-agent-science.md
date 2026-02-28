@@ -51,6 +51,7 @@ But trajectories are not numbers. They are sequences of observations and actions
 We can't average these objects. We cannot overlay them. We cannot plot them on a line. But what we can do is decide **what to measure about each one**.
 
 > I have a full mathematical derivation of how `Field` object is approximated in the math.md in the main repo
+
 ---
 
 ## The measurement function: your hypothesis about what matters
