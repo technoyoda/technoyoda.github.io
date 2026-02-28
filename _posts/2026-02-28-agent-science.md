@@ -9,9 +9,9 @@ hidden: true
 ## Prologue
 
 > This is Part 2 of [Agents are not thinking, they are searching](https://technoyoda.github.io/agent-search.html). That essay reframed what agents are. This one builds the instruments for studying them.
-
+>
 > The limits of my language mean the limits of my world — Ludwig Wittgenstein
-
+>
 > The nature of a thing is more important than its form. - [Brok](https://www.youtube.com/watch?v=lPIXXTtEvzg)
 
 [My previous essay](https://technoyoda.github.io/agent-search.html) was a spinal response, an attempt to jot down the intuition behind how agents actually behave. But once the intuition was expressed, it felt incomplete. I had the thing's nature but no form to study it with. This essay bridges that gap: a construction for scientifically studying agent behavior and give it language.
