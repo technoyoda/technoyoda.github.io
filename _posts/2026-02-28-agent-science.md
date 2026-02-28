@@ -24,6 +24,13 @@ One of my favourite grad school professors used to say: *any engineer worth thei
 
 The `Field` is not static. Every token that enters the context window reshapes it. A precise prompt narrows the `Field`. Noise warps it. Feedback from the environment (test results, error messages, API responses) steers it. Environment conditions eliminate entire regions of it. The system prompt persists in the context window from the first token onward, functioning as persistent reward shaping that continuously narrows which trajectories the `Field` contains.
 
+<figure>
+  <video width="100%" autoplay loop muted playsinline>
+    <source src="../assets/images/AgentFieldTheory.mp4" type="video/mp4">
+  </video>
+  <figcaption>Agent Field Theory — The field of reachable behavior shifts as new observations enter the context window</figcaption>
+</figure>
+
 The engineering consequence: **we are not writing instructions. We are shaping a search space.** the prompt, the test suite, the repository structure, permissions architecture all define the boundaries. The agent's stochastic policy searches within them.
 
 That was the theory. It changed the question from "did I give good instructions?" to "have I bounded the search space well enough that the agent's stochastic search consistently lands where I need it?"
