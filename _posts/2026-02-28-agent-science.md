@@ -8,7 +8,7 @@ hidden: true
 
 ## Prologue
 
-> *This is Part 2 of [Agents are not thinking, they are searching](https://technoyoda.github.io/agent-search.html). That essay reframed what agents are. This one builds the instruments for studying them.*. This essay doesn't comes just come with handwavey theory, it comes with [code](https://github.com/technoyoda/aft) (and [math](https://github.com/technoyoda/aft/blob/master/docs/math.md) for anyone nerdy enough to like thinking about such stuff). This blog will have follow ups given how much fun I have had making it. 
+> *This is Part 2 of [Agents are not thinking, they are searching](https://technoyoda.github.io/agent-search.html). That essay reframed what agents are. This one builds the instruments for studying them.*. This essay doesn't comes just come with handwavey theory, it comes with [code](https://github.com/technoyoda/aft) (and [math](https://github.com/technoyoda/aft/blob/master/docs/math.md) for anyone nerdy enough to like thinking about such stuff). This blog will have follow ups given how much fun I have had making it and I need time for the concept to soak before I make more with it. 
 
 > The limits of my language mean the limits of my world — Ludwig Wittgenstein
 
@@ -21,7 +21,7 @@ One of my favourite grad school professors used to say: *any engineer worth thei
 
 ## The theory (a recap)
 
-[My previous essay](https://technoyoda.github.io/agent-search.html) established a model. An agent is not executing instructions. It is a learned policy $\pi_\theta(a_t \mid s_t)$ navigating a search space shaped by pre-training, RL, and the environment. At each step, the context window $s_t$, the full accumulation of system prompt, observations, and actions so far, conditions a distribution over what the agent does next. That distribution is the `Field`: the space of reachable behaviors from the current position.
+[My previous essay](https://technoyoda.github.io/agent-search.html) established a model. An agent is not executing instructions. It is a learned policy $\pi_\theta(a_t \mid s_t)$ navigating a search space shaped by [pre-training](https://technoyoda.github.io/agent-search.html#heading-4), [RL](https://technoyoda.github.io/agent-search.html#heading-5), and [the environment](https://technoyoda.github.io/agent-search.html#heading-6). At each step, the context window $s_t$, the full accumulation of system prompt, observations, and actions so far, conditions a distribution over what the agent does next. That distribution is the `Field`: the space of reachable behaviors from the current position.
 
 The `Field` is not static. Every token that enters the context window reshapes it. A precise prompt narrows the `Field`. Noise warps it. Feedback from the environment (test results, error messages, API responses) steers it. Environment conditions eliminate entire regions of it. The system prompt persists in the context window from the first token onward, functioning as persistent reward shaping that continuously narrows which trajectories the `Field` contains.
 
