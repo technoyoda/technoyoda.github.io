@@ -253,7 +253,7 @@ chart = compare_variance_bar(
 )
 ```
 
-![Per-dimension variance: vague vs concise prompt](images/compare_variance.png)
+![Per-dimension variance: vague vs concise prompt](../assets/images/compare_variance.png)
 
 The chart shows most of the vague prompt's width comes from `num_messages` (3.81 vs 0.81). The concise prompt squashes it by nearly 5x. Both prompts have zero variance on `ran_code`, `scope_ratio`, and `escaped_cwd`. The task structure determines those dimensions, not the prompt. The variation concentrates in effort: how many messages and tool calls it takes.
 
@@ -325,7 +325,7 @@ from agent_fields.visualisations import separation_bar
 chart = separation_bar(m)
 ```
 
-![Separation: vague prompt](images/separation_vague.png)
+![Separation: vague prompt](../assets/images/separation_vague.png)
 
 The separation chart paints each dimension green (successes higher) or red (successes lower). From the vague-prompt `Field` (K=10, 6/10 pass):
 
@@ -382,7 +382,7 @@ from agent_fields.visualisations import skew_bar
 chart = skew_bar(m)
 ```
 
-![Skew: vague prompt](images/skew_vague.png)
+![Skew: vague prompt](../assets/images/skew_vague.png)
 
 </details>
 
@@ -615,9 +615,9 @@ horizon_width(field)
 horizon_convergence(field)
 ```
 
-![Horizon width: Haiku K=20](images/horizon_width_haiku.png)
+![Horizon width: Haiku K=20](../assets/images/horizon_width_haiku.png)
 
-![Horizon convergence: Haiku K=20](images/horizon_convergence_haiku.png)
+![Horizon convergence: Haiku K=20](../assets/images/horizon_convergence_haiku.png)
 
 </details>
 
@@ -688,17 +688,17 @@ complete_fix: W_haiku=14.2  W_baseline=2.6  gap=11.6
       tested: W_haiku=14.2  W_baseline=2.6  gap=11.6
 ```
 
-![Width: Haiku (all) vs Sonnet (success) across horizons](images/cross_model_drift.png)
+![Width: Haiku (all) vs Sonnet (success) across horizons](../assets/images/cross_model_drift.png)
 
 The Sonnet success corridor (green) is a flat bar at 2.60 across all states. Haiku (red) is 10-13x wider. The gap drops at `complete_fix` (30.9 → 11.6) when the 5 trajectories that edited the wrong things are filtered out. But even the 14 that addressed all bugs are still far outside the success corridor.
 
 Width tells us the spread. But we can also ask *where* in behavioral space Haiku's trajectories land relative to the success corridor. The centroid gap at each horizon answers this:
 
-![Centroid gap at 'editing': Haiku − Sonnet success](images/centroid_gap_editing.png)
+![Centroid gap at 'editing': Haiku − Sonnet success](../assets/images/centroid_gap_editing.png)
 
 At the `editing` horizon (K=19): Haiku trajectories average 28 messages vs the success corridor's 17.8 (gap: +10.15). They use 9.1 tool calls vs 5.6 (gap: +3.49). But they address only 2.05 bugs vs 3.0 (gap: -0.95). Every red bar means Haiku did *more* than the success corridor. The one green bar (`bugs_addressed`) means Haiku did *less*. More effort on every dimension, less quality on the one that matters.
 
-![Centroid: Sonnet success vs Haiku at 'editing' (K=19)](images/centroid_editing.png)
+![Centroid: Sonnet success vs Haiku at 'editing' (K=19)](../assets/images/centroid_editing.png)
 
 The diagnosis is now grounded in a stable reference. Haiku's problem at `editing` is not resource starvation. It uses 55% more messages and 60% more tool calls than what successful execution looks like. But it addresses fewer bugs. The trajectories are editing the wrong things: call sites and test inputs instead of function definitions.
 
@@ -723,7 +723,7 @@ The practical workflow:
 
 At `complete_fix` (K=14), the centroid gap changes character. The `bugs_addressed` gap disappears (by definition, all 14 addressed all 3 bugs). But the `num_messages` gap *grows* to +12.5, and a new gap appears: `num_edits` at +0.79. Even the Haiku trajectories that produced correct fixes needed an extra edit and 12 more messages to get there.
 
-![Centroid gap at 'complete_fix': Haiku − Sonnet success](images/centroid_gap_complete_fix.png)
+![Centroid gap at 'complete_fix': Haiku − Sonnet success](../assets/images/centroid_gap_complete_fix.png)
 
 The failure mode shifts depending on which state we condition on. At `editing`, the gap is about targeting (wrong bugs addressed). At `complete_fix`, it is about efficiency (right bugs, but more effort to get there). Horizons let us see this shift; the baseline corridor gives us stable ground to measure it from.
 
