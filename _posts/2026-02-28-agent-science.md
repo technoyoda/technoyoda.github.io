@@ -767,17 +767,23 @@ The previous essay told us the `Field` exists. That the prompt narrows it, the e
 
 ### What this enables
 
-The vocabulary is not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
+The vocabulary and it's objects are not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
 
-The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that accompany this essay put the vocabulary to work on real tasks.
+The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that accompany this essay put the vocabulary and objects to work on simulated scenarios.
 
-
-### Meta commentary on usage
-
-This framework does not predict what an agent will do. As stated throughout the essay, the `Field` is an empirical instrument, not a generative theory. We cannot derive the true distribution over trajectories from first principles. What we can do is define a proxy: a set of dimensions and states that capture the behaviors we care about, and then measure whether the agent lives within them.
+> This framework does not predict what an agent will do. As stated throughout the essay, the `Field` is an empirical instrument, not a generative theory. We cannot derive the true distribution over trajectories from first principles. What we can do is define a proxy: a set of dimensions and states that capture the behaviors we care about, and then measure whether the agent lives within them.
 
 That proxy is subjective by design. The `Field` does not describe the full space of reachable behaviors. It describes the space *we chose to look at*. `measure()` is our hypothesis about what matters. `state()` is our hypothesis about what progress looks like. The framework tests those hypotheses. We change a prompt, swap a model, modify the environment, and the `Field` tells us whether the behavioral distribution shifted in the directions our dimensions can see. Everything works backwards: start from the behaviors we expect, define the dimensions that would reveal them, then run the experiment.
 
 This implies something deeper than just "test the agent." It means thinking not only about what the agent should achieve, but about the space of programs it might construct along the way. This is the fundamental difference between LLM software and traditional software. Traditional software is statically baked. Line 5 of a program executes whatever instruction was written on line 5. No matter how dynamic the runtime graph, no instruction is synthesized out of thin air. LLM-based software breaks this invariant. The agent's next action is sampled from a distribution. Line 5 could be a completely different program on every run. The code is not written; it is searched for, live, conditioned on everything that came before.
 
 Given the entropy in those unrolled trajectories, reasoning about agent behavior without measurement is guesswork. The framework makes it empirical. And because the `Field` is defined by us, not by the model provider, it enables something practical: **behavioral alignment metrics**. We define the behavioral prescription, the dimensions and states that describe how the agent *should* behave, and then measure how consistently any model adheres to it. The focus shifts from refining what the prompt says to prescribing what the behavior should look like, and then holding the system accountable to that prescription across models, prompts, and environments.
+
+
+### Where can you use this 
+
+This framework applies broadly across the ML/AI domain because all it does is map trajectory space to a behavioral space. That transformation buys us a language for measuring abstract behaviors, and that language opens several doors:
+- Model alignment studies
+- Long-horizon task analysis
+- Using the `Field` as a reward function (optimization target)
+- Using the `Field` as an empirical foundation for prompt ablation studies
