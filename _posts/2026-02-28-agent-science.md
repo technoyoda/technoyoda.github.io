@@ -76,7 +76,7 @@ The critical thing about $\varphi$ is that it is a **choice**. We decide the dim
 
 This makes $\varphi$ a hypothesis. When we define our dimensions, we are stating: *I believe these are the behavioral properties that matter for understanding what my agent does on this task.* The `Field` tests that hypothesis. If our dimensions miss the critical axis, the `Field` will look flat even when important variation exists.
 
-In practice, this is a `Field` subclass with two methods:
+In practice, this is a <tip t="Abstract base class — subclass with measure() and dimensions() to define your behavioral space" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L16" link-text="Field source →">`Field`</tip> subclass with two methods (adapted from the <tip t="Full CodeFixField implementation with measure(), dimensions(), and helper functions for the bug-fixing tutorial" href="https://github.com/technoyoda/aft/blob/master/tutorials/tutorial-1/field_def.py#L51" link-text="CodeFixField source →">tutorial</tip>):
 
 ```python
 import agent_fields as aft
@@ -104,9 +104,9 @@ class CodeFixField(aft.Field):
         ])
 ```
 
-`dimensions()` names the axes of your behavioral space. Each `Dimension` carries a name and a description. Every metric downstream is keyed by these names, so they are the vocabulary you read your results in.
+`dimensions()` names the axes of your behavioral space. Each <tip t="Frozen dataclass carrying a name and description for one axis of the behavioral vector" href="https://github.com/technoyoda/aft/blob/master/agent_fields/dimension.py#L7" link-text="Dimension source →">`Dimension`</tip> carries a name and a description. Every metric downstream is keyed by these names, so they are the vocabulary you read your results in.
 
-`measure()` is $\varphi$. It takes a trajectory (whatever shape your data has: a dict, a dataclass, a list of steps) and returns a numpy vector. One number per dimension. The entire `Field` is built from this function called K times.
+<tip t="Abstract method — override to project a raw trajectory into a fixed-dimensional behavioral vector" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L106" link-text="measure() source →">`measure()`</tip> is $\varphi$. It takes a trajectory (whatever shape your data has: a dict, a dataclass, a list of steps) and returns a numpy vector. One number per dimension. The entire `Field` is built from this function called K times.
 
 Eight dimensions here. Each answers a different facet of "what did the agent do?":
 
@@ -414,7 +414,7 @@ The true state at any moment is the full context window: every observation, ever
 
 The progression is linear. The task has a logical ordering: diagnose before fixing, fix before verifying. Different trajectories traverse this at different speeds, with different behaviors at each state, but the progression itself is a line. States are monotonic.
 
-In the same `Field` subclass, $\psi$ is the `state()` method:
+In the same `Field` subclass, $\psi$ is the <tip t="Optional method — override to label semantic progress at each step of a trajectory" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L136" link-text="state() source →">`state()`</tip> method:
 
 ```python
 class CodeFixField(Field):
@@ -450,7 +450,7 @@ class CodeFixField(Field):
 
 `state()` takes the trajectory and a step index `t`. It looks at everything up to step `t`, checks which milestones have been reached, returns the most advanced one. Five states: `start` → `diagnosed` → `editing` → `complete_fix` → `tested`. The gates are sequential: each requires the previous.
 
-`trajectory_length()` tells the framework how many steps to evaluate. At ingestion time, the `Field` calls `state(trajectory, t)` for every `t`, recording the full state sequence. This happens once per trajectory at `add()` time and is stored for all subsequent horizon queries.
+<tip t="Override to tell the Field how many steps to evaluate when computing state sequences" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L164" link-text="trajectory_length() source →">`trajectory_length()`</tip> tells the framework how many steps to evaluate. At ingestion time, the `Field` calls `state(trajectory, t)` for every `t`, recording the full state sequence. This happens once per trajectory at <tip t="Measures the trajectory via φ, records the state sequence if state() is defined, and appends to the cloud" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L186" link-text="add() source →">`add()`</tip> time and is stored for all subsequent horizon queries.
 
 The critical design choice in `state()` is what counts as progress. A naive version might check "has any Edit been made." The version above checks *what the edit actually did*: `count_bugs_addressed` inspects whether the edit content modifies the buggy function definitions, not just whether an edit occurred. A trajectory that edits test inputs instead of function bodies stays at `"editing"`, not `"complete_fix"`. This distinction is what produces horizon variation: in the Haiku experiment, 5 out of 19 trajectories that made edits never addressed the actual bugs.
 
@@ -519,7 +519,7 @@ There is no correct `state()`. There is the one that answers our question. Like 
 
 ### Horizons
 
-`state()` labels each step of a trajectory. A **horizon** is what we get when we filter the `Field` to only trajectories that passed through a given state. It is itself a `Field`, with the same dimensions, outcome labels, and full metrics, but scoped to trajectories that reached a particular state.
+`state()` labels each step of a trajectory. A <tip t="Returns a materialized Field containing only trajectories whose state sequence includes the given label" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L283" link-text="horizon() source →">**horizon**</tip> is what we get when we filter the `Field` to only trajectories that passed through a given state. It is itself a `Field`, with the same dimensions, outcome labels, and full metrics, but scoped to trajectories that reached a particular state.
 
 $$\mathcal{H}(s) = \lbrace\varphi(\tau_k) : \exists\, t \text{ s.t. } \psi(\tau_k, t) = s\rbrace$$
 
@@ -652,11 +652,11 @@ complete_fix: drift=-1.53   (K+=3)
 
 Look at the K+ column. Drift at `editing` is 33.01, but it is computed from 2 successful trajectories. That is not a success corridor. That is two points. The number comes out of the formula, but it carries no statistical weight. The same problem exists at every horizon: K+=3 is barely better. With so few successes, the within-model drift calculation is unreliable.
 
-This is a common situation. Weak models on hard tasks produce few successes. The very runs where drift analysis would be most useful are the ones where the success region is too thin to measure.
+This is a common situation. Weak models on hard tasks produce few successes. The very runs where drift analysis would be most useful are the ones where the <tip t="Returns a materialized Field filtered to trajectories above the outcome threshold" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L274" link-text="success_region() source →">success region</tip> is too thin to measure.
 
 ### Using a baseline `Field` as a ruler
 
-The `Field` is a behavioral prescription: 8 dimensions, 5 states, defined by `HorizonCodeFixField`. That prescription is model-independent. Any model that runs the same task through the same `Field` produces points in the same behavioral space.
+The `Field` is a behavioral prescription: 8 dimensions, 5 states, defined by <tip t="Full Field subclass with measure(), dimensions(), state(), and trajectory_length() for the bug-fixing tutorial" href="https://github.com/technoyoda/aft/blob/master/tutorials/tutorial-2/horizon_field.py#L117" link-text="HorizonCodeFixField source →">`HorizonCodeFixField`</tip>. That prescription is model-independent. Any model that runs the same task through the same `Field` produces points in the same behavioral space.
 
 We ran the same task with Sonnet (K=20, 13/20 pass). Sonnet's success corridor has K+=13 at every state, with width=2.60 throughout. It is flat, tight, and stable. This is what successful execution looks like through the lens of our `Field`.
 
