@@ -404,11 +404,11 @@ The workflow: check convergence (is there a problem?), read separation (where?),
 
 ## The `Field` is not static
 
-Everything above operates on the terminal cloud. K trajectories, measured at completion. The metrics tell us what the trajectories did and how well they did it. But they do not tell us **when** things went right or wrong.
+Everything above operates on the point cloud of completed trajectories. K trajectories, measured at completion. The metrics tell us what the trajectories did and how well they did it. But they do not tell us **when** things went right or wrong.
 
 The previous essay described the `Field` shifting with every token as context accumulates. *"Long-task failure is drift, not confusion."* The agent does not suddenly fail at step 40. It accumulates noise through the context window, and the `Field` warps gradually until the search lands in the wrong place.
 
-This is a temporal claim. The terminal cloud cannot answer it. A completed trajectory has been projected to a single point; the progression that produced it is gone.
+This is a temporal claim. The point cloud — one point per completed trajectory — cannot answer it. A completed trajectory has been projected to a single point; the progression that produced it is gone.
 
 We need a second lens. Not a replacement for $\varphi$, but a complement. Where $\varphi$ asks *what did the agent do?*, this new lens asks *where in the task is the agent?*
 
@@ -497,7 +497,7 @@ A single trajectory, 12 steps. The `Field` calls `state(trajectory, t)` for `t` 
 
 Stored sequence: `["start", "start", "diagnosed", "diagnosed", "diagnosed", "editing", "editing", "complete_fix", "tested", "tested", "tested", "tested"]`.
 
-A different trajectory might fix all three bugs in a single edit, jumping from `"diagnosed"` to `"complete_fix"` in one step. Another might make edits that never address the real bugs, staying at `"editing"` until it runs out of turns. Different state sequences, but all are comparable through horizons: *among all trajectories that reached `"complete_fix"`, what does the terminal cloud look like?*
+A different trajectory might fix all three bugs in a single edit, jumping from `"diagnosed"` to `"complete_fix"` in one step. Another might make edits that never address the real bugs, staying at `"editing"` until it runs out of turns. Different state sequences, but all are comparable through horizons: *among all trajectories that reached `"complete_fix"`, what does the point cloud of their behavioral measurements look like?*
 
 </details>
 
@@ -540,7 +540,7 @@ h.metrics().convergence() # 1.8 — outcome consistency for that group
 h.metrics().separation()  # separation within this group
 ```
 
-`horizon("editing")` does not measure what the agent was doing *during* editing. It is the terminal cloud, the full `measure()` output, filtered to trajectories that passed through `"editing"` at some point. Same points, smaller set.
+`horizon("editing")` does not measure what the agent was doing *during* editing. It is the point cloud of behavioral measurements — the full `measure()` output — filtered to trajectories that passed through `"editing"` at some point. Same points, smaller set.
 
 But this is not a limitation. The full `Field` is already an approximation: K samples from the true distribution over behaviors. Each horizon is the same kind of approximation, conditioned on a state. The full `Field` approximates "what does the agent do from the start?" The horizon approximates "what does the agent do, given it reached this state?" Filtering trajectories by state and measuring the resulting cloud is the same sampling logic, just conditional.
 
@@ -552,7 +552,7 @@ Because states are monotonic, horizons nest:
 
 $$\mathcal{H}(\text{tested}) \subseteq \mathcal{H}(\text{complete\_fix}) \subseteq \mathcal{H}(\text{editing}) \subseteq \mathcal{H}(\text{diagnosed}) \subseteq \mathcal{H}(\text{start}) = \mathcal{F}$$
 
-The horizon at "start" is the full `Field`. Walking the chain, computing metrics at each state, shows how the terminal cloud changes as we condition on progressively deeper progress:
+The horizon at "start" is the full `Field`. Walking the chain, computing metrics at each state, shows how the point cloud of behavioral measurements changes as we condition on progressively deeper progress:
 
 ```python
 for s in field.states:
