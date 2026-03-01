@@ -8,14 +8,14 @@ hidden: true
 
 ## Prologue
 
-> *This is Part 2 of [Agents are not thinking, they are searching](https://technoyoda.github.io/agent-search.html). Part 1 reframed what agents are (thier nature). This part builds the instruments for studying them.* This essay doesn't just come this time with handwavey theory but it also comes with [code](https://github.com/technoyoda/aft) (and [math](https://github.com/technoyoda/aft/blob/master/docs/math.md) for anyone liking formalism enough). This essay will have follow ups given how much fun I have had making it and the time I need for the concepts to soak before I do more with them. 
+> *This is Part 2 of [Agents are not thinking, they are searching](https://technoyoda.github.io/agent-search.html). Part 1 reframed what agents are (their nature). This part builds the instruments for studying them.* This essay doesn't just come this time with handwavey theory but it also comes with [code](https://github.com/technoyoda/aft) (and [math](https://github.com/technoyoda/aft/blob/master/docs/math.md) for anyone liking formalism enough). This essay will have follow ups given how much fun I have had making it and the time I need for the concepts to soak before I do more with them. 
 
 > The limits of my language mean the limits of my world — Ludwig Wittgenstein
 
 > The nature of a thing is more important than its form. — [Brok](https://www.youtube.com/watch?v=lPIXXTtEvzg)
 
 
-[My previous essay](https://technoyoda.github.io/agent-search.html) was a spinal response, an attempt to jot down the intuition behind how agents actually behave. But once the intuition was expressed, it felt incomplete. I had the thing's nature but no form to study it with. This essay bridges that gap: a construction for scientifically studying agent behavior and give it language.
+[My previous essay](https://technoyoda.github.io/agent-search.html) was a spinal response, an attempt to jot down the intuition behind how agents actually behave. But once the intuition was expressed, it felt incomplete. I had the thing's nature but no form to study it with. This essay bridges that gap: a construction for scientifically studying agent behavior and giving it language.
 
 One of my favourite grad school professors used to say: *any engineer worth their salt would never hedge their career on emergent properties.* This project aims to demystify agents so we can confidently build with them. All the code is open source and any/all human feedback is welcome.
 
@@ -32,7 +32,7 @@ The `Field` is not static. Every token that enters the context window reshapes i
   <figcaption>Agent Field Theory — The field of reachable behavior shifts as new observations enter the context window</figcaption>
 </figure>
 
-The engineering consequence: **we are not writing instructions. We are shaping a search space.** the prompt, the test suite, the repository structure, permissions architecture all define the boundaries. The agent's stochastic policy searches within them.
+The engineering consequence: **we are no longer just writing instructions. We are shaping a search space.** The prompt, the test suite, the repository structure, permissions architecture all define the boundaries. The agent's stochastic policy searches within them.
 
 That was the theory. It changed the question from "did I give good instructions?" to "have I bounded the search space well enough that the agent's stochastic search consistently lands where I need it?"
 
@@ -42,7 +42,7 @@ These are empirical questions. Answering them requires making the `Field` comput
 
 ---
 
-## How do we emperically measure agent behavior ?
+## How do we empirically measure agent behavior?
 
 The theoretical `Field`, the true distribution over reachable behaviors at each token, is intractable. Computing it requires three things no one has access to: the full pre-trained distribution, the RL-shaped policy, and the environment's transition dynamics. None of these will be fully available or easy to trivially study. 
 
@@ -74,7 +74,7 @@ The cloud is the empirical `Field`.
 
 The critical thing about $\varphi$ is that it is a **choice**. We decide the dimensions. We decide what the `Field` can see. A behavior not captured by any dimension is invisible to every metric downstream. If we do not measure "did the agent run tests," no analysis will reveal whether test-running correlates with success. If we do not measure "fraction of work on target files," no metric will detect whether scope creep predicts failure.
 
-This makes $\varphi$ a hypothesis. When we define our dimensions, we are stating: *I believe these are the behavioral properties that matter for understanding what my agent does on this task.* The `Field` tests that hypothesis. If our dimensions capture the right things, the metrics will be informative. If they miss the critical axis, the `Field` will look flat even when important variation exists.
+This makes $\varphi$ a hypothesis. When we define our dimensions, we are stating: *I believe these are the behavioral properties that matter for understanding what my agent does on this task.* The `Field` tests that hypothesis. If our dimensions miss the critical axis, the `Field` will look flat even when important variation exists.
 
 In practice, this is a `Field` subclass with two methods:
 
@@ -104,7 +104,7 @@ class CodeFixField(aft.Field):
         ])
 ```
 
-`dimensions()` names the axes of your behavioral space. Each `Dimension` carries a name and a human-readable description. These are not decorative: every metric downstream is keyed by dimension name. When a summary tells you "separation on `scope_ratio` = +0.4," that is interpretable because you named it and described what it measures.
+`dimensions()` names the axes of your behavioral space. Each `Dimension` carries a name and a description. Every metric downstream is keyed by these names, so they are the vocabulary you read your results in.
 
 `measure()` is $\varphi$. It takes a trajectory (whatever shape your data has: a dict, a dataclass, a list of steps) and returns a numpy vector. One number per dimension. The entire `Field` is built from this function called K times.
 
@@ -182,7 +182,7 @@ Ten points in 8-dimensional space. Each point is one trajectory measured through
 
 ---
 
-## The geometry of the cloud gives us a vocabulary
+## The geometry of the cloud gives us a vocabulary to reason about behavior
 
 We have K points in d-dimensional space. Some trajectories succeeded, some failed. We need to answer four questions, in order:
 
@@ -218,7 +218,7 @@ Large width: trajectories scatter. The measured behavior varies across runs.
 
 The `variance()` vector tells us *where* the spread lives. In the example above, most width comes from `num_messages` (3.81). Three dimensions (`ran_code`, `scope_ratio`, `escaped_cwd`) have zero variance. Every trajectory ran tests, stayed on target, and operated in the same directories. The task structure determined those behaviors; the agent's stochasticity did not touch them. The remaining variation lives in *how many* messages, tool calls, reads, and edits it took. Already a diagnosis: measured behavior varies on *effort*, not on *strategy*.
 
-But width alone is ambiguous. High width could mean the task has many valid strategies (the search space is wide and that is fine) or the prompt is vague and the behavioral variation reflects an underconstrained search (the search space is wide and that is a problem). We need to know whether the variation matters for outcomes.
+But width alone is ambiguous. High width could mean the task has many valid strategies or the prompt is vague and the behavioral variation reflects an underconstrained search. We need to know whether the variation matters for outcomes.
 
 <details markdown="1">
 <summary><b>Width comparison between two prompts</b></summary>
@@ -263,7 +263,7 @@ If we wanted to keep the prompt flexible but reduce width, the data points at me
 
 ### Convergence — are outcomes stable?
 
-Width told we there is behavioral variation. But a wide `Field` where every run succeeds is not a problem. It just means multiple strategies work. A narrow `Field` where outcomes are random is a problem. The agent is doing roughly the same thing and getting different results.
+Width told us there is behavioral variation. But variation is only a problem if it affects outcomes: a wide `Field` where every run succeeds is fine; a narrow `Field` with random outcomes might not be.
 
 Convergence separates these cases. It measures the signal-to-noise ratio of outcomes, mean divided by standard deviation.
 
@@ -542,9 +542,9 @@ Every metric works on it. We can compute separation within a horizon: among traj
 
 Because states are monotonic, horizons nest:
 
-$$\mathcal{H}(\text{tested}) \subseteq \mathcal{H}(\text{complete\\_fix}) \subseteq \mathcal{H}(\text{editing}) \subseteq \mathcal{H}(\text{diagnosed}) \subseteq \mathcal{H}(\text{start}) = \mathcal{F}$$
+$$\mathcal{H}(\text{tested}) \subseteq \mathcal{H}(\text{complete\_fix}) \subseteq \mathcal{H}(\text{editing}) \subseteq \mathcal{H}(\text{diagnosed}) \subseteq \mathcal{H}(\text{start}) = \mathcal{F}$$
 
-Every trajectory that reached "tested" also passed through "complete_fix", "editing", and "diagnosed." The horizon at "start" is the full `Field`. Walking the chain, computing metrics at each state, shows how the terminal cloud changes as we condition on progressively deeper progress:
+The horizon at "start" is the full `Field`. Walking the chain, computing metrics at each state, shows how the terminal cloud changes as we condition on progressively deeper progress:
 
 ```python
 for s in field.states:
@@ -553,7 +553,7 @@ for s in field.states:
     print(f"{s:>12}: K={h.K:>2}  width={hm.width():.1f}  conv={hm.convergence():.2f}")
 ```
 
-This data comes from running the same bug-fixing task 20 times with Haiku, a weaker model that produces real variation in how far trajectories progress:
+This data comes from running the <tip t="Experiment to study horizons." href="https://github.com/technoyoda/aft/blob/master/tutorials/tutorial-2/horizon_flow.py#L85" link-text="Source →">same bug-fixing task 20 times with Haiku</tip>, a weaker model that produces real variation in how far trajectories progress:
 
 ```
        start: K=20  width=33.5  conv=0.42
@@ -711,10 +711,10 @@ The `Field` subclass is the behavioral prescription. It defines which dimensions
 
 The practical workflow:
 
-1. Define your `Field` (dimensions + states) from the engineering question
+1. Define the `Field` (dimensions + states) from the engineering question
 2. Build a reference corridor by running a capable model (or collecting good traces) until the success region stabilizes
 3. For any new configuration, run K trajectories and compare against the reference at each horizon
-4. You no longer need balanced outcomes within a single run. The reference corridor provides what sparse successes cannot
+4. Now we no longer need balanced outcomes within a single run. The reference corridor provides what sparse successes cannot
 
 </details>
 
@@ -760,7 +760,7 @@ The previous essay told us the `Field` exists. That the prompt narrows it, the e
 
 This vocabulary is not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
 
-The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that accompany this essay put the vocabulary to work on real situations to provide insight into usage patterns. They walk through the full cycle: define `measure()` and `state()` from a real engineering question, run K trajectories, build the `Field`, read the metrics, diagnose the problem, intervene, and compare.
+The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that accompany this essay put the vocabulary to work on real tasks.
 
 The vocabulary:
 
@@ -771,4 +771,12 @@ The vocabulary:
 - **Horizons** — at which state does the measured behavioral variation change?
 - **Drift** — at which state do failing trajectories diverge from the success corridor within your `Field`?
 
-These are tools for thinking, scoped to the behavioral space you define. The metrics see what $\varphi$ sees. They are silent on everything else. The answers are always qualified: *within the `Field` you built*.
+## Meta commentary on usage
+
+This framework does not predict what an agent will do. As stated throughout the essay, the `Field` is an empirical instrument, not a generative theory. You cannot derive the true distribution over trajectories from first principles. What you can do is define a proxy: a set of dimensions and states that capture the behaviors you care about, and then measure whether the agent lives within them.
+
+That proxy is subjective by design. The `Field` does not describe the full space of reachable behaviors. It describes the space *you chose to look at*. `measure()` is your hypothesis about what matters. `state()` is your hypothesis about what progress looks like. The framework tests those hypotheses. You change a prompt, swap a model, modify the environment, and the `Field` tells you whether the behavioral distribution shifted in the directions your dimensions can see. Everything works backwards: start from the behaviors you expect, define the dimensions that would reveal them, then run the experiment.
+
+This implies something deeper than just "test your agent." It means thinking not only about what the agent should achieve, but about the space of programs it might construct along the way. This is the fundamental difference between LLM software and traditional software. Traditional software is statically baked. Line 5 of a program executes whatever instruction was written on line 5. No matter how dynamic the runtime graph, no instruction is synthesized out of thin air. LLM-based software breaks this invariant. The agent's next action is sampled from a distribution. Line 5 could be a completely different program on every run. The code is not written; it is searched for, live, conditioned on everything that came before.
+
+Given the entropy in those unrolled trajectories, reasoning about agent behavior without measurement is guesswork. The framework makes it empirical. And because the `Field` is defined by you, not by the model provider, it enables something practical: **behavioral alignment metrics**. You define the behavioral prescription, the dimensions and states that describe how the agent *should* behave, and then measure how consistently any model adheres to it. The focus shifts from refining what the prompt says to prescribing what the behavior should look like, and then holding the system accountable to that prescription across models, prompts, and environments.
