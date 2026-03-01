@@ -731,9 +731,12 @@ The failure mode shifts depending on which state we condition on. At `editing`, 
 
 ---
 
-## The construction
+## Conclusion
 
-Two lenses. `measure()` captures what the trajectory did. `state()` labels where in the task it was. The cloud built from `measure()` is the empirical `Field`. The horizons built from `state()` give it temporal structure. The same metrics apply to both.
+<details markdown="1">
+<summary><b>summary of everything until now</b></summary>
+
+The construction rests on two lenses over the same trajectory. `measure()` projects *what the agent did* into a point cloud — the empirical `Field`. `state()` labels *where in the task* each step falls, slicing that cloud into horizons. One gives shape, the other gives temporal structure. Every metric (width, convergence, separation, skew) works on both.
 
 | Object | Python | What it gives us |
 |--------|--------|------------------|
@@ -745,6 +748,15 @@ Two lenses. `measure()` captures what the trajectory did. `state()` labels where
 | **Drift** | $W_{\mathcal{H}(s)} - W_{\mathcal{H}^+(s)}$ | Where failures depart from the success corridor |
 | **Regions** | `field.success_region()` | The cloud partitioned by outcome |
 
+
+The metrics:
+- **Width** — is the measured behavior constrained or scattered across the dimensions you defined?
+- **Convergence** — are outcomes consistent within the behavioral space you chose to measure?
+- **Separation** — along which measured dimensions do successful and failing trajectories differ?
+- **Skew** — on a given dimension, does doing more correlate with success or failure?
+- **Horizons** — at which state does the measured behavioral variation change?
+- **Drift** — at which state do failing trajectories diverge from the success corridor within your `Field`?
+
 The previous essay told us the `Field` exists. That the prompt narrows it, the environment bounds it, feedback steers it, noise warps it. Now each claim has a measurement:
 
 | Claim from the previous essay | Measurement |
@@ -754,24 +766,16 @@ The previous essay told us the `Field` exists. That the prompt narrows it, the e
 | *"Long-task failure is drift"* | Walk the horizon chain. Find where drift spikes |
 | *"The environment bounds the search"* | Change the environment. Compare both fields |
 
----
+</details>
 
-## What this enables
+### What this enables
 
-This vocabulary is not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
+The vocabulary is not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
 
 The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that accompany this essay put the vocabulary to work on real tasks.
 
-The vocabulary:
 
-- **Width** — is the measured behavior constrained or scattered across the dimensions you defined?
-- **Convergence** — are outcomes consistent within the behavioral space you chose to measure?
-- **Separation** — along which measured dimensions do successful and failing trajectories differ?
-- **Skew** — on a given dimension, does doing more correlate with success or failure?
-- **Horizons** — at which state does the measured behavioral variation change?
-- **Drift** — at which state do failing trajectories diverge from the success corridor within your `Field`?
-
-## Meta commentary on usage
+### Meta commentary on usage
 
 This framework does not predict what an agent will do. As stated throughout the essay, the `Field` is an empirical instrument, not a generative theory. You cannot derive the true distribution over trajectories from first principles. What you can do is define a proxy: a set of dimensions and states that capture the behaviors you care about, and then measure whether the agent lives within them.
 
