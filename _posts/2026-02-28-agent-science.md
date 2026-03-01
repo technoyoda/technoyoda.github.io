@@ -702,8 +702,7 @@ At the `editing` horizon (K=19): Haiku trajectories average 28 messages vs the s
 
 The diagnosis is now grounded in a stable reference. Haiku's problem at `editing` is not resource starvation. It uses 55% more messages and 60% more tool calls than what successful execution looks like. But it addresses fewer bugs. The trajectories are editing the wrong things: call sites and test inputs instead of function definitions.
 
-<details markdown="1">
-<summary><b>The baseline is a property of the task, not the model</b></summary>
+#### The baseline is anchored to the task, not the model
 
 The baseline does not have to come from Sonnet. It can come from any source of successful trajectories measured through the same `Field`: a different model, a curated set of golden runs, even human-operated traces. What matters is that you have enough successful trajectories to define a stable corridor in the behavioral space your `Field` prescribes.
 
@@ -715,8 +714,6 @@ The practical workflow:
 2. Build a reference corridor by running a capable model (or collecting good traces) until the success region stabilizes
 3. For any new configuration, run K trajectories and compare against the reference at each horizon
 4. Now we no longer need balanced outcomes within a single run. The reference corridor provides what sparse successes cannot
-
-</details>
 
 <details markdown="1">
 <summary><b>What shifts between horizons</b></summary>
@@ -777,10 +774,10 @@ The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that ac
 
 ### Meta commentary on usage
 
-This framework does not predict what an agent will do. As stated throughout the essay, the `Field` is an empirical instrument, not a generative theory. You cannot derive the true distribution over trajectories from first principles. What you can do is define a proxy: a set of dimensions and states that capture the behaviors you care about, and then measure whether the agent lives within them.
+This framework does not predict what an agent will do. As stated throughout the essay, the `Field` is an empirical instrument, not a generative theory. We cannot derive the true distribution over trajectories from first principles. What we can do is define a proxy: a set of dimensions and states that capture the behaviors we care about, and then measure whether the agent lives within them.
 
-That proxy is subjective by design. The `Field` does not describe the full space of reachable behaviors. It describes the space *you chose to look at*. `measure()` is your hypothesis about what matters. `state()` is your hypothesis about what progress looks like. The framework tests those hypotheses. You change a prompt, swap a model, modify the environment, and the `Field` tells you whether the behavioral distribution shifted in the directions your dimensions can see. Everything works backwards: start from the behaviors you expect, define the dimensions that would reveal them, then run the experiment.
+That proxy is subjective by design. The `Field` does not describe the full space of reachable behaviors. It describes the space *we chose to look at*. `measure()` is our hypothesis about what matters. `state()` is our hypothesis about what progress looks like. The framework tests those hypotheses. We change a prompt, swap a model, modify the environment, and the `Field` tells us whether the behavioral distribution shifted in the directions our dimensions can see. Everything works backwards: start from the behaviors we expect, define the dimensions that would reveal them, then run the experiment.
 
-This implies something deeper than just "test your agent." It means thinking not only about what the agent should achieve, but about the space of programs it might construct along the way. This is the fundamental difference between LLM software and traditional software. Traditional software is statically baked. Line 5 of a program executes whatever instruction was written on line 5. No matter how dynamic the runtime graph, no instruction is synthesized out of thin air. LLM-based software breaks this invariant. The agent's next action is sampled from a distribution. Line 5 could be a completely different program on every run. The code is not written; it is searched for, live, conditioned on everything that came before.
+This implies something deeper than just "test the agent." It means thinking not only about what the agent should achieve, but about the space of programs it might construct along the way. This is the fundamental difference between LLM software and traditional software. Traditional software is statically baked. Line 5 of a program executes whatever instruction was written on line 5. No matter how dynamic the runtime graph, no instruction is synthesized out of thin air. LLM-based software breaks this invariant. The agent's next action is sampled from a distribution. Line 5 could be a completely different program on every run. The code is not written; it is searched for, live, conditioned on everything that came before.
 
-Given the entropy in those unrolled trajectories, reasoning about agent behavior without measurement is guesswork. The framework makes it empirical. And because the `Field` is defined by you, not by the model provider, it enables something practical: **behavioral alignment metrics**. You define the behavioral prescription, the dimensions and states that describe how the agent *should* behave, and then measure how consistently any model adheres to it. The focus shifts from refining what the prompt says to prescribing what the behavior should look like, and then holding the system accountable to that prescription across models, prompts, and environments.
+Given the entropy in those unrolled trajectories, reasoning about agent behavior without measurement is guesswork. The framework makes it empirical. And because the `Field` is defined by us, not by the model provider, it enables something practical: **behavioral alignment metrics**. We define the behavioral prescription, the dimensions and states that describe how the agent *should* behave, and then measure how consistently any model adheres to it. The focus shifts from refining what the prompt says to prescribing what the behavior should look like, and then holding the system accountable to that prescription across models, prompts, and environments.
