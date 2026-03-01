@@ -3,7 +3,7 @@ layout: post
 title: "Agents are not thinking: Science of agent behavior"
 date: 2026-02-28
 categories: blog
-hidden: true
+hidden: false
 ---
 
 ## Prologue
