@@ -768,13 +768,13 @@ class IntentFluctuationField(aft.Field[dict]):
         ...
 ```
 
-The full implementation is in [`study_field.py`](https://github.com/technoyoda/aft/blob/master/studies/study-1/study_field.py).
+The full implementation is in <tip t="IntentFluctuationField: Field subclass with measure(), state(), and intent() for the bug-fixing task" href="https://github.com/technoyoda/aft/blob/master/studies/study-1/study_field.py" link-text="study_field.py source →">`study_field.py`</tip>.
 
 ### Semantic chains
 
 With intent defined, we can look at the **semantic sequence** of each trajectory: the full action trace interleaving tool names with `model_introspection` labels showing where the model reasoned between actions.
 
-We ran K=20 trajectories for each of three models: Haiku, Sonnet, and Opus. The [analysis notebook](https://github.com/technoyoda/aft/blob/master/studies/study-1/semantic_chains.ipynb) has the complete traces. Here are representative examples:
+We ran K=20 trajectories for each of three models: Haiku, Sonnet, and Opus. The <tip t="Notebook with semantic chains, program families, and horizon × program composition for all three models" href="https://github.com/technoyoda/aft/blob/master/studies/study-1/semantic_chains.ipynb" link-text="analysis notebook →">analysis notebook</tip> has the complete traces. Here are representative examples:
 
 ```
 OPUS   (20/20 pass)
@@ -821,7 +821,7 @@ Program count increases as capability decreases. Opus produces one program acros
 
 Within-family width reveals a second dimension of variation. Opus has one program but width=3.94: same alternation pattern, different tool arguments across runs. Sonnet's dominant family has width=0.66, its passing trajectories tightly clustered in behavioral space. Haiku's largest family has width=6.98. Even runs that share a program diverge in their behavioral vectors.
 
-The [full analysis](https://github.com/technoyoda/aft/blob/master/studies/study-1/semantic_chains.ipynb) includes horizon × program composition, showing that Opus and Sonnet maintain the same program structure across all task states while Haiku loses trajectories at later states. Its divergent programs fail to complete the task.
+The <tip t="Notebook with semantic chains, program families, and horizon × program composition for all three models" href="https://github.com/technoyoda/aft/blob/master/studies/study-1/semantic_chains.ipynb" link-text="full analysis →">full analysis</tip> includes horizon × program composition, showing that Opus and Sonnet maintain the same program structure across all task states while Haiku loses trajectories at later states. Its divergent programs fail to complete the task.
 
 ---
 
