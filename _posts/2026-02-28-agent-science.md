@@ -662,20 +662,11 @@ Look at the K+ column. Drift at `editing` is 33.01, but it is computed from 2 su
 
 This is a common situation. Weak models on hard tasks produce few successes. The very runs where drift analysis would be most useful are the ones where the <tip t="Returns a materialized Field filtered to trajectories above the outcome threshold" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L274" link-text="success_region() source →">success region</tip> is too thin to measure.
 
-### The behavioral baseline is anchored to the task, not the model
+### Using a baseline Field as a ruler
 
-The `Field` subclass is a behavioral prescription. It defines which dimensions matter and which states define progress. That prescription is model-independent — it is anchored to the task. Any model that runs the same task through the same `Field` produces points in the same behavioral space, comparable through the same metrics.
+A `Field` can be used as a **ruler**. Build a reference corridor from a capable model's success region (or from curated golden runs, or human-operated traces), and measure any other model's trajectories against it. The reference corridor does not have to come from the same model, or even the same kind of source. It only needs enough successful trajectories to define a stable region in the behavioral space the `Field` prescribes.
 
-This means a `Field` can be used as a **ruler**. Build a reference corridor from a capable model's success region (or from curated golden runs, or human-operated traces), and measure any other model's trajectories against it. The reference corridor does not have to come from the same model, or even the same kind of source. It only needs enough successful trajectories to define a stable region in the behavioral space the `Field` prescribes.
-
-The practical workflow:
-
-1. Define the `Field` (dimensions + states) from the engineering question
-2. Build a reference corridor by running a capable model (or collecting good traces) until the success region stabilizes
-3. For any new configuration, run K trajectories and compare against the reference at each horizon
-4. Now we no longer need balanced outcomes within a single run. The reference corridor provides what sparse successes cannot
-
-This solves the drift problem from above. Within-model drift requires enough successes to define a stable success corridor — and weak models on hard tasks produce few successes. The very runs where drift analysis would be most useful are the ones where the success region is too thin to measure. A cross-model baseline sidesteps this entirely: use a strong model's success corridor as the ruler, and measure the weak model's trajectories against it at every horizon.
+This solves the drift problem from above. Within-model drift requires enough successes to define a stable success corridor, and weak models on hard tasks produce few successes. A cross-model baseline sidesteps this entirely: use a strong model's success corridor as the ruler, and measure the weak model's trajectories against it at every horizon.
 
 <details markdown="1">
 <summary><b>Example: Sonnet success corridor as a ruler for Haiku</b></summary>
@@ -732,22 +723,127 @@ The failure mode shifts depending on which state we condition on. At `editing`, 
 
 ---
 
+## Intent: what was the policy doing?
+
+The ruler showed Haiku is far from the success corridor. Drift showed where. But neither answers the question that actually matters for engineering: **what was the policy doing differently?**
+
+Two trajectories can land at the same state with similar $\varphi$ measurements (same number of tool calls, same scope ratio) but one is confidently executing while the other is recovering from a failed attempt. $\varphi$ can't see this because it erases temporal order. $\psi$ can't see this because both are at the same task state. The policy's operational character, the thing that determines what happens next, is invisible to both lenses.
+
+We need a third lens. One that reads not the task's signal in the trajectory (that's $\psi$), but the **policy's** signal.
+
+### The intent function
+
+Intent ($\rho_\pi$) is a user-defined function that labels each trajectory step with a discrete marker:
+
+$$\rho_\pi : \mathcal{T} \times \mathbb{N} \to \mathcal{I}$$
+
+where $\mathcal{I}$ is a finite alphabet of intent labels. Unlike $\psi$, intent is **non-monotonic**. The policy can move between labels in any order, revisiting earlier operational modes.
+
+|  | $\psi$ (state) | $\rho_\pi$ (intent) |
+|--|----------------|---------------------|
+| Serves | the trajectory | the policy |
+| Monotonic | yes, progress only moves forward | no, the policy can revisit modes |
+| Reads | task milestones | operational character |
+| Question | *where did the task get to?* | *how was the policy operating?* |
+
+For the bug-fixing task, we use the simplest meaningful decomposition: **binary intent**.
+
+- **acting**: the model makes tool calls (Read, Edit, Bash, Glob, ...)
+- **introspecting**: the model produces reasoning tokens with no tool calls
+
+This is a coarse lens. Richer labels (orienting, executing, recovering, ...) are possible and would enable more fine-grained analysis. But binary is enough to reveal structural differences across models.
+
+```python
+class IntentFluctuationField(aft.Field[dict]):
+    """Field with three lenses: measure (φ), state (ψ), intent (ρ_π)."""
+
+    def intent(self, trajectory: dict, t: int) -> str:
+        msg = trajectory["messages"][t]
+        if is_assistant(msg):
+            if has_tool_calls(msg):
+                return "acting"
+            if has_text(msg):
+                return "introspecting"
+        # non-assistant messages inherit from the nearest assistant
+        ...
+```
+
+The full implementation is in [`study_field.py`](https://github.com/technoyoda/aft/blob/master/studies/study-1/study_field.py).
+
+### Semantic chains
+
+With intent defined, we can look at the **semantic sequence** of each trajectory: the full action trace interleaving tool names with `model_introspection` labels showing where the model reasoned between actions.
+
+We ran K=20 trajectories for each of three models: Haiku, Sonnet, and Opus. The [analysis notebook](https://github.com/technoyoda/aft/blob/master/studies/study-1/semantic_chains.ipynb) has the complete traces. Here are representative examples:
+
+```
+OPUS   (20/20 pass)
+   Glob → Read → MI → Edit×3 → MI → Read → Bash → MI
+
+SONNET (13/20 pass)
+   MI → Read → MI → Edit×3 → MI → Bash → MI → Read → MI     ← passes
+   MI → Read → MI → Edit×4 → MI → Bash → MI → Read → MI     ← fails
+
+HAIKU  (3/20 pass)
+   MI → Read → MI → Bash → MI → Read → MI → Edit×4 → MI → Read → MI → Bash → MI
+   MI → Read → MI → Bash → MI → Read → MI → Bash → MI → Edit → MI → Read → MI → Edit×4 → ...
+```
+
+Three observations:
+
+1. **Opus starts by acting** (`Glob → Read`, no leading MI). Sonnet and Haiku start by introspecting (`MI → Read`).
+2. **Sonnet has two modes.** `Edit×3` runs pass; `Edit×4` runs fail. The fourth edit is the signal: the model misidentified a bug.
+3. **Haiku's chains vary significantly across runs.** More back-and-forth between acting and reasoning. It interleaves Bash and Read throughout, using test feedback to guide its next action rather than working from a diagnosis.
+
+### Program strings and program families
+
+Run-length encoding the intent sequence produces a **program string**, the compressed behavioral fingerprint of the trajectory. Each trajectory maps to a sequence of alternating acting/introspecting runs.
+
+The Field's `program_family()` groups trajectories that share the same program string. This partitions the field by *structural* similarity: trajectories in the same family followed the same act/think pattern regardless of what specific tools they called or what files they targeted.
+
+```python
+for prog in field.programs:
+    fam = field.program_family(prog)
+    fm = fam.metrics()
+    short = " → ".join(p[0].upper() for p in prog)   # A/I
+    print(f"  {fam.K:>2}× (pass={wins}/{fam.K}, width={fm.width():.2f})  {short}")
+```
+
+Here is what fell out of the data:
+
+| Model | Distinct programs | Act/think cycles | Pass rate | Field width |
+|-------|-------------------|-----------------|-----------|-------------|
+| Opus | 1 | 3 | 20/20 | 3.94 |
+| Sonnet | 2 | 4–5 | 13/20 | 1.06 |
+| Haiku | 5 | 6–10 | 3/20 | 8.69 |
+
+Program count increases as capability decreases. Opus produces one program across all 20 runs. Sonnet splits into two. Haiku fragments into five. Cycle count follows the same pattern: Opus alternates 3 times, Haiku up to 10.
+
+Within-family width reveals a second dimension of variation. Opus has one program but width=3.94: same alternation pattern, different tool arguments across runs. Sonnet's dominant family has width=0.66, its passing trajectories tightly clustered in behavioral space. Haiku's largest family has width=6.98. Even runs that share a program diverge in their behavioral vectors.
+
+The [full analysis](https://github.com/technoyoda/aft/blob/master/studies/study-1/semantic_chains.ipynb) includes horizon × program composition, showing that Opus and Sonnet maintain the same program structure across all task states while Haiku loses trajectories at later states. Its divergent programs fail to complete the task.
+
+---
+
 ## Conclusion
 
 <details markdown="1">
 <summary><b>summary of everything until now</b></summary>
 
-The construction rests on two lenses over the same trajectory. `measure()` projects *what the agent did* into a point cloud — the empirical `Field`. `state()` labels *where in the task* each step falls, slicing that cloud into horizons. One gives shape, the other gives temporal structure. Every metric (width, convergence, separation, skew) works on both.
+The construction rests on three lenses over the same trajectory. `measure()` projects *what the agent did* into a point cloud, the empirical `Field`. `state()` labels *where in the task* each step falls, slicing that cloud into horizons. `intent()` labels *how the policy was operating* at each step, compressing the trajectory into a program string. Every metric (width, convergence, separation, skew) works on all three.
 
 | Object | Python | What it gives us |
 |--------|--------|------------------|
 | $\varphi$ | `field.measure(trajectory)` | K points in d-dimensional space |
 | $\psi$ | `field.state(trajectory, t)` | State labels along each trajectory |
+| $\rho_\pi$ | `field.intent(trajectory, t)` | Intent labels along each trajectory |
 | **`Field`** | `field.points`, `field.outcomes` | The empirical search space |
 | **Metrics** | `field.metrics()` | Width, convergence, separation, skew |
 | **Horizons** | `field.horizon("editing")` | Metrics scoped to a state |
 | **Drift** | $W_{\mathcal{H}(s)} - W_{\mathcal{H}^+(s)}$ | Where failures depart from the success corridor |
 | **Regions** | `field.success_region()` | The cloud partitioned by outcome |
+| **Programs** | `field.programs` | Distinct behavioral programs across trajectories |
+| **Program Families** | `field.program_family(prog)` | Sub-field scoped to trajectories sharing a program |
 
 
 The metrics:
@@ -766,12 +862,21 @@ The previous essay told us the `Field` exists. That the prompt narrows it, the e
 | *"Feedback steers the search"* | Compare convergence with and without test suites |
 | *"Long-task failure is drift"* | Walk the horizon chain. Find where drift spikes |
 | *"The environment bounds the search"* | Change the environment. Compare both fields |
+| *"Two identical clouds can hide different strategies"* | Compare program distributions across models |
 
 </details>
 
 ### What this enables
 
-The vocabulary and it's objects are not confined to one tool or one library. The objects ($\varphi$, $\psi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
+Three lenses, one trajectory:
+
+- $\varphi$ sees *what happened*: the behavioral vector
+- $\psi$ sees *where the task got to*: progress through states
+- $\rho_\pi$ sees *how the policy operated*: the program it executed
+
+The `Field` subclass is a behavioral prescription anchored to the task, not the model. It defines which dimensions matter and which states define progress. That prescription is model-independent. Any model that runs the same task through the same `Field` produces points in the same behavioral space. This makes the `Field` a **ruler**: build a reference corridor from a capable model's success region, and measure any other model against it.
+
+The vocabulary and its objects are not confined to one tool or one library. The objects ($\varphi$, $\psi$, $\rho_\pi$, the cloud, the metrics) are abstractions that can be implemented in any stack, applied to any agent, measured on any task. The Python library is one form of expression. The school of thought is what matters: **treat agent behavior as a distribution. Measure the distribution's shape. Use the shape to make engineering decisions.**
 
 The [tutorials](https://github.com/technoyoda/aft/tree/master/tutorials) that accompany this essay put the vocabulary and objects to work on simulated scenarios.
 
