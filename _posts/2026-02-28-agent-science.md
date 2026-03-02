@@ -662,11 +662,25 @@ Look at the K+ column. Drift at `editing` is 33.01, but it is computed from 2 su
 
 This is a common situation. Weak models on hard tasks produce few successes. The very runs where drift analysis would be most useful are the ones where the <tip t="Returns a materialized Field filtered to trajectories above the outcome threshold" href="https://github.com/technoyoda/aft/blob/master/agent_fields/field.py#L274" link-text="success_region() source →">success region</tip> is too thin to measure.
 
-### Using a baseline `Field` as a ruler
+### The behavioral baseline is anchored to the task, not the model
 
-The `Field` is a behavioral prescription: 8 dimensions, 5 states, defined by <tip t="Full Field subclass with measure(), dimensions(), state(), and trajectory_length() for the bug-fixing tutorial" href="https://github.com/technoyoda/aft/blob/master/tutorials/tutorial-2/horizon_field.py#L117" link-text="HorizonCodeFixField source →">`HorizonCodeFixField`</tip>. That prescription is model-independent. Any model that runs the same task through the same `Field` produces points in the same behavioral space.
+The `Field` subclass is a behavioral prescription. It defines which dimensions matter and which states define progress. That prescription is model-independent — it is anchored to the task. Any model that runs the same task through the same `Field` produces points in the same behavioral space, comparable through the same metrics.
 
-We ran the same task with Sonnet (K=20, 13/20 pass). Sonnet's success corridor has K+=13 at every state, with width=2.60 throughout. It is flat, tight, and stable. This is what successful execution looks like through the lens of our `Field`.
+This means a `Field` can be used as a **ruler**. Build a reference corridor from a capable model's success region (or from curated golden runs, or human-operated traces), and measure any other model's trajectories against it. The reference corridor does not have to come from the same model, or even the same kind of source. It only needs enough successful trajectories to define a stable region in the behavioral space the `Field` prescribes.
+
+The practical workflow:
+
+1. Define the `Field` (dimensions + states) from the engineering question
+2. Build a reference corridor by running a capable model (or collecting good traces) until the success region stabilizes
+3. For any new configuration, run K trajectories and compare against the reference at each horizon
+4. Now we no longer need balanced outcomes within a single run. The reference corridor provides what sparse successes cannot
+
+This solves the drift problem from above. Within-model drift requires enough successes to define a stable success corridor — and weak models on hard tasks produce few successes. The very runs where drift analysis would be most useful are the ones where the success region is too thin to measure. A cross-model baseline sidesteps this entirely: use a strong model's success corridor as the ruler, and measure the weak model's trajectories against it at every horizon.
+
+<details markdown="1">
+<summary><b>Example: Sonnet success corridor as a ruler for Haiku</b></summary>
+
+We ran the same bug-fixing task with both Sonnet (K=20, 13/20 pass) and Haiku (K=20, 3/20 pass), using the same <tip t="Full Field subclass with measure(), dimensions(), state(), and trajectory_length() for the bug-fixing tutorial" href="https://github.com/technoyoda/aft/blob/master/tutorials/tutorial-2/horizon_field.py#L117" link-text="HorizonCodeFixField source →">`HorizonCodeFixField`</tip>. Sonnet's success corridor has K+=13 at every state, with width=2.60 throughout — flat, tight, and stable. This is what successful execution looks like through the lens of our `Field`.
 
 ```python
 sonnet = build_field(sonnet_run)
@@ -678,7 +692,7 @@ baseline.K              # 13
 baseline.metrics().width()  # 2.60 — stable across all horizons
 ```
 
-Now compare Haiku's trajectories at each horizon against this baseline:
+Compare Haiku's trajectories at each horizon against this baseline:
 
 ```python
 for s in haiku.states:
@@ -698,39 +712,21 @@ complete_fix: W_haiku=14.2  W_baseline=2.6  gap=11.6
 
 ![Width: Haiku (all) vs Sonnet (success) across horizons](../assets/images/cross_model_drift.png)
 
-The Sonnet success corridor (green) is a flat bar at 2.60 across all states. Haiku (red) is 10-13x wider. The gap drops at `complete_fix` (30.9 → 11.6) when the 5 trajectories that edited the wrong things are filtered out. But even the 14 that addressed all bugs are still far outside the success corridor.
+Haiku is 10-13x wider than the success corridor at every state. The gap drops at `complete_fix` (30.9 → 11.6) when the 5 trajectories that edited the wrong things are filtered out. But even the 14 that addressed all bugs are still far outside the corridor.
 
-Width tells us the spread. But we can also ask *where* in behavioral space Haiku's trajectories land relative to the success corridor. The centroid gap at each horizon answers this:
+The centroid gap reveals *where* in behavioral space Haiku lands relative to the corridor:
 
 ![Centroid gap at 'editing': Haiku − Sonnet success](../assets/images/centroid_gap_editing.png)
 
-At the `editing` horizon (K=19): Haiku trajectories average 28 messages vs the success corridor's 17.8 (gap: +10.15). They use 9.1 tool calls vs 5.6 (gap: +3.49). But they address only 2.05 bugs vs 3.0 (gap: -0.95). Every red bar means Haiku did *more* than the success corridor. The one green bar (`bugs_addressed`) means Haiku did *less*. More effort on every dimension, less quality on the one that matters.
-
 ![Centroid: Sonnet success vs Haiku at 'editing' (K=19)](../assets/images/centroid_editing.png)
 
-The diagnosis is now grounded in a stable reference. Haiku's problem at `editing` is not resource starvation. It uses 55% more messages and 60% more tool calls than what successful execution looks like. But it addresses fewer bugs. The trajectories are editing the wrong things: call sites and test inputs instead of function definitions.
+At `editing` (K=19): Haiku does *more* work on every dimension — 55% more messages, 60% more tool calls — but addresses *fewer* bugs. The diagnosis: Haiku's problem is not resource starvation. The trajectories are editing the wrong things.
 
-#### The baseline is anchored to the task, not the model
-
-The baseline does not have to come from Sonnet. It can come from any source of successful trajectories measured through the same `Field`: a different model, a curated set of golden runs, even human-operated traces. What matters is that you have enough successful trajectories to define a stable corridor in the behavioral space your `Field` prescribes.
-
-The `Field` subclass is the behavioral prescription. It defines which dimensions matter and which states define progress. That prescription is fixed. What varies is which distribution fills it. A strong model's success region, a weak model's full field, a human operator's traces. All produce points in the same space, all comparable through the same metrics.
-
-The practical workflow:
-
-1. Define the `Field` (dimensions + states) from the engineering question
-2. Build a reference corridor by running a capable model (or collecting good traces) until the success region stabilizes
-3. For any new configuration, run K trajectories and compare against the reference at each horizon
-4. Now we no longer need balanced outcomes within a single run. The reference corridor provides what sparse successes cannot
-
-<details markdown="1">
-<summary><b>What shifts between horizons</b></summary>
-
-At `complete_fix` (K=14), the centroid gap changes character. The `bugs_addressed` gap disappears (by definition, all 14 addressed all 3 bugs). But the `num_messages` gap *grows* to +12.5, and a new gap appears: `num_edits` at +0.79. Even the Haiku trajectories that produced correct fixes needed an extra edit and 12 more messages to get there.
+At `complete_fix` (K=14), the gap changes character. The `bugs_addressed` gap disappears (by definition, all 14 addressed all 3 bugs). But the `num_messages` gap *grows* to +12.5, and `num_edits` appears at +0.79. Even the Haiku trajectories that produced correct fixes needed an extra edit and 12 more messages to get there.
 
 ![Centroid gap at 'complete_fix': Haiku − Sonnet success](../assets/images/centroid_gap_complete_fix.png)
 
-The failure mode shifts depending on which state we condition on. At `editing`, the gap is about targeting (wrong bugs addressed). At `complete_fix`, it is about efficiency (right bugs, but more effort to get there). Horizons let us see this shift; the baseline corridor gives us stable ground to measure it from.
+The failure mode shifts depending on which state we condition on. At `editing`, it is about targeting (wrong bugs). At `complete_fix`, it is about efficiency (right bugs, more effort). Horizons reveal this shift; the baseline corridor gives stable ground to measure it from.
 
 </details>
 
