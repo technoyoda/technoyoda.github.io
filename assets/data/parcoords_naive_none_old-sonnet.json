@@ -5,16 +5,12 @@
       "line": {
         "color": [
           0.0,
-          1.0
+          0.0
         ],
         "colorscale": [
           [
             0.0,
             "#50fa7b"
-          ],
-          [
-            1.0,
-            "#ff79c6"
           ]
         ],
         "showscale": false
@@ -82,6 +78,10 @@
           "values": [
             2.0,
             2.0
+          ],
+          "range": [
+            0,
+            3.0
           ]
         },
         {
@@ -89,6 +89,10 @@
           "values": [
             9.0,
             4.0
+          ],
+          "range": [
+            0,
+            10.0
           ]
         },
         {
@@ -96,6 +100,10 @@
           "values": [
             10.0,
             5.0
+          ],
+          "range": [
+            0,
+            11.0
           ]
         },
         {
@@ -103,6 +111,10 @@
           "values": [
             0.28732969999999997,
             0.09722215
+          ],
+          "range": [
+            0,
+            1.2873297
           ]
         },
         {
@@ -129,7 +141,7 @@
   ],
   "layout": {
     "title": {
-      "text": "naive / none \u2014 old-sonnet (K=2)<br><sup style='color:#6272a4'>Drag on any axis to filter</sup>",
+      "text": "naive / none \u2014 old-sonnet (K=2)<br><sup style='color:#6272a4'>2 held \u00b7 Drag on any axis to filter</sup>",
       "font": {
         "size": 14
       },
@@ -150,20 +162,8 @@
     },
     "annotations": [
       {
-        "text": "<span style='color:#50fa7b'>\u25a0</span> run-0 (held)",
+        "text": "<span style='color:#50fa7b'>\u25a0</span> held",
         "x": 0.0,
-        "y": -0.06,
-        "xref": "paper",
-        "yref": "paper",
-        "showarrow": false,
-        "font": {
-          "size": 11,
-          "color": "#f8f8f2"
-        }
-      },
-      {
-        "text": "<span style='color:#ff79c6'>\u25a0</span> run-1 (held)",
-        "x": 0.5,
         "y": -0.06,
         "xref": "paper",
         "yref": "paper",

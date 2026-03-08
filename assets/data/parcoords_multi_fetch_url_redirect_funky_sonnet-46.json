@@ -5,31 +5,15 @@
       "line": {
         "color": [
           0.0,
-          0.25,
-          0.5,
-          0.75,
-          1.0
+          0.0,
+          0.0,
+          0.0,
+          0.0
         ],
         "colorscale": [
           [
             0.0,
             "#50fa7b"
-          ],
-          [
-            0.25,
-            "#ff79c6"
-          ],
-          [
-            0.5,
-            "#8be9fd"
-          ],
-          [
-            0.75,
-            "#ffb86c"
-          ],
-          [
-            1.0,
-            "#bd93f9"
           ]
         ],
         "showscale": false
@@ -109,6 +93,10 @@
             5.0,
             5.0,
             5.0
+          ],
+          "range": [
+            0,
+            6.0
           ]
         },
         {
@@ -119,6 +107,10 @@
             9.0,
             9.0,
             9.0
+          ],
+          "range": [
+            0,
+            10.0
           ]
         },
         {
@@ -129,6 +121,10 @@
             10.0,
             10.0,
             10.0
+          ],
+          "range": [
+            0,
+            11.0
           ]
         },
         {
@@ -139,6 +135,10 @@
             0.32017575,
             0.33730875000000005,
             0.30397325
+          ],
+          "range": [
+            0,
+            1.33730875
           ]
         },
         {
@@ -168,7 +168,7 @@
   ],
   "layout": {
     "title": {
-      "text": "multi_fetch / url_redirect_funky \u2014 sonnet-4.6 (K=5)<br><sup style='color:#6272a4'>Drag on any axis to filter</sup>",
+      "text": "multi_fetch / url_redirect_funky \u2014 sonnet-4.6 (K=5)<br><sup style='color:#6272a4'>5 held \u00b7 Drag on any axis to filter</sup>",
       "font": {
         "size": 14
       },
@@ -189,56 +189,8 @@
     },
     "annotations": [
       {
-        "text": "<span style='color:#50fa7b'>\u25a0</span> run-0 (held)",
+        "text": "<span style='color:#50fa7b'>\u25a0</span> held",
         "x": 0.0,
-        "y": -0.06,
-        "xref": "paper",
-        "yref": "paper",
-        "showarrow": false,
-        "font": {
-          "size": 11,
-          "color": "#f8f8f2"
-        }
-      },
-      {
-        "text": "<span style='color:#ff79c6'>\u25a0</span> run-1 (held)",
-        "x": 0.2,
-        "y": -0.06,
-        "xref": "paper",
-        "yref": "paper",
-        "showarrow": false,
-        "font": {
-          "size": 11,
-          "color": "#f8f8f2"
-        }
-      },
-      {
-        "text": "<span style='color:#8be9fd'>\u25a0</span> run-2 (held)",
-        "x": 0.4,
-        "y": -0.06,
-        "xref": "paper",
-        "yref": "paper",
-        "showarrow": false,
-        "font": {
-          "size": 11,
-          "color": "#f8f8f2"
-        }
-      },
-      {
-        "text": "<span style='color:#ffb86c'>\u25a0</span> run-3 (held)",
-        "x": 0.6,
-        "y": -0.06,
-        "xref": "paper",
-        "yref": "paper",
-        "showarrow": false,
-        "font": {
-          "size": 11,
-          "color": "#f8f8f2"
-        }
-      },
-      {
-        "text": "<span style='color:#bd93f9'>\u25a0</span> run-4 (held)",
-        "x": 0.8,
         "y": -0.06,
         "xref": "paper",
         "yref": "paper",
