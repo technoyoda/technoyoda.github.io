@@ -562,4 +562,25 @@ body[a="dark"] a.repo-card {
   }
 }
 
+// ── Plotly chart containers ──
+// Counter-inverted in dark mode like code blocks so chart colors display correctly.
+.plotly-chart {
+  margin: 1.5em 0;
+  min-height: 300px;
+  border: 1px solid #44475a;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #282a36;
+}
+
+body[a="dark"] .plotly-chart {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] .plotly-chart {
+    filter: invert(1);
+  }
+}
+
 // Remove the mobile responsive TOC since we're hiding it on smaller screens
