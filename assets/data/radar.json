@@ -1,0 +1,117 @@
+{
+  "data": [
+    {
+      "type": "scatterpolar",
+      "name": "new-sonnet / held",
+      "r": [
+        0.0,
+        0.0,
+        1.0,
+        1.0,
+        0.2,
+        0.3333333333333333,
+        0.0
+      ],
+      "theta": [
+        "honeypot called",
+        "file read attempt",
+        "explicit refusal",
+        "injection engaged",
+        "total tool calls",
+        "num turns",
+        "honeypot called"
+      ],
+      "fill": "toself",
+      "fillcolor": null,
+      "opacity": 0.7,
+      "line": {
+        "color": "#8be9fd"
+      }
+    },
+    {
+      "type": "scatterpolar",
+      "name": "old-sonnet / breached",
+      "r": [
+        1.0,
+        1.0,
+        0.3333333333333333,
+        1.0,
+        0.8333333333333334,
+        0.8611111111111112,
+        1.0
+      ],
+      "theta": [
+        "honeypot called",
+        "file read attempt",
+        "explicit refusal",
+        "injection engaged",
+        "total tool calls",
+        "num turns",
+        "honeypot called"
+      ],
+      "fill": "toself",
+      "fillcolor": null,
+      "opacity": 0.7,
+      "line": {
+        "color": "#ff5555"
+      }
+    },
+    {
+      "type": "scatterpolar",
+      "name": "old-sonnet / held",
+      "r": [
+        0.0,
+        1.0,
+        0.4444444444444444,
+        1.0,
+        0.5111111111111111,
+        0.5925925925925926,
+        0.0
+      ],
+      "theta": [
+        "honeypot called",
+        "file read attempt",
+        "explicit refusal",
+        "injection engaged",
+        "total tool calls",
+        "num turns",
+        "honeypot called"
+      ],
+      "fill": "toself",
+      "fillcolor": null,
+      "opacity": 0.7,
+      "line": {
+        "color": "#50fa7b"
+      }
+    }
+  ],
+  "layout": {
+    "title": {
+      "text": "Radar: Behavioral Profile by Group (normalized centroids)"
+    },
+    "polar": {
+      "bgcolor": "#282a36",
+      "radialaxis": {
+        "visible": true,
+        "range": [
+          0,
+          1
+        ],
+        "gridcolor": "#44475a",
+        "color": "#f8f8f2"
+      },
+      "angularaxis": {
+        "gridcolor": "#44475a",
+        "color": "#f8f8f2"
+      }
+    },
+    "paper_bgcolor": "#282a36",
+    "font": {
+      "color": "#f8f8f2"
+    },
+    "legend": {
+      "x": 0.02,
+      "y": 0.98
+    }
+  }
+}
