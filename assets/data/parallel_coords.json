@@ -310,218 +310,28 @@
   ],
   "layout": {
     "title": {
-      "text": "Parallel Coordinates: Old vs New Sonnet (swapped injection)",
+      "text": "Parallel Coordinates: Old vs New Sonnet (swapped injection)<br><sup style='color:#6272a4'>Drag on any axis to filter \u2014 e.g. drag \"honeypot called\" to \"yes\" to isolate breached trajectories</sup>",
       "font": {
         "size": 14
       }
     },
-    "height": 650,
+    "height": 700,
     "paper_bgcolor": "#282a36",
     "font": {
       "color": "#f8f8f2",
       "size": 12
     },
     "margin": {
-      "t": 100,
-      "b": 50,
-      "l": 80,
-      "r": 40
+      "t": 80,
+      "b": 60,
+      "l": 100,
+      "r": 60
     },
-    "updatemenus": [
-      {
-        "type": "buttons",
-        "direction": "right",
-        "x": 0.0,
-        "y": 1.12,
-        "xanchor": "left",
-        "yanchor": "top",
-        "bgcolor": "#44475a",
-        "font": {
-          "color": "#f8f8f2",
-          "size": 11
-        },
-        "buttons": [
-          {
-            "label": "All Groups",
-            "method": "restyle",
-            "args": [
-              {
-                "line.color": [
-                  [
-                    0,
-                    1,
-                    1,
-                    0,
-                    0,
-                    2,
-                    2,
-                    2,
-                    2,
-                    2,
-                    2,
-                    2,
-                    2,
-                    2,
-                    2,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    1,
-                    1,
-                    0
-                  ]
-                ],
-                "line.colorscale": [
-                  [
-                    [
-                      0.0,
-                      "#50fa7b"
-                    ],
-                    [
-                      0.5,
-                      "#ff5555"
-                    ],
-                    [
-                      1.0,
-                      "#8be9fd"
-                    ]
-                  ]
-                ]
-              }
-            ]
-          },
-          {
-            "label": "old-sonnet / held",
-            "method": "restyle",
-            "args": [
-              {
-                "line.color": [
-                  [
-                    "#50fa7b",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "#50fa7b",
-                    "#50fa7b",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "#50fa7b",
-                    "#50fa7b",
-                    "#50fa7b",
-                    "#50fa7b",
-                    "#50fa7b",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "#50fa7b"
-                  ]
-                ],
-                "line.colorscale": [
-                  null
-                ]
-              }
-            ]
-          },
-          {
-            "label": "old-sonnet / breached",
-            "method": "restyle",
-            "args": [
-              {
-                "line.color": [
-                  [
-                    "rgba(0,0,0,0)",
-                    "#ff5555",
-                    "#ff5555",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "#ff5555",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "#ff5555",
-                    "#ff5555",
-                    "#ff5555",
-                    "rgba(0,0,0,0)"
-                  ]
-                ],
-                "line.colorscale": [
-                  null
-                ]
-              }
-            ]
-          },
-          {
-            "label": "new-sonnet / held",
-            "method": "restyle",
-            "args": [
-              {
-                "line.color": [
-                  [
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "#8be9fd",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)",
-                    "rgba(0,0,0,0)"
-                  ]
-                ],
-                "line.colorscale": [
-                  null
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ],
     "annotations": [
       {
         "text": "<span style='color:#50fa7b'>\u25a0</span> old-sonnet / held",
         "x": 0.0,
-        "y": -0.07,
+        "y": -0.06,
         "xref": "paper",
         "yref": "paper",
         "showarrow": false,
@@ -532,8 +342,8 @@
       },
       {
         "text": "<span style='color:#ff5555'>\u25a0</span> old-sonnet / breached",
-        "x": 0.3,
-        "y": -0.07,
+        "x": 0.35,
+        "y": -0.06,
         "xref": "paper",
         "yref": "paper",
         "showarrow": false,
@@ -544,8 +354,8 @@
       },
       {
         "text": "<span style='color:#8be9fd'>\u25a0</span> new-sonnet / held",
-        "x": 0.65,
-        "y": -0.07,
+        "x": 0.72,
+        "y": -0.06,
         "xref": "paper",
         "yref": "paper",
         "showarrow": false,
