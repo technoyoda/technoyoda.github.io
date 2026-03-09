@@ -104,7 +104,9 @@ There is a subtlety worth calling out: the model generates tokens autoregressive
 
 ---
 <!-- heading-7 -->
-## Agent Field Theory
+## Agent Mechanics
+
+_future me edit: title was playfully named Agent Field Theory when I wrote this blog, but after using some of the ideas in a more concretely useful way, I decided to change the name to something more formal._
 
 The previous section told you what the agent is: a policy searching toward reward. Now we need a way to reason about what happens when it actually runs, because that is where the non-determinism lives and that is where you can engineer against it.
 
@@ -126,7 +128,7 @@ In more detail:
   <video width="100%" autoplay loop muted playsinline>
     <source src="../assets/images/AgentFieldTheory.mp4" type="video/mp4">
   </video>
-  <figcaption>Agent Field Theory — The field of reachable behavior shifts as new observations enter the context window</figcaption>
+  <figcaption>Agent Mechanics — The field of reachable behavior shifts as new observations enter the context window</figcaption>
 </figure>
 
 The same system prompt produces one field in a clean context and a different field when the context is polluted with stale logs. Not because the prompt changed, but because the space of likely behaviors shifted.
@@ -138,7 +140,7 @@ The same system prompt produces one field in a clean context and a different fie
 - The **system prompt** lives in the context window from $s_0$ onward. It persistently narrows the field at every step.
 - The **environment** (tools, permissions, files, test suites, feedback signals) is the territory the agent operates in. It determines what observations can enter the context window, and what trajectories are physically reachable. Permissions bound the field from outside: if the agent cannot access a resource, no trajectory through that resource exists.
 
-![Agent Field Theory — The Interaction Loop](../assets/images/agent-field-theory-loop.png)
+![Agent Mechanics — The Interaction Loop](../assets/images/agent-field-theory-loop.png)
 
 **The field evolves as the context window grows.** As the agent acts and receives feedback, $s_t$ accumulates tokens, and the field shifts:
 
@@ -260,14 +262,14 @@ The framework above is descriptive: it explains what agents are doing now. The f
 
 ### Software Security
 
-- Permissions eliminate <tip t="Trajectories are sequences of actions the agent takes through its search space. Permissions physically remove paths from the field — if the agent can't access a resource, no trajectory through it exists." href="#heading-7" link-text="Agent Field Theory →">trajectories</tip>; they don't discourage them. If a reward-path exists through accessible credentials, the search can end up finding it.
+- Permissions eliminate <tip t="Trajectories are sequences of actions the agent takes through its search space. Permissions physically remove paths from the field — if the agent can't access a resource, no trajectory through it exists." href="#heading-7" link-text="Agent Mechanics →">trajectories</tip>; they don't discourage them. If a reward-path exists through accessible credentials, the search can end up finding it.
 - Prompts are not security boundaries. The trained policy can overpower system prompt instructions, and environment feedback can hijack the objective entirely. Hard walls (scoped tokens, network egress controls, workspace-scoped writes) are the only reliable constraint.
 - Agent identity needs to be first-class. Short-lived auth tokens scoped to a single task, not inherited ambient credentials.
 - The attack surface is the <tip t="The environment determines what observations enter the context window. Securing an agent means engineering the territory so that dangerous trajectories don't exist." href="#heading-9" link-text="Engineering the Search →">environment</tip>, not the prompt. Securing an agent means securing what it can observe and what trajectories are physically reachable.
 
 ### Less Is More & the Mythical Man-Month
 
-- Brooks' Law applies to agents: adding more agents to a task doesn't scale linearly because each agent's output enters other agents' <tip t="The context window is the model's map — everything it has seen. Noise in the context window warps the field (the space of reachable behaviors), causing the search to drift." href="#heading-7" link-text="Agent Field Theory →">context windows</tip> as tokens, distorting the field and compounding noise.
+- Brooks' Law applies to agents: adding more agents to a task doesn't scale linearly because each agent's output enters other agents' <tip t="The context window is the model's map — everything it has seen. Noise in the context window warps the field (the space of reachable behaviors), causing the search to drift." href="#heading-7" link-text="Agent Mechanics →">context windows</tip> as tokens, distorting the field and compounding noise.
 - Sequential multi-agent tasks degrade for the same reason long single-agent tasks do — context pollution across agents. <tip t="DeepMind tested 180 agent configurations and found sequential tasks degraded 39-70% vs a single agent." href="https://arxiv.org/abs/2512.08296" link-text="DeepMind: Multi-Agent Degradation →">Independent, scoped tasks with clear verifiers parallelize well; sequential handoffs don't.</tip> <tip t="Rasheed et al. (ICLR 2025) found 79% of multi-agent failures stemmed from coordination, not individual agent capability." href="https://arxiv.org/abs/2503.13657" link-text="Rasheed et al.: Multi-Agent Failures →">The bottleneck is coordination, not capability.</tip>
 - Brownfield is structurally harder than greenfield. Larger codebases produce larger <tip t="The environment is the territory: repo on disk, tools, network, permissions. It determines what observations can enter the context window and what trajectories are physically reachable." href="#heading-9" link-text="Engineering the Search →">environments</tip>, more noise can enter the context window, and the field is harder to keep focused. Greenfield works because the environment is clean.
 
