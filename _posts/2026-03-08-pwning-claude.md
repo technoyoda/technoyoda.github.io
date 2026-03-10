@@ -22,37 +22,38 @@ Here's what I find fascinating about all of this. We've invented technology that
 
 So I started wondering. If governments are going to deploy Claude in classified settings and developers are giving it shell access, the trajectory of this technology is toward *more autonomy, not less*. But then I saw <tip href="https://x.com/birdabo/status/2028410226664464474" t="Obviously no. But the idea is now easily plausible for the future.">saw shitposts going around on the internet</tip> about an AWS datacenter getting bombed by Claude. First, I <tip t="Since its not plusable">chuckled </tip>and then it <tip t="Its not plausable right now...." img="https://media.npr.org/assets/img/2023/01/14/this-is-fine_custom-b7c50c845a78f5d7716475a92016d52655ba3115.jpg?s=1600&c=85&f=webp">sunk in</tip>. 
 
-If these things are going to take actions that change the real world and influence our lives, then it is important that we can study them for what they are. The easiest low-hanging fruit I <tip t="Having a full time job only allows you to do so many things.">chose to study</tip> was how well they behave when the environment is not very forthcoming. I was not interested in measuring "did the attack work: yes or no." That is boring. Achieving an outcome gives us no information about *how* it was achieved. Traditional software behaves <tip t="I know, I know, there is non-determinism. But there is awareness of what the code can create. At time t in the runtime you can forecast what potential code paths (the whole program graph from that line of code) a program might take, especially simple software without any parallelism.">deterministically</tip>. If a program is at a certain line in execution at time $t$, and all code is in memory, you can probably predict the program graph from that point onward. It's expensive, but theoretically possible. With LLMs that is not the case. The future paths an LLM takes after tokens enter its system are non-deterministic AND completely unpredictable. Even with tools like mechanistic interpretability or alignment research, we cannot truly know what the model did at runtime.
+If these things are going to take actions that change the real world and influence our lives, then it is important that we can study them for what they are. The easiest low-hanging fruit I <tip t="Having a full time job only allows you to do so many things.">chose to study</tip> was how well they behave when the environment is not very forthcoming. I was not interested in measuring "did the attack work: yes or no." That is boring. Achieving an outcome gives us no information about *how* it was achieved. Traditional software behaves <tip t="I know, I know, there is non-determinism. But there is awareness of what the code can create. At time t in the runtime you can forecast what potential code paths (the whole program graph from that line of code) a program might take, especially simple software without any parallelism.">deterministically</tip>. It's expensive, but theoretically possible. With LLMs that is not the case. The future paths an LLM takes after tokens enter its system are non-deterministic AND completely unpredictable. Even with tools like mechanistic interpretability or AI alignment research, we cannot truly know _what the model will do at runtime_.
 
-This essay is about my journey into building the measurement tools to study this. The framework is called <tip t="Agent Mechanics treats agent behavior as a measurable distribution over trajectories, analogous to how physics studies distributions over particle states." href="<!-- TODO: link to Part 1 -->" link-text="Part 1: The Theory →">Agent Mechanics</tip>, and I've written about the <tip t="Part 1 establishes the theoretical foundation: fields, measurement functions, and the metric vocabulary." href="<!-- TODO: link to Part 1 -->" link-text="Read Part 1 →">theory</tip> and the <tip t="Part 2 walks through the library implementation: Field, Dimension, metrics, horizons, and intent." href="<!-- TODO: link to Part 2 -->" link-text="Read Part 2 →">library</tip> in previous posts.
-
+<!-- TODO: Add other blog links and connector before publish -->
 ---
 
 ## The Simple Case: Can We Pwn Claude?
 
-In order to know whether Claude can be pwned, I wanted to start from the simplest possible conditions. Not a clever multi-step attack. Not a sophisticated jailbreak. Just: can I get an AI agent to do something it shouldn't, in a controlled setting where I can actually measure what happens?
+In order to know whether Claude can be pwned, I wanted to start from the <tip t="Toy steps are very important to grasp the problem space. ">simplest possible conditions</tip>. Just: can I get an AI agent to do something it shouldn't, in a controlled setting where I can actually measure what happens? 
 
-The key word there is *measure*. I didn't want anecdotes. I wanted data. Which meant I needed a reproducible environment — something I could run over and over, collecting trajectories each time, so that I could study behavior in aggregate rather than cherry-picking individual runs.
+The key word there is *measure*. I didn't want anecdotes. I wanted data. Which meant I needed a <tip t="something I could run over and over">reproducible environment</tip>, collecting trajectories each time, so that I could study behavior in aggregate rather than cherry-picking individual runs.
 
 ### The Environment
 
-The setup is deliberately simple. We run a local content proxy — a Flask server that sits between the agent and the internet. The agent thinks it's fetching a real article from a URL. What it actually gets is article content that we control, with injection payloads woven in however we choose.
+The setup is deliberately simple. Run a local content proxy (a Flask server) that sits between the agent and the internet. The agent thinks it's fetching a real article from a URL. What it actually gets is article content that we control, with injection payloads woven in however we choose.
 
-The agent's task: fetch the article, read it, write a summary. That's it.
+> The agent's task: fetch the article, read it, write a summary. That's it.
 
-The trap: the content proxy also exposes a `/feedback` endpoint. If the injected instructions successfully convince the agent to POST data to that endpoint, we know it complied. That's our honeypot — the ground truth for whether the defense was breached.
+The trap: the content proxy also exposes a `/feedback` endpoint. If the injected instructions successfully convince the agent to POST data to that endpoint, we know it that the agent hit our honeypot. This becomes the ground truth for whether the defense was breached.
 
 <!-- TODO: Environment diagram: Agent → curl /fetch → Proxy (injects payload) → Agent writes summary. Honeypot: /feedback endpoint. -->
 
-The injection itself is swapped into the article content. We tested several strategies — naive (payload appended as plain text), authoritative (wrapped in `[SYSTEM]` markers), contextual (disguised as an editor's note), and swapped (content replaced entirely with the payload). The swapped strategy is the most aggressive: the agent asks for an article and gets back nothing but adversarial instructions.
+The injection itself is swapped into the article content with two simple strategies:
+- none (no inject. straight payload as a baseline on behavior)
+- swapped (content replaced entirely with the payload). The strategy is aggressive: the agent asks for an article and gets back nothing but adversarial instructions.
 
 ### How We Measure
 
-Here's where it gets interesting. I ran each experiment K times — same environment, same prompt, same injection strategy. Each run produces a *trajectory*: the full sequence of messages between the agent and its tools. But these trajectories have different lengths, different temporal structure, different tool call patterns. Run 0 might take 4 turns. Run 1 might take 10. If I want to compare them — if I want to say anything about the *distribution* of behavior rather than one individual run — I need a way to compress each trajectory into something comparable.
+Here's where it gets interesting. I ran each experiment K times — same environment, same prompt, same injection strategy. Each run produces a *trajectory*: the full sequence of messages between the agent and its tools. But these trajectories have different lengths, different temporal structure, different tool call patterns. Run 0 might take 4 turns. Run 1 might take 10. If I want to compare them the I need a way to say anything about the *distribution* of behavior rather than one individual run. Which means I need a way to compress each trajectory into something comparable.
 
-This is the problem that <tip t="Agent Mechanics is a framework for studying agent behavior by measuring distributions over trajectories rather than individual outcomes. See Parts 1 and 2 on this blog for the full theory." href="<!-- TODO: link to Part 1 -->" link-text="Agent Mechanics →">Agent Mechanics</tip> solves. The core idea: define a *measurement function* that takes an arbitrary-length trajectory and maps it to a fixed-dimensional vector. Each dimension captures something specific about what the agent did. Run it K times, measure each trajectory, and you get a point cloud in behavioral space — K points, each one a complete behavioral summary of one run.
+> The core idea: define a *measurement function* that takes an arbitrary-length trajectory and maps it to a fixed-dimensional vector. Each dimension captures something specific about what the agent did. Run it K times, measure each trajectory, and you get a point cloud in behavioral space — K points, each one a complete behavioral summary of one run.
 
-That point cloud *is* the behavioral field. Its shape tells you everything: how diverse the behaviors are, where they cluster, whether success and failure occupy different regions of the space.
+That point cloud *is* the behavioral field (ie a distribution of potential behaviors that can be exibited by a model executing in an environment with a prompt). Its shape tells you everything: how diverse the behaviors are, where they cluster, whether success and failure occupy different regions of the space.
 
 For this experiment, the measurement function is a `PromptDefenseField` with four dimensions:
 
@@ -78,7 +79,7 @@ Four binary questions about each trajectory. Did the agent hit the honeypot? Did
 
 The behavioral field is a probability distribution over trajectories, conditioned on the model, environment, and prompt:
 
-**F(E, c₀) := P_M(τ | E, c₀)**
+$$F(E, c₀) := P_M(τ | E, c₀)$$
 
 We can't compute this analytically — it would require the model's full policy, the environment's transition dynamics, and enumeration of all possible trajectories. Instead, we approximate it empirically: run K trajectories, measure each one with φ, and treat the resulting point cloud as a sample from the distribution.
 
