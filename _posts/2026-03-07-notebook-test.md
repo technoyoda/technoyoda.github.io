@@ -14,7 +14,12 @@ Test page for rendered notebook embeds. Each notebook is converted from `.ipynb`
 
 ### Intent Sankey + Program Families
 
+<details>
+<summary>Notebook and Viz</summary>
 <iframe src="/assets/notebooks/pwning-claude/proto_intent_sankey.html" width="100%" height="800" frameborder="0" style="border: 1px solid var(--border-color, #e0e0e0); border-radius: 8px;"></iframe>
+
+</details>
+
 
 ---
 
