@@ -395,6 +395,23 @@ tip {
   opacity: 0.7;
 }
 
+.tip-popup.has-img {
+  max-width: 360px;
+}
+
+.tip-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 0.4em;
+  object-fit: cover;
+}
+
+.tip-text {
+  display: block;
+}
+
 .tip-link {
   display: block;
   margin-top: 0.3em;

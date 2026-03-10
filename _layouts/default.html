@@ -28,7 +28,22 @@
         var hasLink = el.hasAttribute('href');
         if (hasLink) popup.classList.add('has-link');
 
-        popup.textContent = el.getAttribute('t');
+        var imgSrc = el.getAttribute('img');
+        if (imgSrc) {
+          var img = document.createElement('img');
+          img.className = 'tip-img';
+          img.src = imgSrc;
+          img.alt = el.getAttribute('t') || '';
+          if (el.getAttribute('img-w')) img.style.width = el.getAttribute('img-w') + 'px';
+          if (el.getAttribute('img-h')) img.style.height = el.getAttribute('img-h') + 'px';
+          popup.appendChild(img);
+          popup.classList.add('has-img');
+        }
+
+        var textNode = document.createElement('span');
+        textNode.className = 'tip-text';
+        textNode.textContent = el.getAttribute('t');
+        popup.appendChild(textNode);
 
         var sub = el.getAttribute('s');
         if (sub) {
