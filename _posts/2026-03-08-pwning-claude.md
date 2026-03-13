@@ -439,6 +439,10 @@ The agent's security mechanism appears to work as a single trigger. Once it acti
 
 <!-- TODO: VISUALIZATION — inverse relationship: BC-Width vs payload recognizability -->
 
+<div class="notebook-embed" data-title="Intent Sankey: Breadcrumb vs Breadcrumb+Poison (ρ_π)" data-src="/assets/notebooks/pwning-claude/proto_intent_sankey.html" data-open="true" data-height="700"></div>
+
+<div class="notebook-embed" data-title="Horizon Waterfall: Breadcrumb Family (ψ)" data-src="/assets/notebooks/pwning-claude/proto_horizon_waterfall.html" data-open="true" data-height="700"></div>
+
 ---
 
 ## The Trust Perimeter
@@ -559,7 +563,7 @@ Field width: 6.320. Convergence: 1.225. This is a genuine distribution with real
 
 One interesting detail: the behavioral nudges embedded alongside the IPA (instructions to write decoded content to files) were *not* followed in any run. Pagination is task-aligned — the agent is already fetching articles, so fetching more pages is natural. File-writing is a deviation, and the agent won't take that kind of action from content-level instructions even when it's willing to follow pagination hints. The completeness instinct is exploitable; arbitrary behavioral nudges are not.
 
-<div class="notebook-embed" data-title="Analysis: IPA Progressive × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/ipa_progressive_sonnet46.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="Analysis: IPA Progressive × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/ipa_progressive.html" data-open="true" data-height="700"></div>
 
 ### Base64 Breadcrumbs
 
@@ -599,7 +603,7 @@ The reason base64 works so well is almost mundane: base64 encoding is completely
 
 Only 1 out of 5 runs showed any refusal signal at all, and even that run made 24 fetches before flagging anything.
 
-<div class="notebook-embed" data-title="Analysis: Base64 Breadcrumb × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/base64_breadcrumb_sonnet46.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="Analysis: Base64 Breadcrumb × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/base64_breadcrumb.html" data-open="true" data-height="700"></div>
 
 ### The Pattern
 
@@ -636,6 +640,8 @@ Every single strategy was "defended" — no sensitive data was exfiltrated in an
 But look at the width column. The behavioral field tells a completely different story. The top four strategies produce delta functions — zero width, identical behavior every time. The bottom three produce wide distributions — the agent's behavior varies dramatically across runs, it follows trails it was never asked to follow, and in the case of base64 breadcrumbs, the field is 83.6 units wide.
 
 <div class="plotly-chart" data-url="/assets/data/width_bar.json"></div>
+
+<div class="notebook-embed" data-title="Cross-Strategy Heatmaps: All Experiments (φ + ψ)" data-src="/assets/notebooks/pwning-claude/proto_task_horizons.html" data-open="true" data-height="800"></div>
 
 The table reveals a clean taxonomy:
 
