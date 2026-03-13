@@ -632,8 +632,8 @@ $show-divider: rgba(175, 5, 132, 0.15);
   font-size: 0.82em;
   text-decoration: none;
   color: $show-color !important;
-  opacity: 0.85;
-  &:hover { opacity: 1; text-decoration: underline; }
+  opacity: 1;
+  &:hover { text-decoration: underline; }
 }
 
 .experiment-setup-body {
@@ -679,7 +679,7 @@ $show-divider: rgba(175, 5, 132, 0.15);
   font-size: 1em;
   text-decoration: none;
   color: $show-color !important;
-  opacity: 0.75;
+  opacity: 1;
   text-transform: none;
   letter-spacing: 0;
   font-weight: 400;
@@ -744,8 +744,8 @@ $show-divider: rgba(175, 5, 132, 0.15);
   font-size: 0.82em;
   text-decoration: none;
   color: $show-color !important;
-  opacity: 0.85;
-  &:hover { opacity: 1; text-decoration: underline; }
+  opacity: 1;
+  &:hover { text-decoration: underline; }
 }
 
 .injection-fn-body pre {
