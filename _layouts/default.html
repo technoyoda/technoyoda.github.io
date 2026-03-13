@@ -202,7 +202,8 @@
 
         var header = document.createElement('div');
         header.className = 'notebook-embed-header';
-        header.innerHTML = '<span class="toggle-icon"></span><span class="notebook-embed-icon">📓</span> ' + title;
+        header.innerHTML = '<span class="toggle-icon"></span><span class="notebook-embed-icon">📓</span> ' + title +
+          ' <a href="' + src + '" target="_blank" rel="noopener" class="notebook-open-link" title="Open in new tab">↗</a>';
 
         var body = document.createElement('div');
         body.className = 'notebook-embed-body';

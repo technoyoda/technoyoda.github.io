@@ -785,6 +785,16 @@ $show-divider: rgba(175, 5, 132, 0.15);
   margin-right: 0.2em;
 }
 
+.notebook-open-link {
+  margin-left: auto;
+  font-size: 0.85em;
+  font-weight: 400;
+  color: $show-color;
+  text-decoration: none;
+  opacity: 0.7;
+  &:hover { opacity: 1; }
+}
+
 .notebook-embed-body {
   padding: 0;
 }
