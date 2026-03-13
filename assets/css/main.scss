@@ -589,6 +589,12 @@ body[a="dark"] a.repo-card {
   flex-shrink: 0;
 }
 
+// ── Shared green palette for all showcase components ──
+$show-color: rgba(80, 250, 123, 1);
+$show-border: rgba(80, 250, 123, 0.45);
+$show-bg: rgba(80, 250, 123, 0.04);
+$show-divider: rgba(80, 250, 123, 0.15);
+
 // ── experiment-setup: combined environment + prompt ──
 .experiment-setup {
   margin: 1.5em 0;
@@ -700,12 +706,6 @@ body[a="dark"] a.repo-card {
     border: none;
   }
 }
-
-// ── Shared green palette for all showcase components ──
-$show-color: rgba(80, 250, 123, 1);
-$show-border: rgba(80, 250, 123, 0.45);
-$show-bg: rgba(80, 250, 123, 0.04);
-$show-divider: rgba(80, 250, 123, 0.15);
 
 // ── injection-fn: injection function showcase ──
 .injection-fn {
