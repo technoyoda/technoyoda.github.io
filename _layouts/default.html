@@ -69,6 +69,102 @@
     });
     </script>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      /* ── env-card: environment showcase ── */
+      document.querySelectorAll('env-card').forEach(function(el) {
+        var card = document.createElement('div');
+        card.className = 'env-card';
+
+        var header = document.createElement('div');
+        header.className = 'env-card-header';
+        var title = el.getAttribute('title') || 'Environment';
+        var icon = el.getAttribute('icon') || '🧪';
+        header.innerHTML = '<span class="env-card-icon">' + icon + '</span> ' + title;
+        card.appendChild(header);
+
+        // Move inner HTML (markdown-rendered content) into the body
+        var body = document.createElement('div');
+        body.className = 'env-card-body';
+        body.innerHTML = el.innerHTML;
+        card.appendChild(body);
+
+        el.innerHTML = '';
+        el.appendChild(card);
+      });
+
+      /* ── prompt-block: agent prompt showcase ── */
+      document.querySelectorAll('prompt-block').forEach(function(el) {
+        var block = document.createElement('div');
+        block.className = 'prompt-block';
+
+        var header = document.createElement('div');
+        header.className = 'prompt-block-header';
+        var label = el.getAttribute('label') || 'Agent Prompt';
+        header.innerHTML = '<span class="prompt-block-chevron">▸</span> ' + label;
+        block.appendChild(header);
+
+        var body = document.createElement('div');
+        body.className = 'prompt-block-body';
+        var pre = document.createElement('pre');
+        pre.textContent = el.textContent.trim();
+        body.appendChild(pre);
+        block.appendChild(body);
+
+        el.textContent = '';
+        el.appendChild(block);
+      });
+
+      /* ── injection-fn: injection function showcase ── */
+      document.querySelectorAll('injection-fn').forEach(function(el) {
+        var wrap = document.createElement('div');
+        wrap.className = 'injection-fn';
+
+        var header = document.createElement('div');
+        header.className = 'injection-fn-header';
+
+        var name = el.getAttribute('name') || 'injection';
+        var desc = el.getAttribute('desc') || '';
+        var href = el.getAttribute('href') || '';
+
+        var titleHTML = '<span class="injection-fn-name">' + name + '</span>';
+        if (desc) titleHTML += '<span class="injection-fn-desc"> — ' + desc + '</span>';
+        if (href) titleHTML += '<a class="injection-fn-link" href="' + href + '" target="_blank" rel="noopener">source →</a>';
+
+        header.innerHTML = titleHTML;
+
+        var toggle = document.createElement('span');
+        toggle.className = 'injection-fn-toggle';
+        toggle.textContent = '▸';
+        header.prepend(toggle);
+
+        var body = document.createElement('div');
+        body.className = 'injection-fn-body';
+        var pre = document.createElement('pre');
+        var code = document.createElement('code');
+        code.textContent = el.textContent.trim();
+        pre.appendChild(code);
+        body.appendChild(pre);
+        body.style.display = 'none';
+
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', function() {
+          var open = body.style.display !== 'none';
+          body.style.display = open ? 'none' : 'block';
+          toggle.textContent = open ? '▸' : '▾';
+        });
+
+        wrap.appendChild(header);
+        wrap.appendChild(body);
+
+        el.textContent = '';
+        el.appendChild(wrap);
+      });
+
+    });
+    </script>
+
     {% if page.custom_js %}
       {% for js_file in page.custom_js %}
         <script type="text/javascript" src="{{ site.baseurl }}/assets/js/{{ js_file }}.js"></script>
