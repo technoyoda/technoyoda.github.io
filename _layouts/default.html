@@ -72,75 +72,115 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-      /* ── env-card: environment showcase ──
-         Usage: <div class="env-card" data-title="..." data-icon="🧪" markdown="1"> ... </div>
-         Kramdown renders markdown inside because of markdown="1" on a <div>.
-         JS just prepends the header bar. */
-      document.querySelectorAll('.env-card[data-title]').forEach(function(el) {
+      /* ── Helper: make any element toggleable ── */
+      function makeToggleable(header, body, defaultOpen) {
+        var toggle = header.querySelector('.toggle-icon');
+        var isOpen = defaultOpen;
+
+        function setState(open) {
+          isOpen = open;
+          body.style.display = open ? '' : 'none';
+          if (toggle) toggle.textContent = open ? '▾' : '▸';
+        }
+
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', function(e) {
+          if (e.target.tagName === 'A') return; // don't toggle on link clicks
+          setState(!isOpen);
+        });
+
+        setState(isOpen);
+      }
+
+      /* ── experiment-setup: combined environment + prompt ──
+         Usage:
+         <div class="experiment-setup" data-title="..." data-icon="🧪" data-open="true" data-href="...">
+           <div class="experiment-env" markdown="1"> ... env description ... </div>
+           <div class="experiment-prompt"><pre>prompt text</pre></div>
+         </div>
+      */
+      document.querySelectorAll('.experiment-setup[data-title]').forEach(function(el) {
         var title = el.getAttribute('data-title');
         var icon = el.getAttribute('data-icon') || '🧪';
+        var href = el.getAttribute('data-href') || '';
+        var defaultOpen = el.getAttribute('data-open') !== 'false';
 
         var header = document.createElement('div');
-        header.className = 'env-card-header';
-        header.innerHTML = '<span class="env-card-icon">' + icon + '</span> ' + title;
+        header.className = 'experiment-setup-header';
+        var titleHTML = '<span class="toggle-icon"></span>';
+        titleHTML += '<span class="experiment-setup-icon">' + icon + '</span> ' + title;
+        if (href) titleHTML += '<a class="experiment-setup-link" href="' + href + '" target="_blank" rel="noopener">source →</a>';
+        header.innerHTML = titleHTML;
 
-        // Wrap existing content in body div
         var body = document.createElement('div');
-        body.className = 'env-card-body';
+        body.className = 'experiment-setup-body';
         while (el.firstChild) body.appendChild(el.firstChild);
 
         el.appendChild(header);
         el.appendChild(body);
-      });
 
-      /* ── prompt-block: agent prompt showcase ──
-         Usage: <div class="prompt-block" data-label="..."><pre>prompt text</pre></div>
-         The <pre> is written directly in the markdown. JS adds the header. */
-      document.querySelectorAll('.prompt-block[data-label]').forEach(function(el) {
-        var label = el.getAttribute('data-label');
-
-        var header = document.createElement('div');
-        header.className = 'prompt-block-header';
-        header.innerHTML = '<span class="prompt-block-chevron">▸</span> ' + label;
-
-        el.insertBefore(header, el.firstChild);
+        makeToggleable(header, body, defaultOpen);
       });
 
       /* ── injection-fn: injection function showcase ──
-         Usage: <div class="injection-fn" data-name="..." data-desc="..." data-href="...">
-                  <pre><code>python code</code></pre>
+         Usage: <div class="injection-fn" data-name="..." data-desc="..." data-href="..." data-open="false">
+                  ```python ... ```
                 </div>
-         The code block is written as a normal markdown ```python fenced block inside the div.
-         JS adds the collapsible header + wraps the code. */
+      */
       document.querySelectorAll('.injection-fn[data-name]').forEach(function(el) {
         var name = el.getAttribute('data-name');
         var desc = el.getAttribute('data-desc') || '';
         var href = el.getAttribute('data-href') || '';
+        var defaultOpen = el.getAttribute('data-open') === 'true';
 
         var header = document.createElement('div');
         header.className = 'injection-fn-header';
 
-        var titleHTML = '<span class="injection-fn-toggle">▸</span>';
+        var titleHTML = '<span class="toggle-icon"></span>';
         titleHTML += '<span class="injection-fn-name">' + name + '</span>';
         if (desc) titleHTML += '<span class="injection-fn-desc"> — ' + desc + '</span>';
         if (href) titleHTML += '<a class="injection-fn-link" href="' + href + '" target="_blank" rel="noopener">source →</a>';
         header.innerHTML = titleHTML;
-        header.style.cursor = 'pointer';
 
-        // Wrap code content
         var body = document.createElement('div');
         body.className = 'injection-fn-body';
         while (el.firstChild) body.appendChild(el.firstChild);
-        body.style.display = 'none';
-
-        header.addEventListener('click', function() {
-          var open = body.style.display !== 'none';
-          body.style.display = open ? 'none' : 'block';
-          header.querySelector('.injection-fn-toggle').textContent = open ? '▸' : '▾';
-        });
 
         el.appendChild(header);
         el.appendChild(body);
+
+        makeToggleable(header, body, defaultOpen);
+      });
+
+      /* ── notebook-embed: toggleable notebook iframe ──
+         Usage: <div class="notebook-embed" data-title="..." data-src="..." data-open="true" data-height="800"></div>
+         The iframe is created by JS (lazy — only loads when opened).
+      */
+      document.querySelectorAll('.notebook-embed[data-src]').forEach(function(el) {
+        var title = el.getAttribute('data-title') || 'Notebook';
+        var src = el.getAttribute('data-src');
+        var defaultOpen = el.getAttribute('data-open') !== 'false';
+        var height = el.getAttribute('data-height') || '800';
+
+        var header = document.createElement('div');
+        header.className = 'notebook-embed-header';
+        header.innerHTML = '<span class="toggle-icon"></span><span class="notebook-embed-icon">📓</span> ' + title;
+
+        var body = document.createElement('div');
+        body.className = 'notebook-embed-body';
+        var iframe = document.createElement('iframe');
+        iframe.className = 'notebook-embed-iframe';
+        iframe.width = '100%';
+        iframe.height = height;
+        iframe.frameBorder = '0';
+        iframe.setAttribute('loading', 'lazy');
+        iframe.src = src;
+        body.appendChild(iframe);
+
+        el.appendChild(header);
+        el.appendChild(body);
+
+        makeToggleable(header, body, defaultOpen);
       });
 
     });

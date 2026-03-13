@@ -579,74 +579,95 @@ body[a="dark"] a.repo-card {
   }
 }
 
-// ── env-card: environment showcase ──
-.env-card {
+// ── Shared toggle icon ──
+.toggle-icon {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+
+// ── experiment-setup: combined environment + prompt ──
+.experiment-setup {
   margin: 1.5em 0;
-  border: 1.5px solid rgba(139, 233, 253, 0.3);
+  border: 1.5px solid rgba(139, 233, 253, 0.5);
   border-radius: 8px;
   overflow: hidden;
 }
 
-.env-card-header {
+.experiment-setup-header {
   padding: 0.6em 1em;
   font-weight: 600;
   font-size: 0.95em;
   background: rgba(139, 233, 253, 0.06);
-  border-bottom: 1px solid rgba(139, 233, 253, 0.15);
+  border-bottom: 1px solid rgba(139, 233, 253, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
 }
 
-.env-card-icon {
-  margin-right: 0.3em;
+.experiment-setup-icon {
+  margin-right: 0.2em;
 }
 
-.env-card-body {
+.experiment-setup-link {
+  margin-left: auto;
+  font-size: 0.8em;
+  font-weight: 400;
+  text-decoration: none;
+  color: rgba(139, 233, 253, 0.9) !important;
+  &:hover { text-decoration: underline; }
+}
+
+.experiment-setup-body {
+  display: flex;
+  gap: 0;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+  }
+}
+
+.experiment-env {
+  flex: 1;
   padding: 0.8em 1em;
   font-size: 0.9em;
   line-height: 1.6;
+  border-right: 1px solid rgba(139, 233, 253, 0.15);
+
+  @media (max-width: 700px) {
+    border-right: none;
+    border-bottom: 1px solid rgba(139, 233, 253, 0.15);
+  }
 
   p { margin: 0.4em 0; }
   code { font-size: 0.88em; }
   ul, ol { margin: 0.4em 0; padding-left: 1.4em; }
 }
 
-// ── prompt-block: agent prompt showcase ──
-.prompt-block {
-  margin: 1.5em 0;
-  border: 1.5px solid rgba(80, 250, 123, 0.3);
-  border-radius: 8px;
-  overflow: hidden;
-}
+.experiment-prompt {
+  flex: 1;
+  padding: 0;
+  overflow: auto;
 
-.prompt-block-header {
-  padding: 0.5em 1em;
-  font-weight: 600;
-  font-size: 0.85em;
-  font-family: monospace;
-  background: rgba(80, 250, 123, 0.06);
-  border-bottom: 1px solid rgba(80, 250, 123, 0.15);
-  letter-spacing: 0.02em;
-}
-
-.prompt-block-chevron {
-  margin-right: 0.4em;
-  opacity: 0.5;
-}
-
-.prompt-block-body pre {
-  margin: 0;
-  padding: 1em;
-  font-size: 0.85em;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  background: transparent;
-  border: none;
+  pre {
+    margin: 0;
+    padding: 0.8em 1em;
+    font-size: 0.82em;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background: transparent;
+    border: none;
+  }
 }
 
 // ── injection-fn: injection function showcase ──
 .injection-fn {
   margin: 1em 0;
-  border: 1.5px solid rgba(255, 121, 198, 0.3);
+  border: 1.5px solid rgba(255, 121, 198, 0.55);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -655,17 +676,11 @@ body[a="dark"] a.repo-card {
   padding: 0.5em 1em;
   font-size: 0.85em;
   background: rgba(255, 121, 198, 0.06);
-  border-bottom: 1px solid rgba(255, 121, 198, 0.15);
+  border-bottom: 1px solid rgba(255, 121, 198, 0.2);
   display: flex;
   align-items: center;
   gap: 0.4em;
   flex-wrap: wrap;
-}
-
-.injection-fn-toggle {
-  opacity: 0.5;
-  font-size: 0.85em;
-  flex-shrink: 0;
 }
 
 .injection-fn-name {
@@ -681,9 +696,9 @@ body[a="dark"] a.repo-card {
 .injection-fn-link {
   margin-left: auto;
   font-size: 0.82em;
-  opacity: 0.6;
   text-decoration: none;
-  color: rgba(255, 121, 198, 0.8) !important;
+  color: rgba(255, 121, 198, 1) !important;
+  opacity: 0.85;
   &:hover { opacity: 1; text-decoration: underline; }
 }
 
@@ -699,6 +714,39 @@ body[a="dark"] a.repo-card {
 
 .injection-fn-body code {
   font-size: inherit;
+}
+
+// ── notebook-embed: toggleable notebook ──
+.notebook-embed {
+  margin: 1.5em 0;
+  border: 1.5px solid rgba(189, 147, 249, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.notebook-embed-header {
+  padding: 0.5em 1em;
+  font-weight: 600;
+  font-size: 0.9em;
+  background: rgba(189, 147, 249, 0.06);
+  border-bottom: 1px solid rgba(189, 147, 249, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.notebook-embed-icon {
+  margin-right: 0.2em;
+}
+
+.notebook-embed-body {
+  padding: 0;
+}
+
+.notebook-embed-iframe {
+  display: block;
+  border: none;
+  border-radius: 0 0 6px 6px;
 }
 
 // ── Plotly chart containers ──
