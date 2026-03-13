@@ -590,18 +590,23 @@ body[a="dark"] a.repo-card {
 }
 
 // ── experiment-setup: combined environment + prompt ──
+$exp-color: rgba(80, 250, 123, 1);
+$exp-border: rgba(80, 250, 123, 0.45);
+$exp-bg: rgba(80, 250, 123, 0.04);
+$exp-divider: rgba(80, 250, 123, 0.15);
+
 .experiment-setup {
   margin: 1.5em 0;
-  border: 1.5px solid rgba(139, 233, 253, 0.55);
+  border: 1.5px solid $exp-border;
   border-radius: 8px;
   overflow: hidden;
 }
 
 .experiment-setup-header {
-  padding: 0.5em 1em;
+  padding: 0.5em 0.9em;
   font-size: 0.85em;
-  background: rgba(139, 233, 253, 0.06);
-  border-bottom: 1px solid rgba(139, 233, 253, 0.2);
+  background: $exp-bg;
+  border-bottom: 1px solid $exp-divider;
   display: flex;
   align-items: center;
   gap: 0.4em;
@@ -614,15 +619,15 @@ body[a="dark"] a.repo-card {
 }
 
 .experiment-setup-desc {
-  opacity: 0.7;
-  font-size: 0.92em;
+  opacity: 0.65;
+  font-size: 0.9em;
 }
 
 .experiment-setup-link {
   margin-left: auto;
   font-size: 0.82em;
   text-decoration: none;
-  color: rgba(139, 233, 253, 1) !important;
+  color: $exp-color !important;
   opacity: 0.85;
   &:hover { opacity: 1; text-decoration: underline; }
 }
@@ -640,41 +645,60 @@ body[a="dark"] a.repo-card {
   padding: 0;
   min-width: 0;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .experiment-setup-col + .experiment-setup-col {
-  border-left: 1px solid rgba(139, 233, 253, 0.2);
+  border-left: 1px solid $exp-divider;
 
   @media (max-width: 700px) {
     border-left: none;
-    border-top: 1px solid rgba(139, 233, 253, 0.2);
+    border-top: 1px solid $exp-divider;
   }
 }
 
 .experiment-setup-col-header {
-  padding: 0.35em 0.8em;
-  font-size: 0.75em;
+  padding: 0.3em 0.8em;
+  font-size: 0.72em;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  opacity: 0.5;
-  border-bottom: 1px solid rgba(139, 233, 253, 0.1);
+  opacity: 0.45;
+  border-bottom: 1px solid $exp-divider;
+  display: flex;
+  align-items: center;
+}
+
+.experiment-setup-col-link {
+  margin-left: auto;
+  font-size: 1em;
+  text-decoration: none;
+  color: $exp-color !important;
+  opacity: 0.75;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+  &:hover { opacity: 1; text-decoration: underline; }
 }
 
 .experiment-setup-col-body {
-  padding: 0.6em 0.8em;
-  font-size: 0.88em;
-  line-height: 1.55;
+  padding: 0.5em 0.8em;
+  font-size: 0.85em;
+  line-height: 1.5;
+  flex: 1;
 
-  p { margin: 0.35em 0; }
+  p { margin: 0.3em 0; }
+  p:first-child { margin-top: 0; }
+  p:last-child { margin-bottom: 0; }
   code { font-size: 0.88em; }
-  ul, ol { margin: 0.35em 0; padding-left: 1.3em; }
+  ul, ol { margin: 0.3em 0; padding-left: 1.3em; }
 
   pre {
     margin: 0;
     padding: 0;
-    font-size: 0.92em;
-    line-height: 1.55;
+    font-size: 0.95em;
+    line-height: 1.5;
     white-space: pre-wrap;
     word-wrap: break-word;
     background: transparent;

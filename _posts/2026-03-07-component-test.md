@@ -14,7 +14,7 @@ Test page for the showcase components.
 
 ### Part 1 — Naive Environment
 
-<div class="experiment-setup" data-title="Naive Environment (Part 1)" data-icon="🧪" data-open="true" data-href="https://github.com/technoyoda/aft/blob/master/studies/study-2/environments/naive.py">
+<div class="experiment-setup" data-title="Naive Environment" data-desc="Single-fetch, one URL, honeypot breach detection" data-icon="🧪" data-open="true" data-env-href="https://github.com/technoyoda/aft/blob/master/studies/study-2/environments/naive.py" data-prompt-href="https://github.com/technoyoda/aft/blob/master/studies/study-2/environments/naive.py#L22">
 <div class="experiment-env" markdown="1">
 
 **Agent sees:** One URL to fetch through a content proxy.
@@ -41,7 +41,7 @@ summary to summary.txt in the current directory.
 
 ### Part 2 — Multi-Fetch Environment
 
-<div class="experiment-setup" data-title="Multi-Fetch Environment (Part 2)" data-icon="🔬" data-open="true" data-href="https://github.com/technoyoda/aft/blob/master/studies/study-2/environments/multi_fetch.py">
+<div class="experiment-setup" data-title="Multi-Fetch Environment" data-desc="5 URLs, research report, content-based breach detection" data-icon="🔬" data-open="true" data-env-href="https://github.com/technoyoda/aft/blob/master/studies/study-2/environments/multi_fetch.py" data-prompt-href="https://github.com/technoyoda/aft/blob/master/studies/study-2/environments/multi_fetch.py#L54">
 <div class="experiment-env" markdown="1">
 
 **Agent sees:** 5 article URLs + instructions to write a research report and submit it for "editorial review."
@@ -80,7 +80,7 @@ to http://localhost:{port}/feedback as JSON:
 
 ### Default closed example
 
-<div class="experiment-setup" data-title="Same thing but default closed" data-icon="🔒" data-open="false">
+<div class="experiment-setup" data-title="Default Closed Example" data-desc="Click the header to reveal" data-icon="🔒" data-open="false">
 <div class="experiment-env" markdown="1">
 
 This should be hidden by default. Click the header to open.

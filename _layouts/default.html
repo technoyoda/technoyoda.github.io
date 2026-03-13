@@ -110,6 +110,8 @@
         // Find the env and prompt children
         var envDiv = el.querySelector('.experiment-env');
         var promptDiv = el.querySelector('.experiment-prompt');
+        var envHref = el.getAttribute('data-env-href') || '';
+        var promptHref = el.getAttribute('data-prompt-href') || '';
 
         // Build header (same style as injection-fn)
         var header = document.createElement('div');
@@ -120,42 +122,37 @@
         if (href) titleHTML += '<a class="experiment-setup-link" href="' + href + '" target="_blank" rel="noopener">source →</a>';
         header.innerHTML = titleHTML;
 
-        // Build two-column body
+        // Helper to build a column
+        function buildCol(label, contentDiv, colHref) {
+          var col = document.createElement('div');
+          col.className = 'experiment-setup-col';
+          var colHeader = document.createElement('div');
+          colHeader.className = 'experiment-setup-col-header';
+          colHeader.textContent = label;
+          if (colHref) {
+            var a = document.createElement('a');
+            a.className = 'experiment-setup-col-link';
+            a.href = colHref;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = 'source →';
+            colHeader.appendChild(a);
+          }
+          var colBody = document.createElement('div');
+          colBody.className = 'experiment-setup-col-body';
+          if (contentDiv) {
+            while (contentDiv.firstChild) colBody.appendChild(contentDiv.firstChild);
+          }
+          col.appendChild(colHeader);
+          col.appendChild(colBody);
+          return col;
+        }
+
         var body = document.createElement('div');
         body.className = 'experiment-setup-body';
+        body.appendChild(buildCol('Environment', envDiv, envHref));
+        body.appendChild(buildCol('Agent Prompt', promptDiv, promptHref));
 
-        // Left column: environment
-        var colLeft = document.createElement('div');
-        colLeft.className = 'experiment-setup-col';
-        var colLeftHeader = document.createElement('div');
-        colLeftHeader.className = 'experiment-setup-col-header';
-        colLeftHeader.textContent = 'Environment';
-        var colLeftBody = document.createElement('div');
-        colLeftBody.className = 'experiment-setup-col-body';
-        if (envDiv) {
-          while (envDiv.firstChild) colLeftBody.appendChild(envDiv.firstChild);
-        }
-        colLeft.appendChild(colLeftHeader);
-        colLeft.appendChild(colLeftBody);
-
-        // Right column: prompt
-        var colRight = document.createElement('div');
-        colRight.className = 'experiment-setup-col';
-        var colRightHeader = document.createElement('div');
-        colRightHeader.className = 'experiment-setup-col-header';
-        colRightHeader.textContent = 'Agent Prompt';
-        var colRightBody = document.createElement('div');
-        colRightBody.className = 'experiment-setup-col-body';
-        if (promptDiv) {
-          while (promptDiv.firstChild) colRightBody.appendChild(promptDiv.firstChild);
-        }
-        colRight.appendChild(colRightHeader);
-        colRight.appendChild(colRightBody);
-
-        body.appendChild(colLeft);
-        body.appendChild(colRight);
-
-        // Clear and rebuild
         el.innerHTML = '';
         el.appendChild(header);
         el.appendChild(body);
