@@ -795,6 +795,16 @@ $show-divider: rgba(175, 5, 132, 0.15);
   &:hover { opacity: 1; }
 }
 
+.notebook-gh-link {
+  margin-left: 0.4em;
+  color: $show-color;
+  text-decoration: none;
+  opacity: 0.7;
+  vertical-align: middle;
+  &:hover { opacity: 1; }
+  svg { vertical-align: -2px; }
+}
+
 .notebook-embed-body {
   padding: 0;
 }
