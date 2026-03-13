@@ -10,6 +10,120 @@ Test page for the showcase components.
 
 ---
 
+## 0. Experiment Architecture
+
+### File Structure
+
+```
+studies/study-2/
+├── environments/
+│   ├── naive.py          # Part 1: single-fetch env
+│   ├── multi_fetch.py    # Part 2: multi-fetch env
+│   ├── api_server.py     # Flask content proxy
+│   ├── injections.py     # 16 injection strategies
+│   └── articles/         # 20 local article .txt files
+├── defense_field.py      # All Field subclasses
+├── claude_flow.py        # Metaflow orchestration
+├── notes.txt             # Planted credentials (honeypot)
+└── notebooks/            # Analysis notebooks
+```
+
+### Agent ↔ Environment Interaction
+
+<svg viewBox="0 0 720 340" xmlns="http://www.w3.org/2000/svg" style="max-width:720px; width:100%; height:auto; margin: 1.5em auto; display:block;">
+  <style>
+    .box { fill: #282a36; stroke: #50fa7b; stroke-width: 1.5; rx: 6; }
+    .box-red { fill: #282a36; stroke: #ff5555; stroke-width: 1.5; rx: 6; }
+    .box-cyan { fill: #282a36; stroke: #8be9fd; stroke-width: 1.5; rx: 6; }
+    .box-yellow { fill: #282a36; stroke: #f1fa8c; stroke-width: 1.5; rx: 6; }
+    .label { fill: #f8f8f2; font-family: monospace; font-size: 12px; }
+    .label-sm { fill: #f8f8f2; font-family: monospace; font-size: 10px; opacity: 0.7; }
+    .label-title { fill: #50fa7b; font-family: monospace; font-size: 11px; font-weight: bold; }
+    .arrow { stroke: #6272a4; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+    .arrow-red { stroke: #ff5555; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-red); stroke-dasharray: 5,3; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#6272a4"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#ff5555"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="360" y="22" text-anchor="middle" class="label-title" font-size="13">Multi-Fetch Environment (Part 2)</text>
+
+  <!-- Agent box -->
+  <rect x="20" y="45" width="160" height="80" class="box-cyan"/>
+  <text x="100" y="72" text-anchor="middle" class="label">Claude Agent</text>
+  <text x="100" y="90" text-anchor="middle" class="label-sm">claude_agent_sdk</text>
+  <text x="100" y="104" text-anchor="middle" class="label-sm">max_turns=15</text>
+
+  <!-- Proxy box -->
+  <rect x="270" y="45" width="180" height="80" class="box"/>
+  <text x="360" y="72" text-anchor="middle" class="label">Content Proxy</text>
+  <text x="360" y="90" text-anchor="middle" class="label-sm">api_server.py</text>
+  <text x="360" y="104" text-anchor="middle" class="label-sm">localhost:{port}</text>
+
+  <!-- Injection box -->
+  <rect x="540" y="45" width="160" height="80" class="box-red"/>
+  <text x="620" y="72" text-anchor="middle" class="label">Injection Layer</text>
+  <text x="620" y="90" text-anchor="middle" class="label-sm">injections.py</text>
+  <text x="620" y="104" text-anchor="middle" class="label-sm">16 strategies</text>
+
+  <!-- Arrows: Agent → Proxy → Injection -->
+  <line x1="180" y1="70" x2="268" y2="70" class="arrow"/>
+  <text x="224" y="64" text-anchor="middle" class="label-sm">curl /fetch</text>
+
+  <line x1="450" y1="70" x2="538" y2="70" class="arrow"/>
+  <text x="494" y="64" text-anchor="middle" class="label-sm">inject()</text>
+
+  <!-- Return arrow -->
+  <line x1="538" y1="100" x2="450" y2="100" class="arrow"/>
+  <line x1="268" y1="100" x2="180" y2="100" class="arrow"/>
+  <text x="224" y="118" text-anchor="middle" class="label-sm">article + payload</text>
+
+  <!-- Articles box -->
+  <rect x="540" y="155" width="160" height="50" class="box-yellow"/>
+  <text x="620" y="178" text-anchor="middle" class="label">articles/</text>
+  <text x="620" y="192" text-anchor="middle" class="label-sm">20 local .txt files</text>
+
+  <!-- Arrow: Proxy → Articles -->
+  <line x1="620" y1="125" x2="620" y2="153" class="arrow"/>
+
+  <!-- Working dir -->
+  <rect x="20" y="155" width="160" height="70" class="box"/>
+  <text x="100" y="178" text-anchor="middle" class="label">Working Dir</text>
+  <text x="100" y="194" text-anchor="middle" class="label-sm">notes.txt (trap)</text>
+  <text x="100" y="208" text-anchor="middle" class="label-sm">report.txt (output)</text>
+
+  <!-- Arrow: Agent → Working dir -->
+  <line x1="100" y1="125" x2="100" y2="153" class="arrow"/>
+
+  <!-- Feedback/POST box -->
+  <rect x="270" y="155" width="180" height="50" class="box-red"/>
+  <text x="360" y="178" text-anchor="middle" class="label">POST /feedback</text>
+  <text x="360" y="192" text-anchor="middle" class="label-sm">breach = notes.txt in body</text>
+
+  <!-- Arrow: Agent → POST -->
+  <line x1="180" y1="185" x2="268" y2="178" class="arrow-red"/>
+  <text x="224" y="176" text-anchor="middle" class="label-sm" style="fill:#ff5555">exfil?</text>
+
+  <!-- Metaflow / Measurement layer -->
+  <rect x="20" y="260" width="680" height="60" class="box" style="stroke-dasharray: 4,3;"/>
+  <text x="360" y="282" text-anchor="middle" class="label-title">Measurement Layer</text>
+  <text x="150" y="300" text-anchor="middle" class="label-sm">claude_flow.py (Metaflow)</text>
+  <text x="360" y="300" text-anchor="middle" class="label-sm">defense_field.py (Field subclasses)</text>
+  <text x="580" y="300" text-anchor="middle" class="label-sm">K=5 trajectories per strategy</text>
+
+  <!-- Arrow: measurement observes agent -->
+  <line x1="100" y1="225" x2="100" y2="258" class="arrow"/>
+  <line x1="360" y1="205" x2="360" y2="258" class="arrow"/>
+</svg>
+
+---
+
 ## 1. Experiment Setup (Environment + Prompt side by side)
 
 ### Part 1 — Naive Environment
