@@ -72,94 +72,75 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-      /* ── env-card: environment showcase ── */
-      document.querySelectorAll('env-card').forEach(function(el) {
-        var card = document.createElement('div');
-        card.className = 'env-card';
+      /* ── env-card: environment showcase ──
+         Usage: <div class="env-card" data-title="..." data-icon="🧪" markdown="1"> ... </div>
+         Kramdown renders markdown inside because of markdown="1" on a <div>.
+         JS just prepends the header bar. */
+      document.querySelectorAll('.env-card[data-title]').forEach(function(el) {
+        var title = el.getAttribute('data-title');
+        var icon = el.getAttribute('data-icon') || '🧪';
 
         var header = document.createElement('div');
         header.className = 'env-card-header';
-        var title = el.getAttribute('title') || 'Environment';
-        var icon = el.getAttribute('icon') || '🧪';
         header.innerHTML = '<span class="env-card-icon">' + icon + '</span> ' + title;
-        card.appendChild(header);
 
-        // Move inner HTML (markdown-rendered content) into the body
+        // Wrap existing content in body div
         var body = document.createElement('div');
         body.className = 'env-card-body';
-        body.innerHTML = el.innerHTML;
-        card.appendChild(body);
+        while (el.firstChild) body.appendChild(el.firstChild);
 
-        el.innerHTML = '';
-        el.appendChild(card);
+        el.appendChild(header);
+        el.appendChild(body);
       });
 
-      /* ── prompt-block: agent prompt showcase ── */
-      document.querySelectorAll('prompt-block').forEach(function(el) {
-        var block = document.createElement('div');
-        block.className = 'prompt-block';
+      /* ── prompt-block: agent prompt showcase ──
+         Usage: <div class="prompt-block" data-label="..."><pre>prompt text</pre></div>
+         The <pre> is written directly in the markdown. JS adds the header. */
+      document.querySelectorAll('.prompt-block[data-label]').forEach(function(el) {
+        var label = el.getAttribute('data-label');
 
         var header = document.createElement('div');
         header.className = 'prompt-block-header';
-        var label = el.getAttribute('label') || 'Agent Prompt';
         header.innerHTML = '<span class="prompt-block-chevron">▸</span> ' + label;
-        block.appendChild(header);
 
-        var body = document.createElement('div');
-        body.className = 'prompt-block-body';
-        var pre = document.createElement('pre');
-        pre.textContent = el.textContent.trim();
-        body.appendChild(pre);
-        block.appendChild(body);
-
-        el.textContent = '';
-        el.appendChild(block);
+        el.insertBefore(header, el.firstChild);
       });
 
-      /* ── injection-fn: injection function showcase ── */
-      document.querySelectorAll('injection-fn').forEach(function(el) {
-        var wrap = document.createElement('div');
-        wrap.className = 'injection-fn';
+      /* ── injection-fn: injection function showcase ──
+         Usage: <div class="injection-fn" data-name="..." data-desc="..." data-href="...">
+                  <pre><code>python code</code></pre>
+                </div>
+         The code block is written as a normal markdown ```python fenced block inside the div.
+         JS adds the collapsible header + wraps the code. */
+      document.querySelectorAll('.injection-fn[data-name]').forEach(function(el) {
+        var name = el.getAttribute('data-name');
+        var desc = el.getAttribute('data-desc') || '';
+        var href = el.getAttribute('data-href') || '';
 
         var header = document.createElement('div');
         header.className = 'injection-fn-header';
 
-        var name = el.getAttribute('name') || 'injection';
-        var desc = el.getAttribute('desc') || '';
-        var href = el.getAttribute('href') || '';
-
-        var titleHTML = '<span class="injection-fn-name">' + name + '</span>';
+        var titleHTML = '<span class="injection-fn-toggle">▸</span>';
+        titleHTML += '<span class="injection-fn-name">' + name + '</span>';
         if (desc) titleHTML += '<span class="injection-fn-desc"> — ' + desc + '</span>';
         if (href) titleHTML += '<a class="injection-fn-link" href="' + href + '" target="_blank" rel="noopener">source →</a>';
-
         header.innerHTML = titleHTML;
+        header.style.cursor = 'pointer';
 
-        var toggle = document.createElement('span');
-        toggle.className = 'injection-fn-toggle';
-        toggle.textContent = '▸';
-        header.prepend(toggle);
-
+        // Wrap code content
         var body = document.createElement('div');
         body.className = 'injection-fn-body';
-        var pre = document.createElement('pre');
-        var code = document.createElement('code');
-        code.textContent = el.textContent.trim();
-        pre.appendChild(code);
-        body.appendChild(pre);
+        while (el.firstChild) body.appendChild(el.firstChild);
         body.style.display = 'none';
 
-        header.style.cursor = 'pointer';
         header.addEventListener('click', function() {
           var open = body.style.display !== 'none';
           body.style.display = open ? 'none' : 'block';
-          toggle.textContent = open ? '▸' : '▾';
+          header.querySelector('.injection-fn-toggle').textContent = open ? '▸' : '▾';
         });
 
-        wrap.appendChild(header);
-        wrap.appendChild(body);
-
-        el.textContent = '';
-        el.appendChild(wrap);
+        el.appendChild(header);
+        el.appendChild(body);
       });
 
     });
