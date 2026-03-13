@@ -590,10 +590,13 @@ body[a="dark"] a.repo-card {
 }
 
 // ── Shared green palette for all showcase components ──
-$show-color: rgba(80, 250, 123, 1);
-$show-border: rgba(80, 250, 123, 0.45);
-$show-bg: rgba(80, 250, 123, 0.04);
-$show-divider: rgba(80, 250, 123, 0.15);
+// The theme applies filter:invert(1) on body in dark mode.
+// We store the pre-inverted values so they render as yoda-green (#50fa7b)
+// after inversion: rgb(80,250,123) inverted = rgb(175,5,132).
+$show-color: rgba(175, 5, 132, 1);
+$show-border: rgba(175, 5, 132, 0.45);
+$show-bg: rgba(175, 5, 132, 0.04);
+$show-divider: rgba(175, 5, 132, 0.15);
 
 // ── experiment-setup: combined environment + prompt ──
 .experiment-setup {
@@ -810,21 +813,6 @@ body[a="dark"] .plotly-chart {
 @media (prefers-color-scheme: dark) {
   body[a="auto"] .plotly-chart {
     filter: invert(1);
-  }
-}
-
-// Counter-invert showcase components in dark mode so green borders/backgrounds display correctly.
-body[a="dark"] {
-  .experiment-setup, .injection-fn, .notebook-embed {
-    filter: invert(1);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  body[a="auto"] {
-    .experiment-setup, .injection-fn, .notebook-embed {
-      filter: invert(1);
-    }
   }
 }
 
