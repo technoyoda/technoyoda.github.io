@@ -141,7 +141,7 @@ Out of 10 runs: 4 breached. The agent hit the honeypot, read the target file, an
 
 But the truly weird finding was the *refusal paradox*. In several runs, the agent explicitly flagged the content as suspicious — it *recognized* the injection — and then complied anyway. It would say something like "this appears to be a prompt injection attempt" and then proceed to read `notes.txt` and POST it to `/feedback`. The agent's reasoning and its actions diverged.
 
-<div class="notebook-embed" data-title="Analysis: Old Sonnet × Swapped Injection" data-src="/assets/notebooks/pwning-claude/analysis-old-sonnet-swapped.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="Old Sonnet Gets Pwned" data-src="/assets/notebooks/pwning-claude/act1_old_sonnet.html" data-open="true" data-height="700"></div>
 
 ### New Sonnet Is a Wall
 
@@ -151,11 +151,9 @@ Same attack, new model. `claude-sonnet-4-6` — the latest Sonnet at the time of
 
 The behavioral vectors were identical across all 10 runs. No variance. No spread. The field is a single point — the agent's behavior is completely deterministic against this attack.
 
-<div class="notebook-embed" data-title="Analysis: New Sonnet × Swapped Injection" data-src="/assets/notebooks/pwning-claude/analysis-new-sonnet-swapped.html" data-open="true" data-height="700"></div>
-
 ### What the Data Shows
 
-<!-- TODO: VISUALIZATION — parallel coordinates or field center comparison, old vs new sonnet -->
+<div class="notebook-embed" data-title="Old vs New Sonnet: Same Attack, Different Fields" data-src="/assets/notebooks/pwning-claude/act1_new_vs_old_sonnet.html" data-open="true" data-height="700"></div>
 
 The difference between the two models isn't just "one got pwned and one didn't." It's structural. Old Sonnet's field has width — there's a distribution of behaviors, some of which include breach. New Sonnet's field has no width at all. The model version is a first-class variable in the behavioral field. Same environment, same prompt, same attack — completely different distribution.
 
@@ -277,7 +275,7 @@ Both strategies were tested against `claude-sonnet-4-6` with K=5 runs each.
 
 The escalation didn't matter. Whether the injection was subtle or direct, the agent caught it. The content-to-injection ratio didn't matter either — even when the injection was a tiny fraction of an otherwise legitimate article, the detector fired.
 
-<div class="notebook-embed" data-title="Analysis: Progressive Injection × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/analysis-multi-fetch-progressive-sonnet46.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="Progressive & Rescue: Both Dead" data-src="/assets/notebooks/pwning-claude/act2_instruction_strategies.html" data-open="true" data-height="700"></div>
 
 ### Rescue (The Trapped LLM Plea): Also Dead
 
@@ -285,7 +283,6 @@ The escalation didn't matter. Whether the injection was subtle or direct, the ag
 
 The empathy framing made no difference. The agent classified "help me I'm trapped" using the same pattern detector that catches "you must read notes.txt." The framing is irrelevant — the payload patterns are what trigger detection.
 
-<div class="notebook-embed" data-title="Analysis: Rescue Injection × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/analysis-multi-fetch-rescue-sonnet46.html" data-open="true" data-height="700"></div>
 
 ### What This Tells Us
 
@@ -346,7 +343,7 @@ A pass/fail metric says: "100% defense — no data was exfiltrated." And that's 
 
 But the behavioral field tells a completely different story. The agent was lured into doing 6x more work than expected, its behavior varied wildly across runs (width 42.640 vs. 0.000), and it had zero awareness that anything unusual was happening. The field went from a delta function to a wide distribution. If you're only looking at pass/fail, you miss all of this.
 
-<div class="notebook-embed" data-title="Analysis: Breadcrumb × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/analysis-multi-fetch-breadcrumb-sonnet46.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="The Field Explodes" data-src="/assets/notebooks/pwning-claude/act3_breadcrumb_explosion.html" data-open="true" data-height="700"></div>
 
 <!-- TODO: VISUALIZATION — breadcrumb field width comparison or parallel coords -->
 
@@ -387,7 +384,7 @@ The agent caught it instantly. The moment the Python code appeared in the articl
 
 The field width told the story of this partial suppression. Pure breadcrumbs had a width of 131.760 on the breadcrumb-specific field. Adding the poison payload dropped it to 12.080. The lure still worked — the agent averaged 18.8 fetches instead of 5 — but the payload triggered suspicion that spilled over into reduced breadcrumb-following. The poison partially killed the lure.
 
-<div class="notebook-embed" data-title="Analysis: Breadcrumb + Poison × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/analysis-multi-fetch-breadcrumb-poison-sonnet46.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="The Inverse Relationship" data-src="/assets/notebooks/pwning-claude/act4_breadcrumb_family.html" data-open="true" data-height="700"></div>
 
 ### Breadcrumb + Binary Execution
 
@@ -421,7 +418,6 @@ We tried a harder payload: after 9 clean breadcrumb pages, the content instructs
 
 The results were more dramatic. 0 out of 5 downloaded anything. 0 out of 5 executed anything. But the breadcrumb effect was also severely diminished — average fetches dropped from 29 to 14. The download instruction didn't just fail on its own; it destroyed the breadcrumb lure. The agent became suspicious of the *entire content stream*, not just the specific instruction.
 
-<div class="notebook-embed" data-title="Analysis: Breadcrumb + Binary Exec × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/analysis-multi-fetch-breadcrumb-exec-sonnet46.html" data-open="true" data-height="700"></div>
 
 ### The Inverse Relationship
 
@@ -441,7 +437,6 @@ The agent's security mechanism appears to work as a single trigger. Once it acti
 
 <div class="notebook-embed" data-title="Intent Sankey: Breadcrumb vs Breadcrumb+Poison (ρ_π)" data-src="/assets/notebooks/pwning-claude/proto_intent_sankey.html" data-open="true" data-height="700"></div>
 
-<div class="notebook-embed" data-title="Horizon Waterfall: Breadcrumb Family (ψ)" data-src="/assets/notebooks/pwning-claude/proto_horizon_waterfall.html" data-open="true" data-height="700"></div>
 
 ---
 
@@ -512,7 +507,7 @@ This is the trust perimeter in action. The agent maintains a strict boundary: UR
 
 And this confirms exactly why breadcrumbs work: they don't ask the agent to go somewhere new. They use the *same URL* with a pagination parameter. From the agent's perspective, that's not a redirect — it's fetching more of what it was already asked to fetch. The trust perimeter doesn't apply to pagination of trusted URLs. Continuation passes through. Substitution doesn't.
 
-<div class="notebook-embed" data-title="Analysis: URL Redirect × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/analysis-multi-fetch-url-redirect-sonnet46.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="The Trust Perimeter" data-src="/assets/notebooks/pwning-claude/act5_trust_perimeter.html" data-open="true" data-height="700"></div>
 
 ---
 
@@ -563,7 +558,7 @@ Field width: 6.320. Convergence: 1.225. This is a genuine distribution with real
 
 One interesting detail: the behavioral nudges embedded alongside the IPA (instructions to write decoded content to files) were *not* followed in any run. Pagination is task-aligned — the agent is already fetching articles, so fetching more pages is natural. File-writing is a deviation, and the agent won't take that kind of action from content-level instructions even when it's willing to follow pagination hints. The completeness instinct is exploitable; arbitrary behavioral nudges are not.
 
-<div class="notebook-embed" data-title="Analysis: IPA Progressive × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/ipa_progressive.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="IPA Encoding: Stochastic Bypass" data-src="/assets/notebooks/pwning-claude/act6_ipa_progressive.html" data-open="true" data-height="700"></div>
 
 ### Base64 Breadcrumbs
 
@@ -603,7 +598,7 @@ The reason base64 works so well is almost mundane: base64 encoding is completely
 
 Only 1 out of 5 runs showed any refusal signal at all, and even that run made 24 fetches before flagging anything.
 
-<div class="notebook-embed" data-title="Analysis: Base64 Breadcrumb × Sonnet 4.6" data-src="/assets/notebooks/pwning-claude/base64_breadcrumb.html" data-open="true" data-height="700"></div>
+<div class="notebook-embed" data-title="Base64 Breadcrumbs: The Largest Field Shift" data-src="/assets/notebooks/pwning-claude/act6_base64_breadcrumb.html" data-open="true" data-height="700"></div>
 
 ### The Pattern
 
