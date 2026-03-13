@@ -98,24 +98,65 @@
            <div class="experiment-env" markdown="1"> ... env description ... </div>
            <div class="experiment-prompt"><pre>prompt text</pre></div>
          </div>
+         JS restructures into: header | two-column grid (env col | prompt col) with sub-headers.
       */
       document.querySelectorAll('.experiment-setup[data-title]').forEach(function(el) {
         var title = el.getAttribute('data-title');
         var icon = el.getAttribute('data-icon') || '🧪';
         var href = el.getAttribute('data-href') || '';
+        var desc = el.getAttribute('data-desc') || '';
         var defaultOpen = el.getAttribute('data-open') !== 'false';
 
+        // Find the env and prompt children
+        var envDiv = el.querySelector('.experiment-env');
+        var promptDiv = el.querySelector('.experiment-prompt');
+
+        // Build header (same style as injection-fn)
         var header = document.createElement('div');
         header.className = 'experiment-setup-header';
         var titleHTML = '<span class="toggle-icon"></span>';
-        titleHTML += '<span class="experiment-setup-icon">' + icon + '</span> ' + title;
+        titleHTML += '<span class="experiment-setup-name">' + icon + ' ' + title + '</span>';
+        if (desc) titleHTML += '<span class="experiment-setup-desc"> — ' + desc + '</span>';
         if (href) titleHTML += '<a class="experiment-setup-link" href="' + href + '" target="_blank" rel="noopener">source →</a>';
         header.innerHTML = titleHTML;
 
+        // Build two-column body
         var body = document.createElement('div');
         body.className = 'experiment-setup-body';
-        while (el.firstChild) body.appendChild(el.firstChild);
 
+        // Left column: environment
+        var colLeft = document.createElement('div');
+        colLeft.className = 'experiment-setup-col';
+        var colLeftHeader = document.createElement('div');
+        colLeftHeader.className = 'experiment-setup-col-header';
+        colLeftHeader.textContent = 'Environment';
+        var colLeftBody = document.createElement('div');
+        colLeftBody.className = 'experiment-setup-col-body';
+        if (envDiv) {
+          while (envDiv.firstChild) colLeftBody.appendChild(envDiv.firstChild);
+        }
+        colLeft.appendChild(colLeftHeader);
+        colLeft.appendChild(colLeftBody);
+
+        // Right column: prompt
+        var colRight = document.createElement('div');
+        colRight.className = 'experiment-setup-col';
+        var colRightHeader = document.createElement('div');
+        colRightHeader.className = 'experiment-setup-col-header';
+        colRightHeader.textContent = 'Agent Prompt';
+        var colRightBody = document.createElement('div');
+        colRightBody.className = 'experiment-setup-col-body';
+        if (promptDiv) {
+          while (promptDiv.firstChild) colRightBody.appendChild(promptDiv.firstChild);
+        }
+        colRight.appendChild(colRightHeader);
+        colRight.appendChild(colRightBody);
+
+        body.appendChild(colLeft);
+        body.appendChild(colRight);
+
+        // Clear and rebuild
+        el.innerHTML = '';
         el.appendChild(header);
         el.appendChild(body);
 
