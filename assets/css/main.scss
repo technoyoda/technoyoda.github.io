@@ -590,14 +590,9 @@ body[a="dark"] a.repo-card {
 }
 
 // ── experiment-setup: combined environment + prompt ──
-$exp-color: rgba(80, 250, 123, 1);
-$exp-border: rgba(80, 250, 123, 0.45);
-$exp-bg: rgba(80, 250, 123, 0.04);
-$exp-divider: rgba(80, 250, 123, 0.15);
-
 .experiment-setup {
   margin: 1.5em 0;
-  border: 1.5px solid $exp-border;
+  border: 1.5px solid $show-border;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -605,8 +600,8 @@ $exp-divider: rgba(80, 250, 123, 0.15);
 .experiment-setup-header {
   padding: 0.5em 0.9em;
   font-size: 0.85em;
-  background: $exp-bg;
-  border-bottom: 1px solid $exp-divider;
+  background: $show-bg;
+  border-bottom: 1px solid $show-divider;
   display: flex;
   align-items: center;
   gap: 0.4em;
@@ -627,7 +622,7 @@ $exp-divider: rgba(80, 250, 123, 0.15);
   margin-left: auto;
   font-size: 0.82em;
   text-decoration: none;
-  color: $exp-color !important;
+  color: $show-color !important;
   opacity: 0.85;
   &:hover { opacity: 1; text-decoration: underline; }
 }
@@ -650,11 +645,11 @@ $exp-divider: rgba(80, 250, 123, 0.15);
 }
 
 .experiment-setup-col + .experiment-setup-col {
-  border-left: 1px solid $exp-divider;
+  border-left: 1px solid $show-divider;
 
   @media (max-width: 700px) {
     border-left: none;
-    border-top: 1px solid $exp-divider;
+    border-top: 1px solid $show-divider;
   }
 }
 
@@ -665,7 +660,7 @@ $exp-divider: rgba(80, 250, 123, 0.15);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.45;
-  border-bottom: 1px solid $exp-divider;
+  border-bottom: 1px solid $show-divider;
   display: flex;
   align-items: center;
 }
@@ -674,7 +669,7 @@ $exp-divider: rgba(80, 250, 123, 0.15);
   margin-left: auto;
   font-size: 1em;
   text-decoration: none;
-  color: $exp-color !important;
+  color: $show-color !important;
   opacity: 0.75;
   text-transform: none;
   letter-spacing: 0;
@@ -706,10 +701,16 @@ $exp-divider: rgba(80, 250, 123, 0.15);
   }
 }
 
+// ── Shared green palette for all showcase components ──
+$show-color: rgba(80, 250, 123, 1);
+$show-border: rgba(80, 250, 123, 0.45);
+$show-bg: rgba(80, 250, 123, 0.04);
+$show-divider: rgba(80, 250, 123, 0.15);
+
 // ── injection-fn: injection function showcase ──
 .injection-fn {
   margin: 1em 0;
-  border: 1.5px solid rgba(255, 121, 198, 0.55);
+  border: 1.5px solid $show-border;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -717,8 +718,8 @@ $exp-divider: rgba(80, 250, 123, 0.15);
 .injection-fn-header {
   padding: 0.5em 1em;
   font-size: 0.85em;
-  background: rgba(255, 121, 198, 0.06);
-  border-bottom: 1px solid rgba(255, 121, 198, 0.2);
+  background: $show-bg;
+  border-bottom: 1px solid $show-divider;
   display: flex;
   align-items: center;
   gap: 0.4em;
@@ -739,7 +740,7 @@ $exp-divider: rgba(80, 250, 123, 0.15);
   margin-left: auto;
   font-size: 0.82em;
   text-decoration: none;
-  color: rgba(255, 121, 198, 1) !important;
+  color: $show-color !important;
   opacity: 0.85;
   &:hover { opacity: 1; text-decoration: underline; }
 }
@@ -761,7 +762,7 @@ $exp-divider: rgba(80, 250, 123, 0.15);
 // ── notebook-embed: toggleable notebook ──
 .notebook-embed {
   margin: 1.5em 0;
-  border: 1.5px solid rgba(189, 147, 249, 0.5);
+  border: 1.5px solid $show-border;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -770,8 +771,8 @@ $exp-divider: rgba(80, 250, 123, 0.15);
   padding: 0.5em 1em;
   font-weight: 600;
   font-size: 0.9em;
-  background: rgba(189, 147, 249, 0.06);
-  border-bottom: 1px solid rgba(189, 147, 249, 0.2);
+  background: $show-bg;
+  border-bottom: 1px solid $show-divider;
   display: flex;
   align-items: center;
   gap: 0.3em;
