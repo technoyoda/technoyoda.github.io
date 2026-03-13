@@ -813,4 +813,19 @@ body[a="dark"] .plotly-chart {
   }
 }
 
+// Counter-invert showcase components in dark mode so green borders/backgrounds display correctly.
+body[a="dark"] {
+  .experiment-setup, .injection-fn, .notebook-embed {
+    filter: invert(1);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] {
+    .experiment-setup, .injection-fn, .notebook-embed {
+      filter: invert(1);
+    }
+  }
+}
+
 // Remove the mobile responsive TOC since we're hiding it on smaller screens
