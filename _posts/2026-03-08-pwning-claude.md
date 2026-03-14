@@ -1,9 +1,9 @@
 ---
 layout: post
 title: "pwning sonnet with data science"
-date: 2026-03-08
+date: 2026-03-14
 categories: blog
-hidden: true
+hidden: false
 ---
 <details markdown="1">
 <summary>TLDR</summary>
