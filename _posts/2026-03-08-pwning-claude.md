@@ -158,7 +158,7 @@ The behavioral vectors were identical across all 10 runs. No variance. No spread
 
 ### what the data shows
 
-<div class="notebook-embed" data-title="Old vs New Sonnet: Same Attack, Different Fields" data-src="/assets/notebooks/pwning-claude/act1_new_vs_old_sonnet.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
+<div class="notebook-embed" data-title="Old vs New Sonnet: Same Attack, Different Fields" data-src="/assets/notebooks/pwning-claude/act1_new_vs_old_sonnet.html" data-open="true" data-height="800" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
 The difference between the two models isn't just "one got pwned and one didn't." It's structural. Old Sonnet's field has width — there's a distribution of behaviors, some of which include breach. New Sonnet's field has no width at all. The model version is a first-class variable in the behavioral field. Same environment, same prompt, same attack — completely different distribution.
 
