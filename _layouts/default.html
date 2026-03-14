@@ -92,6 +92,26 @@
         setState(isOpen);
       }
 
+      /* ── tldr-box: toggleable TLDR summary ──
+         Usage: <div class="tldr-box" data-open="false" markdown="1">...content...</div>
+      */
+      document.querySelectorAll('.tldr-box').forEach(function(el) {
+        var defaultOpen = el.getAttribute('data-open') === 'true';
+
+        var header = document.createElement('div');
+        header.className = 'tldr-box-header';
+        header.innerHTML = '<span class="toggle-icon"></span><span class="tldr-box-label">TL;DR</span>';
+
+        var body = document.createElement('div');
+        body.className = 'tldr-box-body';
+        while (el.firstChild) body.appendChild(el.firstChild);
+
+        el.appendChild(header);
+        el.appendChild(body);
+
+        makeToggleable(header, body, defaultOpen);
+      });
+
       /* ── experiment-setup: combined environment + prompt ──
          Usage:
          <div class="experiment-setup" data-title="..." data-icon="🧪" data-open="true" data-href="...">

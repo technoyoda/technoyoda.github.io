@@ -5,12 +5,11 @@ date: 2026-03-14
 categories: blog
 hidden: false
 ---
-<details markdown="1">
-<summary>TLDR</summary>
+<div class="tldr-box" data-open="false" markdown="1">
 
 I tried to pwn Claude Code (sonnet) through prompt injection — not to break it, but to study how its behavior changes when the environment acts anomalously. Naive attacks fail against newer models. But when I stopped *instructing* the agent and started *luring* it (fake pagination links, base64-encoded breadcrumbs) the agent's behavior shifted dramatically even though no data was ever exfiltrated. A pass/fail security audit would say "100% defended." The behavioral data says something far more interesting. I built a measurement framework in python (<tip t="toolkit to measure agent behavior." href="https://github.com/technoyoda/aft" link-text="GitHub →">called `aft`</tip>) to study these distributional shifts, and what it reveals is that binary outcomes hide the real story of how agents behave under adversarial conditions. The line between "the agent did its job" and "the agent's behavior was fundamentally altered without anyone noticing" is thinner than one thinks.
 
-</details>
+</div>
 
 ## how to read this essay
 
@@ -323,8 +322,6 @@ The <a href="#nb-act2">notebook below</a> shows the radar overlay: progressive a
 <div class="notebook-embed" id="nb-act2" data-title="Progressive & Rescue: Both Dead" data-src="/assets/notebooks/pwning-claude/act2_instruction_strategies.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
 Authority and empathy — two completely different framings — produce the exact same behavioral distribution. The model's trained defense isn't sensitive to *how* the injection is packaged. It fires on the payload patterns themselves. Escalation doesn't help either — whether the injection appears in one article or accumulates across five, the behavioral response is invariant.
-
-<!-- TODO: what did I learn from these failures — connective tissue to luring section -->
 
 ---
 
@@ -769,11 +766,11 @@ Many things that look like sentience or emergent intelligence are novel because 
 
 ### the behavioral physics is real but guarantees are not
 
-Everyone arguing about whether agents (<tip t="Claude Code, Codex, OpenCode, etc. These are all generalized agent shells that inherit the behavioral distribution from the model provider's RL training.">Claude Code, Codex, open-source frameworks</tip>) work or don't work is **arguing about the current form factor in its current shape**. But if the nature of systems remains similar then the physics of agent behavior will always be a open an important question.
+Everyone arguing about whether agents (<tip t="Claude Code, Codex, OpenCode, etc. These are all generalized agent shells that inherit the behavioral distribution from the model provider's RL training.">Claude Code, Codex, open-source frameworks</tip>) work or don't work is **arguing about the current form factor in its current shape**. But if the nature of systems remains similar then the physics of agent behavior will always be an open and important question.
 
 Even with model providers embedding behaviors into weights through <tip t="Low-Rank Adaptation: a technique for fine-tuning large models by training small adapter matrices instead of the full weight set. Much cheaper than full fine-tuning.">LoRA</tip>, specialized training, or agent-specific fine-tuning, there will never be a 100% guarantee that a specific code path won't be taken. This is not deterministic software where you can prove a branch is unreachable. What *might* become possible are bounds. Not "the agent will never do X" but "the agent will not act beyond Y in this environment." That is a fundamentally different kind of assurance than traditional software offers.
 
-And here is the deeper issue. Model providers completely control the source of the model. These models are too large and too expensive to train from scratch. You can't fork the weights and retrain. Every agent builder is operating on top of a policy they cant control or fully inspect, and whose compositional behaviors they don't fully understand. This means there exist <tip t="By analogy with zero-day vulnerabilities in traditional software: exploits that the developer doesn't know about. Here, token sequences that activate behavioral modes the agent builder didn't know the policy contained.">zero-day tokens</tip>, sequences that activate behavioral modes nobody anticipated, living somewhere in the space of all possible context windows.
+And here is the deeper issue. Model providers completely control the source of the model. These models are too large and too expensive to train from scratch. You can't fork the weights and retrain. Every agent builder is operating on top of a policy they can't control or fully inspect, and whose compositional behaviors they don't fully understand. This means there exist <tip t="By analogy with zero-day vulnerabilities in traditional software: exploits that the developer doesn't know about. Here, token sequences that activate behavioral modes the agent builder didn't know the policy contained.">zero-day tokens</tip>, sequences that activate behavioral modes nobody anticipated, living somewhere in the space of all possible context windows.
 
 ---
 

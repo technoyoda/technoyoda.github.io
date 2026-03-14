@@ -598,6 +598,39 @@ $show-border: rgba(175, 5, 132, 0.45);
 $show-bg: rgba(175, 5, 132, 0.04);
 $show-divider: rgba(175, 5, 132, 0.15);
 
+// ── tldr-box: toggleable TLDR summary ──
+.tldr-box {
+  margin: 1.5em 0;
+  border: 1.5px solid $show-border;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tldr-box-header {
+  padding: 0.6em 1em;
+  font-size: 0.9em;
+  background: $show-bg;
+  border-bottom: 1px solid $show-divider;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.tldr-box-label {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: $show-color;
+}
+
+.tldr-box-body {
+  padding: 0.8em 1.2em;
+  font-size: 0.92em;
+  line-height: 1.65;
+
+  p:first-child { margin-top: 0; }
+  p:last-child { margin-bottom: 0; }
+}
+
 // ── experiment-setup: combined environment + prompt ──
 .experiment-setup {
   margin: 1.5em 0;
