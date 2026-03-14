@@ -23,11 +23,10 @@ So I started wondering. If governments are going to deploy Claude in classified 
 
 If these things are going to take actions that change the real world and influence our lives, then it is important that we can study them for what they are. The easiest low-hanging fruit I <tip t="Having a full time job only allows you to do so many things.">chose to study</tip> was how well they behave when the environment is not very forthcoming. I was not interested in measuring "did the attack work: yes or no." That is boring. Achieving an outcome gives us no information about *how* it was achieved. Traditional software behaves <tip t="I know, I know, there is non-determinism. But there is awareness of what the code can create. At time t in the runtime you can forecast what potential code paths (the whole program graph from that line of code) a program might take, especially simple software without any parallelism.">deterministically</tip>. It's expensive, but theoretically possible. With LLMs that is not the case. The future paths an LLM takes after tokens enter its system are non-deterministic AND completely unpredictable. Even with tools like mechanistic interpretability or AI alignment research, we cannot truly know _what the model will do at runtime_.
 
-<!-- TODO: Add other blog links and connector before publish -->
 
-<details>
+<details markdown="1">
 <summary>Dataset, source code, and notebooks</summary>
-
+<!-- TODO: We should add nice HTML before release. -->
 All experiments in this post were run using [Agent Mechanics](https://github.com/technoyoda/aft) (`aft`), an open-source library for measuring agent behavior as probability distributions. The raw dataset, field classes, injection strategies, and all notebooks are in the [study-2](https://github.com/technoyoda/aft/tree/master/studies/study-2) directory. The blog-specific visualization code lives in [blog/viz/](https://github.com/technoyoda/aft/tree/master/studies/study-2/blog/viz).
 
 Every notebook embedded below is generated from `dataset.json` — the full experimental record extracted from Metaflow runs. You can reproduce any chart by cloning the repo and running `make notebooks` in `studies/study-2/blog/`.
@@ -135,21 +134,21 @@ These constructs are used throughout the blog. Each is a specific, measurable qu
 
 **Measurement function (φ)** — maps a trajectory of any length to a fixed-dimensional vector. You design it to capture the behavioral questions you care about. Different measurement functions on the same data ask different questions.
 
-**Behavioral field** — the point cloud from measuring K trajectories. Formally, the empirical approximation of F(E, c₀) := P_M(τ | E, c₀) — the distribution over all possible trajectories the model could produce in this environment with this prompt. We can't compute F analytically, so we sample it.
+**Behavioral field** — the distribution of behaviors a model can exhibit when running in a given environment with a given prompt. We approximate it by running K trajectories, measuring each one, and treating the resulting point cloud as a sample. Formally: $F(E, c_0) := P_M(\tau \mid E, c_0)$.
 
-**Width (W)** — the trace of the covariance matrix over the point cloud. Total behavioral variance across all dimensions. Width = 0 means every run produced the exact same behavioral vector — deterministic behavior. High width means the model's behavior varied significantly under identical conditions.
+**Width (W)** — how diverse the model's behavior is across runs. If every run does the exact same thing, width is zero — the field is a single point. If runs vary wildly (some fetch 5 URLs, some fetch 40), width is high. Computed as the trace of the covariance matrix over the point cloud.
 
-**Center (μ)** — the mean behavioral vector across K runs. When comparing two experiments, the shift in center tells you how the *typical* behavior changed.
+**Center (μ)** — what the model *typically* does. The average behavioral vector across K runs. When comparing two experiments, a shift in center means the typical behavior changed — even if the outcomes didn't.
 
-**Convergence (C)** — E[outcome] / σ[outcome]. How reliably the model produces the same outcome, normalized by variance. Convergence = ∞ means every run had the same outcome. Low convergence means outcomes are unpredictable even when the setup is identical.
+**Convergence (C)** — how reliably the model produces the same outcome across runs. If every run succeeds or every run fails, convergence is infinite — there's no outcome variance. If some runs succeed and some fail under identical conditions, convergence drops. Computed as $C = \mathbb{E}[y] \,/\, \sigma[y]$.
 
-<details>
+<details markdown="1">
 <summary>The formal framework (for the curious)</summary>
 <!-- TODO: Add other blog links before publish -->
 
 This formalization is part of a broader framework I call **Agent Mechanics** — the study of agent behavior through distributional measurement rather than individual-run analysis. The field F(E, c₀) is a property of the *model-environment-prompt triple*, not the model alone. Change any one of those three and you get a different distribution.
 
-The full theorization — why fields, why this particular decomposition, and the math behind the metric vocabulary — lives in the [root blog post](/agent-mechanics.html). The technical documentation for the `aft` library and its API can be found in the [Agent Mechanics library post](/agent-mechanics-library.html).
+The core theoretical intuition — why agents are better understood as searching rather than thinking, and why that reframing leads to fields — is in [Agents are not thinking, they are searching](/agent-search.html). The analytical framing, metric vocabulary, and the `aft` library that implements all of it are derived in [Agents are not thinking: Science of agent behavior](/agent-science.html).
 
 </details>
 
