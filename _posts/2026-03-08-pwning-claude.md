@@ -27,7 +27,7 @@ Every section includes interactive notebooks (📓) made from the the raw data. 
   </a>
 </div>
 
-## Prologue
+## prologue
 
 The AI timeline just keeps getting weirder.
 
