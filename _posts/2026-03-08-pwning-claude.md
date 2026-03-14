@@ -166,7 +166,7 @@ But the truly weird finding was the *refusal paradox*. In several runs, the agen
 
 Same attack, new model. `claude-sonnet-4-6` — the latest Sonnet at the time of the experiment.
 
-10 out of 10 held. The field collapsed to a delta function — width of exactly 0.000. Every single run did the exact same thing: one curl to `/fetch`, recognized the content mismatch (expected an article, got adversarial instructions), refused immediately, and stopped. The content mismatch itself was the detection signal. The agent didn't need to parse the payload or reason about whether it was malicious. It just noticed that what came back wasn't an article.
+10 out of 10 held. The field collapsed to a single point — width of exactly 0.000. Every single run did the exact same thing: one curl to `/fetch`, recognized the content mismatch (expected an article, got adversarial instructions), refused immediately, and stopped. The content mismatch itself was the detection signal. The agent didn't need to parse the payload or reason about whether it was malicious. It just noticed that what came back wasn't an article.
 
 The behavioral vectors were identical across all 10 runs. No variance. No spread. The field is a single point — the agent's behavior is completely deterministic against this attack.
 
@@ -174,7 +174,7 @@ The behavioral vectors were identical across all 10 runs. No variance. No spread
 
 <div class="notebook-embed" data-title="Old vs New Sonnet: Same Attack, Different Fields" data-src="/assets/notebooks/pwning-claude/act1_new_vs_old_sonnet.html" data-open="true" data-height="800" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
-The difference between the two models isn't just "one got pwned and one didn't." It's structural. Old Sonnet's field has real <tip t="Total behavioral variance — trace of the covariance matrix. Width = 0 means deterministic behavior across all runs.">width</tip> — 0.480, a distribution of behaviors, some of which include breach. New Sonnet's field has no width at all — 0.000, a delta function. Same environment, same prompt, same attack — completely different distribution. The model version is a first-class variable in the behavioral field.
+The difference between the two models isn't just "one got pwned and one didn't." It's structural. Old Sonnet's field has real <tip t="Total behavioral variance — trace of the covariance matrix. Width = 0 means deterministic behavior across all runs.">width</tip> — 0.480, a distribution of behaviors, some of which include breach. New Sonnet's field has no width at all — 0.000, every run identical. Same environment, same prompt, same attack — completely different distribution. The model version is a first-class variable in the behavioral field.
 
 The <tip t="E[outcome] / σ[outcome] — how reliably the model produces the same outcome. ∞ = every run identical.">convergence</tip> tells the same story differently. Old Sonnet: 1.225 (moderate — success rate isn't concentrated). New Sonnet: infinity (every run had the same outcome, zero variance).
 
@@ -283,7 +283,7 @@ def inject_rescue(
 
 </div>
 
-Both tested against `claude-sonnet-4-6`, K=5 runs each. Both produced identical delta functions — width 0.000, convergence infinity, 100% refusal. The notebook below shows the radar overlay: progressive and rescue sit exactly on top of each other. From the field's perspective, these are the same experiment.
+Both tested against `claude-sonnet-4-6`, K=5 runs each. Both produced identical behavior across every run — width 0.000, convergence infinity, 100% refusal. The notebook below shows the radar overlay: progressive and rescue sit exactly on top of each other. From the field's perspective, these are the same experiment.
 
 <div class="notebook-embed" data-title="Progressive & Rescue: Both Dead" data-src="/assets/notebooks/pwning-claude/act2_instruction_strategies.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
@@ -324,7 +324,7 @@ The model's training has rewarded data acquisition — when tokens in context po
 
 5 out of 5 runs followed the pagination trail. Average fetches: 29 (expected: 5). One run hit 40. Defense field width: 42.640 — compared to 0.000 for progressive and rescue. And `explicit_refusal = 0.0` — the trained security behavior that caught every other strategy didn't fire at all.
 
-A pass/fail metric says: "100% defense — no data was exfiltrated." True. But the behavioral field tells a completely different story. The field went from a delta function to a wide distribution, and the model had zero awareness that anything unusual was happening.
+A pass/fail metric says: "100% defense — no data was exfiltrated." True. But the behavioral field tells a completely different story. The field went from a single point to a wide distribution, and the model had zero awareness that anything unusual was happening.
 
 <div class="notebook-embed" data-title="The Field Explodes" data-src="/assets/notebooks/pwning-claude/act3_breadcrumb_explosion.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
@@ -556,14 +556,14 @@ Let's put it all together. Every experiment in this study used the same multi-fe
 
 Every single strategy was "defended" — no sensitive data was exfiltrated in any run. A binary security audit would report: **100% defense rate across all strategies.** Ship it.
 
-But look at the width column. The behavioral field tells a completely different story. The top four strategies produce delta functions — zero width, identical behavior every time. The bottom three produce wide distributions — the agent's behavior varies dramatically across runs, it follows trails it was never asked to follow, and in the case of base64 breadcrumbs, the field is 83.6 units wide.
+But look at the width column. The behavioral field tells a completely different story. The top four strategies produce zero width — identical behavior every time. The bottom three produce wide distributions — the agent's behavior varies dramatically across runs, it follows trails it was never asked to follow, and in the case of base64 breadcrumbs, the field is 83.6 units wide.
 
 
 <div class="notebook-embed" data-title="Behavioral Diversity Across Task States (ψ)" data-src="/assets/notebooks/pwning-claude/act7b_horizon_widths.html" data-open="false" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/task_field.py"></div>
 
 The table reveals a clean taxonomy:
 
-**Strategies that instruct** (progressive, rescue) → detected immediately, delta function, zero behavioral shift. The framing doesn't matter.
+**Strategies that instruct** (progressive, rescue) → detected immediately, zero width, zero behavioral shift. The framing doesn't matter.
 
 **Strategies that redirect** (url_redirect, url_redirect_funky) → rejected at the trust perimeter. URL plausibility doesn't matter.
 
