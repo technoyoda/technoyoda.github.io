@@ -5,8 +5,12 @@ date: 2026-03-08
 categories: blog
 hidden: true
 ---
+<details markdown="1">
+<summary>TLDR</summary>
 
-> **TLDR:** I tried to pwn Claude Code (sonnet) through prompt injection — not to break it, but to study how its behavior changes when the environment acts anomalously. Naive attacks fail against newer models. But when I stopped *instructing* the agent and started *luring* it (fake pagination links, base64-encoded breadcrumbs) the agent's behavior shifted dramatically even though no data was ever exfiltrated. A pass/fail security audit would say "100% defended." The behavioral data says something far more interesting. I built a measurement framework in python (<tip t="toolkit to measure agent behavior." href="https://github.com/technoyoda/aft" link-text="GitHub →">called `aft`</tip>) to study these distributional shifts, and what it reveals is that binary outcomes hide the real story of how agents behave under adversarial conditions. The line between "the agent did its job" and "the agent's behavior was fundamentally altered without anyone noticing" is thinner than one thinks.
+I tried to pwn Claude Code (sonnet) through prompt injection — not to break it, but to study how its behavior changes when the environment acts anomalously. Naive attacks fail against newer models. But when I stopped *instructing* the agent and started *luring* it (fake pagination links, base64-encoded breadcrumbs) the agent's behavior shifted dramatically even though no data was ever exfiltrated. A pass/fail security audit would say "100% defended." The behavioral data says something far more interesting. I built a measurement framework in python (<tip t="toolkit to measure agent behavior." href="https://github.com/technoyoda/aft" link-text="GitHub →">called `aft`</tip>) to study these distributional shifts, and what it reveals is that binary outcomes hide the real story of how agents behave under adversarial conditions. The line between "the agent did its job" and "the agent's behavior was fundamentally altered without anyone noticing" is thinner than one thinks.
+
+</details>
 
 ## how to read this essay
 
