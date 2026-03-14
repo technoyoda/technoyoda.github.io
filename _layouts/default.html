@@ -190,6 +190,37 @@
         makeToggleable(header, body, defaultOpen);
       });
 
+      /* ── field-def: measurement field showcase ──
+         Usage: <div class="field-def" data-name="PromptDefenseField" data-desc="..." data-href="..." data-open="false" markdown="1">
+                  ```python ... ```
+                </div>
+      */
+      document.querySelectorAll('.field-def[data-name]').forEach(function(el) {
+        var name = el.getAttribute('data-name');
+        var desc = el.getAttribute('data-desc') || '';
+        var href = el.getAttribute('data-href') || '';
+        var defaultOpen = el.getAttribute('data-open') === 'true';
+
+        var header = document.createElement('div');
+        header.className = 'field-def-header';
+
+        var titleHTML = '<span class="toggle-icon"></span>';
+        titleHTML += '<span class="field-def-icon">φ</span>';
+        titleHTML += '<span class="field-def-name">' + name + '</span>';
+        if (desc) titleHTML += '<span class="field-def-desc"> — ' + desc + '</span>';
+        if (href) titleHTML += '<a class="field-def-link" href="' + href + '" target="_blank" rel="noopener">source →</a>';
+        header.innerHTML = titleHTML;
+
+        var body = document.createElement('div');
+        body.className = 'field-def-body';
+        while (el.firstChild) body.appendChild(el.firstChild);
+
+        el.appendChild(header);
+        el.appendChild(body);
+
+        makeToggleable(header, body, defaultOpen);
+      });
+
       /* ── notebook-embed: toggleable notebook iframe ──
          Usage: <div class="notebook-embed" data-title="..." data-src="..." data-open="true" data-height="800"></div>
          The iframe is created by JS (lazy — only loads when opened).
