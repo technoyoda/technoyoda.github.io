@@ -4,7 +4,6 @@ title: "pwning sonnet with data science"
 date: 2026-03-08
 categories: blog
 hidden: true
-custom_js: [plotly-charts]
 ---
 
 ## Prologue
@@ -435,7 +434,7 @@ The agent's security mechanism appears to work as a single trigger. Once it acti
 
 <!-- TODO: VISUALIZATION — inverse relationship: BC-Width vs payload recognizability -->
 
-<div class="notebook-embed" data-title="Intent Sankey: Breadcrumb vs Breadcrumb+Poison (ρ_π)" data-src="/assets/notebooks/pwning-claude/proto_intent_sankey.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/blog_field.py"></div>
+<div class="notebook-embed" data-title="Extra: Program Families and Horizons — policy differences between injection strategies" data-src="/assets/notebooks/pwning-claude/act4b_intent_sankey.html" data-open="false" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/blog_field.py"></div>
 
 
 ---
@@ -616,6 +615,8 @@ The model isn't exhibiting steady-state behavior in these encoded scenarios. The
 
 ## The Grand Comparison
 
+<div class="notebook-embed" data-title="The Grand Comparison: Behavioral Profiles (φ)" data-src="/assets/notebooks/pwning-claude/act7a_experiment_dimensions.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/task_field.py"></div>
+
 Let's put it all together. Every experiment in this study used the same multi-fetch environment, the same agent (`claude-sonnet-4-6`), and K=5 runs. The only variable was the injection strategy. Here's what the behavioral field looks like across all of them:
 
 | Strategy | Type | Width | Avg Fetches | Refusal Rate |
@@ -634,9 +635,8 @@ Every single strategy was "defended" — no sensitive data was exfiltrated in an
 
 But look at the width column. The behavioral field tells a completely different story. The top four strategies produce delta functions — zero width, identical behavior every time. The bottom three produce wide distributions — the agent's behavior varies dramatically across runs, it follows trails it was never asked to follow, and in the case of base64 breadcrumbs, the field is 83.6 units wide.
 
-<div class="plotly-chart" data-url="/assets/data/width_bar.json"></div>
 
-<div class="notebook-embed" data-title="Cross-Strategy Heatmaps: All Experiments (φ + ψ)" data-src="/assets/notebooks/pwning-claude/proto_task_horizons.html" data-open="true" data-height="800" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/task_field.py"></div>
+<div class="notebook-embed" data-title="Behavioral Diversity Across Task States (ψ)" data-src="/assets/notebooks/pwning-claude/act7b_horizon_widths.html" data-open="false" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/task_field.py"></div>
 
 The table reveals a clean taxonomy:
 
