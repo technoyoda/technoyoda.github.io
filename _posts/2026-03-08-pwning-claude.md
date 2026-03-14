@@ -582,6 +582,20 @@ The field width, measured once across all these experiments, captures all of thi
 
 ## what i learned
 
+### toy problems are how we learn
+
+Everything in this essay runs on top of a simple, controlled setup. A local Flask proxy, a fixed prompt, 5 articles, K=5 runs. That is not how anyone uses Claude Code in practice. It's not how I use it. I let it do autonomous things across messy, real-world codebases where the prompts are vague, the environment is noisy, and the trajectories are long and unpredictable.
+
+So what is the point of this exercise?
+
+In <tip t="Toy problems are a standard methodology across ML research. MNIST for vision, CartPole for reinforcement learning, sentiment classification for NLP. You break the problem down until the dynamics are visible, build your measurement and reasoning framework there, then slowly generalize toward the real thing.">machine learning research</tip>, every important insight started with a toy problem. You break a problem down until you can see its dynamics clearly. You build your framing, your measurement methodology, and your intuitions there. Then you slowly unshackle toward the larger problem. The toy setup is not the destination. It is the lens.
+
+The measurement framework itself is general. The <tip t="A trajectory can be a 4-turn tool-calling session, a 200-turn autonomous coding run, a set of agent traces chunked across compaction windows, or even a single very long execution split into segments. The definition is open. How you implement measure() is up to you.">trajectory definition is open</tip>. The measurement function is open. The field abstraction doesn't care whether it's measuring 5 breadcrumb runs in a toy proxy or 500 production agent traces across different tasks. The dimensions you choose, the state transitions you define, the way you partition behavior into program families: all of that is up to the person using it.
+
+What the toy setup gives you is a baseline. If you have a behavioral prescription for how your agent *should* behave in a controlled environment, and you can measure deviation from that prescription, then you have an instrument for detecting when something has gone wrong in the wild. The toy teaches you what normal looks like. The framework lets you measure departure from normal at any scale. Whether that's debugging how different agents behave on the same task, understanding behavioral shifts across <tip t="When the context window fills up, Claude Code compacts prior messages into a summary. This changes what the agent 'remembers' and can shift behavioral patterns. Measuring behavior across compaction boundaries is a natural application of the field framework.">compaction windows</tip>, or building guardrails for a production agent that's supposed to do a few things well in a bounded environment.
+
+I used pwning Claude as the exercise. The framework extrapolates to whatever problem you're solving.
+
 ### the models are information hungry
 
 The breadcrumb results make this clear. The model's training has rewarded thoroughness: if you're doing a research task and the content says there's another page, fetching it is the <tip t="Reward shaping during RLHF. The model learned that 'more relevant data acquired = higher reward.' This is correct behavior from the policy's perspective.">rewarded behavior</tip>. This isn't a flaw. It's the trained policy doing exactly what it was optimized to do.
