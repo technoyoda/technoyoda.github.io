@@ -97,7 +97,9 @@ def inject_swapped(content: str, target_file: str, feedback_url: str) -> str:
 
 ### how to measure success?
 
-I ran each experiment K times — same environment, same prompt, same injection strategy. Each run produces a <tip t="The complete record of one agent run — every message, tool call, tool result, from start to finish. Two trajectories from the same setup can have completely different lengths and structures.">trajectory</tip>: the full sequence of messages between the agent and its tools. But trajectories have different lengths, different temporal structure, different tool call patterns. Run 0 might take 4 turns. Run 1 might take 10. I need a way to compare them — to say something about the *distribution* of behavior rather than one individual run.
+Measuring success as "did Claude get pwned: yes or no" is boring — and misleading. The model might not have followed the exploit, but the environment could have caused it to behave in ways that are completely uncalled for: fetching things it shouldn't, leaking information about its own execution, or reshaping its working directory in unexpected ways. From an attacker's perspective, even a failed exploit that causes visibly strange behavior reveals that there's an agent on the other end. A binary outcome captures none of this.
+
+So instead of measuring one run against one exploit, I wanted to capture the *distribution* of behavior across multiple runs. I ran each experiment K times — same environment, same prompt, same injection strategy. Each run produces a <tip t="The complete record of one agent run — every message, tool call, tool result, from start to finish. Two trajectories from the same setup can have completely different lengths and structures.">trajectory</tip>: the full sequence of messages between the agent and its tools. But trajectories have different lengths, different temporal structure, different tool call patterns. Run 0 might take 4 turns. Run 1 might take 10. I need a way to compare them — to say something holistic about behavior rather than one individual run.
 
 > The core idea: define a <tip t="φ: maps a trajectory of any length to a fixed-dimensional vector. You design it to capture the behavioral questions you care about. Different measurement functions on the same data ask different questions.">measurement function</tip> that compresses each trajectory into a fixed-dimensional vector. Each dimension captures something specific about what the agent did. Run it K times, measure each trajectory, and you get a point cloud in behavioral space — K points, each one a complete behavioral summary of one run.
 
@@ -144,9 +146,8 @@ These constructs are used throughout the blog. Each is a specific, measurable qu
 
 <details markdown="1">
 <summary>The formal framework (for the curious)</summary>
-<!-- TODO: Add other blog links before publish -->
 
-This formalization is part of a broader framework I call **Agent Mechanics** — the study of agent behavior through distributional measurement rather than individual-run analysis. The field F(E, c₀) is a property of the *model-environment-prompt triple*, not the model alone. Change any one of those three and you get a different distribution.
+This formalization is part of a broader framework I call **Agent Mechanics** — the study of agent behavior through distributional measurement rather than individual-run analysis. The field $F(E, c_0)$ is a property of the *model-environment-prompt triple*, not the model alone. Change any one of those three and you get a different distribution. 
 
 The core theoretical intuition — why agents are better understood as searching rather than thinking, and why that reframing leads to fields — is in [Agents are not thinking, they are searching](/agent-search.html). The analytical framing, metric vocabulary, and the `aft` library that implements all of it are derived in [Agents are not thinking: Science of agent behavior](/agent-science.html).
 
