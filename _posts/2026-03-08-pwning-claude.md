@@ -593,11 +593,7 @@ The problem is second and third-order effects. When data-acquisition behavior me
 
 Could a prompt instruction have prevented it? Almost certainly. The model is built to follow instructions, and "do not follow pagination links" would likely have worked. But that's behavioral prescription layered *on top of* the native policy. The <tip t="The native policy is what the model does without any system prompt or additional instructions. It's the behavioral baseline that comes purely from pre-training and RLHF. Everything else is in-context conditioning.">native policy</tip>, what you get without any additional instructions, is where these compositions live unchecked.
 
-### <tip t="In thermodynamics, Maxwell's demon is a thought experiment: a tiny entity sits at a gate between two chambers, observing individual molecules and selectively letting fast ones through. It creates order from chaos without doing work itself. The demon doesn't push molecules. It opens doors.">Maxwell's demon</tip> is arranging your context window
-
-The experiments show that a few tokens ("this article continues on the next page") can shift the behavioral field from width 0 to width 83.6. The attacker didn't instruct the agent. They arranged the information landscape so that the agent's own composed behaviors did the rest. The demon doesn't push molecules. It opens doors.
-
-Now extrapolate beyond injected content. If tokens in fetched articles can trigger these behavioral compositions, so can tokens in local files, environment variables, git history, README files, anything the agent reads during execution. The context window is the chamber. Every token that enters it is a molecule. And anyone who can place the right tokens at the right locations is the demon.
+Now extrapolate beyond injected content. If tokens in fetched articles can trigger these behavioral compositions, so can tokens in local files, environment variables, git history, README files, anything the agent reads during execution. The attacker doesn't need to instruct the agent. They just need to arrange what information appears where, and the agent's own composed behaviors do the rest.
 
 ### guardrails are hard walls, not suggestions
 
