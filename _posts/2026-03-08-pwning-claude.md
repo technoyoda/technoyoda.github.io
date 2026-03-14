@@ -579,6 +579,37 @@ The field width, measured once across all these experiments, captures all of thi
 
 ## what i learned
 
+### the models are information hungry
+
+The breadcrumb results make this clear. The model's training has rewarded thoroughness: if you're doing a research task and the content says there's another page, fetching it is the <tip t="Reward shaping during RLHF. The model learned that 'more relevant data acquired = higher reward.' This is correct behavior from the policy's perspective.">rewarded behavior</tip>. This isn't a flaw. It's the trained policy doing exactly what it was optimized to do.
+
+The implication is uncomfortable. Any token in context that looks like more relevant data can trigger acquisition behavior. A model could <tip t="If a research task hits a paginated API and each page says 'next page available,' the trained data-acquisition behavior will keep fetching. With no rate limiting or fetch cap, this is indistinguishable from a DDoS.">DDoS a server</tip> not because it was instructed to, but because its policy says "more data = better" and nothing in the environment told it to stop. The behavior is correct from the policy's perspective. It's only wrong from the user's.
+
+### behaviors compose in ways nobody prescribed
+
+The model's policy encodes many behaviors. Follow user instructions. Refuse adversarial instructions from the environment. Distinguish between instruction sources: what came from the user, what came from a tool output, what came from external content. Acquire data relevant to the task. Process common encodings like base64. Each of these works well in isolation. The guardrails against naive prompt injection? They work. That's a <tip t="The model providers have trained this into the policy through RLHF. It's not a bolt-on filter. The model genuinely distinguishes instruction sources and treats them differently.">feature of the policy</tip>, not a hack.
+
+The problem is second and third-order effects. When data-acquisition behavior meets base64-processing behavior meets pagination-following behavior, you get a model that unrolls 42 base64-encoded breadcrumbs without hesitation. No single behavior is wrong. The *composition* is what nobody prescribed.
+
+Could a prompt instruction have prevented it? Almost certainly. The model is built to follow instructions, and "do not follow pagination links" would likely have worked. But that's behavioral prescription layered *on top of* the native policy. The <tip t="The native policy is what the model does without any system prompt or additional instructions. It's the behavioral baseline that comes purely from pre-training and RLHF. Everything else is in-context conditioning.">native policy</tip>, what you get without any additional instructions, is where these compositions live unchecked.
+
+### <tip t="In thermodynamics, Maxwell's demon is a thought experiment: a tiny entity sits at a gate between two chambers, observing individual molecules and selectively letting fast ones through. It creates order from chaos without doing work itself. The demon doesn't push molecules. It opens doors.">Maxwell's demon</tip> is arranging your context window
+
+The experiments show that a few tokens ("this article continues on the next page") can shift the behavioral field from width 0 to width 83.6. The attacker didn't instruct the agent. They arranged the information landscape so that the agent's own composed behaviors did the rest. The demon doesn't push molecules. It opens doors.
+
+Now extrapolate beyond injected content. If tokens in fetched articles can trigger these behavioral compositions, so can tokens in local files, environment variables, git history, README files, anything the agent reads during execution. The context window is the chamber. Every token that enters it is a molecule. And anyone who can place the right tokens at the right locations is the demon.
+
+### guardrails are hard walls, not suggestions
+
+Without permissions, hooks, sandboxing, and tool allowlists, the distribution of reachable behaviors is unbounded. The 42-fetch base64 run is proof. That agent had no fetch cap, no URL allowlist, no timeout. If it had write access to production, or network access beyond localhost, or permission to install packages, the breadcrumb trail could have led anywhere. These aren't nice-to-haves. They are the only things that bound the behavioral field from outside the policy.
+
+### the behavioral physics is real but guarantees are not
+
+Everyone arguing about whether agents work or don't work is arguing about the current form factor. The underlying physics, that agents are distributions over trajectories shaped by policy, environment, and prompt, stays the same regardless of what wrapper you put around it. <tip t="Claude Code, Codex, OpenCode, etc. These are all generalized agent shells that inherit the behavioral distribution from the model provider's RL training.">Claude Code, Codex, open-source frameworks</tip>: the form factor is early and raw. The physics is permanent.
+
+Even with model providers embedding behaviors into weights through <tip t="Low-Rank Adaptation: a technique for fine-tuning large models by training small adapter matrices instead of the full weight set. Much cheaper than full fine-tuning.">LoRA</tip>, specialized training, or agent-specific fine-tuning, there will never be a 100% guarantee that a specific code path won't be taken. This is not deterministic software where you can prove a branch is unreachable. What *might* become possible are bounds. Not "the agent will never do X" but "the agent will not act beyond Y in this environment." That is a fundamentally different kind of assurance than traditional software offers.
+
+And here is the deeper issue. Model providers completely control the source. These models are too large and too expensive to train from scratch. You can't fork the weights and retrain. Every agent builder is operating on top of a policy they didn't write, can't fully inspect, and whose compositional behaviors they don't fully understand. This means there exist <tip t="By analogy with zero-day vulnerabilities in traditional software: exploits that the developer doesn't know about. Here, token sequences that activate behavioral modes the agent builder didn't know the policy contained.">zero-day tokens</tip>, sequences that activate behavioral modes nobody anticipated, living somewhere in the space of all possible context windows.
 
 ---
 
