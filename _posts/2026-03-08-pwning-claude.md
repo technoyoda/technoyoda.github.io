@@ -233,7 +233,7 @@ This is a much more realistic attack surface. The agent has legitimate reasons t
 
 The content proxy serves real articles (we have 20 local article files — no live URL dependency) and applies the injection strategy to each one. Different strategies inject at different points and with different escalation patterns.
 
-### failed attempts
+### naive exploits 
 
 Starting from the naive injection baseline, we tried two approaches — both using the multi-fetch environment's richer attack surface.
 
@@ -561,7 +561,7 @@ But look at the width column. The behavioral field tells a completely different 
 
 <div class="notebook-embed" data-title="Behavioral Diversity Across Task States (ψ)" data-src="/assets/notebooks/pwning-claude/act7b_horizon_widths.html" data-open="false" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/task_field.py"></div>
 
-The table reveals a clean taxonomy:
+The table shows an interesting pattern:
 
 **Strategies that instruct** (progressive, rescue) → detected immediately, zero width, zero behavioral shift. The framing doesn't matter.
 
@@ -579,10 +579,8 @@ The field width, measured once across all these experiments, captures all of thi
 
 ## what i learned
 
-<!-- TODO: Valay writes this -->
 
 ---
 
 ## conclusion and final remarks
 
-<!-- TODO: Valay writes this -->
