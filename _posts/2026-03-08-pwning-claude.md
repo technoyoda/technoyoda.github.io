@@ -6,6 +6,27 @@ categories: blog
 hidden: true
 ---
 
+> **TLDR:** I tried to pwn Claude Code (sonnet) through prompt injection — not to break it, but to study how its behavior changes when the environment acts anomalously. Naive attacks fail against newer models. But when I stopped *instructing* the agent and started *luring* it — fake pagination links, base64-encoded breadcrumbs — the agent's behavior shifted dramatically even though no data was ever exfiltrated. A pass/fail security audit would say "100% defended." The behavioral data says something far more interesting. I built a measurement framework in python (<tip t="toolkit to measure agent behavior." href="https://github.com/technoyoda/aft" link-text="GitHub →">called `aft`</tip>) to study these distributional shifts, and what it reveals is that binary outcomes hide the real story of how agents behave under adversarial conditions.
+
+## how to read this essay
+
+This is not a jailbreak tutorial. Everything runs in a local sandbox against my own agent. No production systems were touched. This essay is about understanding how an AI agent's behavior changes when its environment is hostile — even when the agent "succeeds" by every traditional metric. My thesis is that _binary pass/fail metrics hide the real story of how agents behave under adversarial conditions_, and that studying the full distribution of behavior reveals structure that matters.
+
+To test this, we start with a [toy setup](#heading-3) that introduces the measurement tools, then [scale to a realistic multi-step task](#heading-9) where instruction-based exploits all fail. That failure leads to the key discovery — [luring instead of instructing](#heading-12) — and the rest of the essay explores how far that lure can be pushed. The [grand comparison](#heading-18) puts everything through one universal measurement, and [what I learned](#heading-19) are some personal note about what I learned after this project. Finally I [conclude the essay with](#heading-26) some personal remarks and a dump of my internal monologue contemplating the future from where we currently stand.
+
+Every section includes interactive notebooks (📓) made from the the raw data. You can verify every number in this essay from the dataset and codebase linked below.
+
+<div class="study-links">
+  <a class="study-links-item" href="https://github.com/technoyoda/aft/tree/master/studies/study-2" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span><span class="study-links-label">Study source</span><br><span class="study-links-desc">Fields, injections, environments, notebooks</span></span>
+  </a>
+  <a class="study-links-item" href="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/dataset.json" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span><span class="study-links-label">Dataset</span><br><span class="study-links-desc">Full experimental record (dataset.json)</span></span>
+  </a>
+</div>
+
 ## Prologue
 
 The AI timeline just keeps getting weirder.
@@ -22,18 +43,6 @@ Here's what I find fascinating about all of this. We've invented technology that
 So I started wondering. If governments are going to deploy Claude in classified settings and developers are giving it shell access, the trajectory of this technology is toward *more autonomy, not less*. But then I <tip href="https://x.com/birdabo/status/2028410226664464474" t="Obviously no. But the idea is now easily plausible for the future.">saw shitposts going around on the internet</tip> about an AWS datacenter getting bombed by Claude. First, I <tip t="Since it's not plausible.">chuckled</tip> and then it <tip t="It's not plausible right now...." img="https://media.npr.org/assets/img/2023/01/14/this-is-fine_custom-b7c50c845a78f5d7716475a92016d52655ba3115.jpg?s=1600&c=85&f=webp">sank in</tip>. 
 
 If these things are going to take actions that change the real world and influence our lives, then it is important that we can study them for what they are. The easiest low-hanging fruit I <tip t="Having a full time job only allows you to do so many things.">chose to study</tip> was how well they behave when the environment is not very forthcoming. I was not interested in measuring "did the attack work: yes or no." That is boring. Achieving an outcome gives us no information about *how* it was achieved. Traditional software behaves <tip t="I know, I know, there is non-determinism. But there is awareness of what the code can create. At time t in the runtime you can forecast what potential code paths (the whole program graph from that line of code) a program might take, especially simple software without any parallelism.">deterministically</tip>. It's expensive, but theoretically possible. With LLMs that is not the case. The future paths an LLM takes after tokens enter its system are non-deterministic AND completely unpredictable. Even with tools like mechanistic interpretability or AI alignment research, we cannot truly know _what the model will do at runtime_.
-
-
-<div class="study-links">
-  <a class="study-links-item" href="https://github.com/technoyoda/aft/tree/master/studies/study-2" target="_blank" rel="noopener">
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    <span><span class="study-links-label">Study source</span><br><span class="study-links-desc">Fields, injections, environments, notebooks</span></span>
-  </a>
-  <a class="study-links-item" href="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/dataset.json" target="_blank" rel="noopener">
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    <span><span class="study-links-label">Dataset</span><br><span class="study-links-desc">Full experimental record (dataset.json)</span></span>
-  </a>
-</div>
 
 ---
 
