@@ -710,6 +710,60 @@ $show-divider: rgba(175, 5, 132, 0.15);
   }
 }
 
+// ── study-links: repo + dataset card ──
+.study-links {
+  margin: 1em 0;
+  border: 1.5px solid $show-border;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.study-links-item {
+  flex: 1 1 auto;
+  padding: 0.7em 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.85em;
+  transition: background 0.15s;
+
+  &:hover {
+    background: $show-bg;
+  }
+
+  & + & {
+    border-left: 1.5px solid $show-border;
+  }
+
+  svg {
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+}
+
+.study-links-label {
+  font-weight: 600;
+  color: $show-color;
+}
+
+.study-links-desc {
+  opacity: 0.6;
+  font-size: 0.9em;
+}
+
+@media (max-width: 500px) {
+  .study-links {
+    flex-direction: column;
+  }
+  .study-links-item + .study-links-item {
+    border-left: none;
+    border-top: 1.5px solid $show-border;
+  }
+}
+
 // ── injection-fn: injection function showcase ──
 .injection-fn {
   margin: 1em 0;

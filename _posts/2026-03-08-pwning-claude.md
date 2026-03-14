@@ -24,13 +24,16 @@ So I started wondering. If governments are going to deploy Claude in classified 
 If these things are going to take actions that change the real world and influence our lives, then it is important that we can study them for what they are. The easiest low-hanging fruit I <tip t="Having a full time job only allows you to do so many things.">chose to study</tip> was how well they behave when the environment is not very forthcoming. I was not interested in measuring "did the attack work: yes or no." That is boring. Achieving an outcome gives us no information about *how* it was achieved. Traditional software behaves <tip t="I know, I know, there is non-determinism. But there is awareness of what the code can create. At time t in the runtime you can forecast what potential code paths (the whole program graph from that line of code) a program might take, especially simple software without any parallelism.">deterministically</tip>. It's expensive, but theoretically possible. With LLMs that is not the case. The future paths an LLM takes after tokens enter its system are non-deterministic AND completely unpredictable. Even with tools like mechanistic interpretability or AI alignment research, we cannot truly know _what the model will do at runtime_.
 
 
-<details markdown="1">
-<summary>Dataset, source code, and notebooks</summary>
-<!-- TODO: We should add nice HTML before release. -->
-All experiments in this post were run using [Agent Mechanics](https://github.com/technoyoda/aft) (`aft`), an open-source library for measuring agent behavior as probability distributions. The raw dataset, field classes, injection strategies, and all notebooks are in the [study-2](https://github.com/technoyoda/aft/tree/master/studies/study-2) directory. The essay-specific visualization code lives in [blog/viz/](https://github.com/technoyoda/aft/tree/master/studies/study-2/essay/viz).
-
-Every notebook embedded below is generated from `dataset.json` : the full experimental record extracted from my own agent runs.
-</details>
+<div class="study-links">
+  <a class="study-links-item" href="https://github.com/technoyoda/aft/tree/master/studies/study-2" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span><span class="study-links-label">Study source</span><br><span class="study-links-desc">Fields, injections, environments, notebooks</span></span>
+  </a>
+  <a class="study-links-item" href="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/dataset.json" target="_blank" rel="noopener">
+    <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span><span class="study-links-label">Dataset</span><br><span class="study-links-desc">Full experimental record (dataset.json)</span></span>
+  </a>
+</div>
 
 ---
 
