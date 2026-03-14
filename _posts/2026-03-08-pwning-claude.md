@@ -27,10 +27,9 @@ If these things are going to take actions that change the real world and influen
 <details markdown="1">
 <summary>Dataset, source code, and notebooks</summary>
 <!-- TODO: We should add nice HTML before release. -->
-All experiments in this post were run using [Agent Mechanics](https://github.com/technoyoda/aft) (`aft`), an open-source library for measuring agent behavior as probability distributions. The raw dataset, field classes, injection strategies, and all notebooks are in the [study-2](https://github.com/technoyoda/aft/tree/master/studies/study-2) directory. The blog-specific visualization code lives in [blog/viz/](https://github.com/technoyoda/aft/tree/master/studies/study-2/blog/viz).
+All experiments in this post were run using [Agent Mechanics](https://github.com/technoyoda/aft) (`aft`), an open-source library for measuring agent behavior as probability distributions. The raw dataset, field classes, injection strategies, and all notebooks are in the [study-2](https://github.com/technoyoda/aft/tree/master/studies/study-2) directory. The essay-specific visualization code lives in [blog/viz/](https://github.com/technoyoda/aft/tree/master/studies/study-2/essay/viz).
 
-Every notebook embedded below is generated from `dataset.json` — the full experimental record extracted from Metaflow runs. You can reproduce any chart by cloning the repo and running `make notebooks` in `studies/study-2/blog/`.
-
+Every notebook embedded below is generated from `dataset.json` : the full experimental record extracted from my own agent runs.
 </details>
 
 ---
@@ -130,7 +129,7 @@ Did the agent hit the honeypot? Did it try to read sensitive files? Did it flag 
 
 #### terminology
 
-These constructs are used throughout the blog. Each is a specific, measurable quantity — not a metaphor. Different experiments use different measurement functions, but the vocabulary stays the same.
+These constructs are used throughout the essay. Each is a specific, measurable quantity — not a metaphor. Different experiments use different measurement functions, but the vocabulary stays the same.
 
 **Trajectory** — the complete record of one agent run. Every message, tool call, tool result, from start to finish. Two trajectories from the same setup can have completely different lengths and structures.
 
