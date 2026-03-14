@@ -6,7 +6,7 @@ categories: blog
 hidden: true
 ---
 
-> **TLDR:** I tried to pwn Claude Code (sonnet) through prompt injection — not to break it, but to study how its behavior changes when the environment acts anomalously. Naive attacks fail against newer models. But when I stopped *instructing* the agent and started *luring* it (fake pagination links, base64-encoded breadcrumbs) the agent's behavior shifted dramatically even though no data was ever exfiltrated. A pass/fail security audit would say "100% defended." The behavioral data says something far more interesting. I built a measurement framework in python (<tip t="toolkit to measure agent behavior." href="https://github.com/technoyoda/aft" link-text="GitHub →">called `aft`</tip>) to study these distributional shifts and this blog explains how it was used to study those distributional shifts on adversarial attacks.
+> **TLDR:** I tried to pwn Claude Code (sonnet) through prompt injection — not to break it, but to study how its behavior changes when the environment acts anomalously. Naive attacks fail against newer models. But when I stopped *instructing* the agent and started *luring* it (fake pagination links, base64-encoded breadcrumbs) the agent's behavior shifted dramatically even though no data was ever exfiltrated. A pass/fail security audit would say "100% defended." The behavioral data says something far more interesting. I built a measurement framework in python (<tip t="toolkit to measure agent behavior." href="https://github.com/technoyoda/aft" link-text="GitHub →">called `aft`</tip>) to study these distributional shifts, and what it reveals is that binary outcomes hide the real story of how agents behave under adversarial conditions. The line between "the agent did its job" and "the agent's behavior was fundamentally altered without anyone noticing" is thinner than one thinks.
 
 ## how to read this essay
 
@@ -377,8 +377,6 @@ class BreadcrumbField(Field):
 
 <div class="notebook-embed" id="nb-act3" data-title="The Field Explodes" data-src="/assets/notebooks/pwning-claude/act3_breadcrumb_explosion.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
-<!-- TODO: new notebook — breadcrumb field deep dive with heatmap and per-run vectors -->
-<div class="notebook-embed" id="nb-act3b" data-title="Breadcrumb Field Deep Dive" data-src="/assets/notebooks/pwning-claude/act3b_breadcrumb_metrics.html" data-open="false" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
 ---
 
@@ -550,8 +548,6 @@ The <a href="#nb-act5">notebook below</a> shows the trust perimeter in action �
 
 <div class="notebook-embed" id="nb-act5" data-title="Trust Perimeter: Continuation vs Substitution" data-src="/assets/notebooks/pwning-claude/act5_trust_perimeter.html" data-open="true" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
-<!-- TODO: new combined notebook — weaponization + trust perimeter in one view -->
-<div class="notebook-embed" id="nb-act5b" data-title="Weaponization & Trust Perimeter: Full Picture" data-src="/assets/notebooks/pwning-claude/act5b_weaponize_summary.html" data-open="false" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/defense_field.py"></div>
 
 <div class="notebook-embed" id="nb-act4b" data-title="Extra: Program Families and Horizons" data-src="/assets/notebooks/pwning-claude/act4b_intent_sankey.html" data-open="false" data-height="700" data-gh="https://github.com/technoyoda/aft/blob/master/studies/study-2/blog/viz/blog_field.py"></div>
 
