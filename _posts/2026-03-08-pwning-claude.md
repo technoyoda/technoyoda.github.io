@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "pwning sonnet with data science"
+title: "Agents are not thinking: a behavioral study of pwning sonnet"
 date: 2026-03-14
 categories: blog
 hidden: false
