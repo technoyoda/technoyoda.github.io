@@ -27,7 +27,7 @@ The beauty is that the more different languages you learn, more domains, more wa
 
 ---
 
-Because there is something deeper than language games. There is something I call **linguistic frame**.
+Because there is something deeper than language games. There is something I call a **linguistic frame**.
 
 A language game is the act of using language in a specific context with specific rules. A linguistic frame is the choice of language that determines which games can be played in the first place. The frame precedes the game. The frame determines what is expressible, what is thinkable, and what dynamics will unfold.
 
