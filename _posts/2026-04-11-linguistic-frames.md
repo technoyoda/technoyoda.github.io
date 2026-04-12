@@ -6,6 +6,8 @@ categories: blog
 hidden: false
 ---
 
+> this essay is a dedication to all the wonderful people in my life who have made me the person I am today. The synthesis of this thought would not have been possible without the range of experiences and ideas I have gotten to share and experience with everyone who entered my life. 
+
 ## Part I: The Philosophy
 
 When you are young, you are told to go to school. You go to school, you learn things, you go to college, you figure out what you want to do, and then you go find somewhere to work. You make money, you raise a family, and somewhere along the way you develop your own philosophical view of what money means, what work means, what any of it means. Some people see working for a company as a noose around their neck. Others see it as one avenue of income. Some might even see it as a higher calling for some really altruistic cause. All rationalizations are inherantly a pursuit of someone's dharma and so all rationalizations are valid. There is no single true rationalization for any of this. It is your choice, eventually, how you wish to live and what you wish to do.
