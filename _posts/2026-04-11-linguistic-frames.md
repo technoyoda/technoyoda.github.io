@@ -6,7 +6,7 @@ categories: blog
 hidden: false
 ---
 
-> this essay is a dedication to all the wonderful people in my life who have made me the person I am today. The synthesis of this thought would not have been possible without the range of experiences and ideas I have gotten to share and experience with everyone who entered my life. 
+> this essay is a dedication to all the wonderful people in my life who have made me the person I am today. The synthesis of this thought would not have been possible without the range of experiences and ideas I have gotten to share with everyone who entered my life. 
 
 ## Part I: The Philosophy
 
