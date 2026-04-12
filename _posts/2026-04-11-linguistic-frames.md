@@ -27,7 +27,7 @@ The beauty is that the more different languages you learn, more domains, more wa
 
 ---
 
-Because there is something deeper than language games. There is the **linguistic frame**.
+Because there is something deeper than language games. There is something I call **linguistic frame**.
 
 A language game is the act of using language in a specific context with specific rules. A linguistic frame is the choice of language that determines which games can be played in the first place. The frame precedes the game. The frame determines what is expressible, what is thinkable, and what dynamics will unfold.
 
@@ -51,9 +51,9 @@ Everything in Part I is philosophy. It is a way of seeing. But the observation I
 
 This is not a life lesson. This is not prescriptive. This is an observation, and I am stating it as an observation.
 
-Consider what a therapist does. When you go to therapy, you tell your therapist things. This person asks you questions, specific kinds of questions, that nudge you to answer in specific kinds of ways. You start choosing words, describing situations, and many times what is happening is that the therapist is changing your linguistic frame. They tell you different things such that you look at things differently, such that something clicks. The language game being played between you and your therapist is them giving you larger and larger linguistic frames within which to see your own life.
+Consider what a therapist does. A person walks in, tells the therapist things. The therapist asks questions, specific kinds of questions, that nudge the person to answer in specific kinds of ways. The person starts choosing words, describing situations, and many times what is happening is that the therapist is changing the person's linguistic frame. They tell the person different things such that the person looks at things differently, such that something clicks. The language game being played is the therapist giving larger and larger linguistic frames within which to see one's own life.
 
-And when you think about it: the only tools a therapist has are language. They literally cannot do anything else. They cannot reach into your brain and rearrange it. They can only talk to you. Language is the only instrument, and the way they wield it is by shifting your frame.
+And when we think about it: the only tools a therapist has are language. They literally cannot do anything else. They cannot reach into someone's brain and rearrange it. They can only talk. Language is the only instrument, and the way they wield it is by shifting the frame.
 
 This is why they say: if you know how to describe your feelings, you know what to do with them. It is the same thought. The ability to name what you are experiencing, to have the language for it, is what makes it actionable. And the absence of language makes it inaccessible. If a <tip t="The Sapir-Whorf hypothesis in its strong form: language determines thought. The weak form, which is more widely accepted: language influences thought and certain kinds of cognitive processes. Either way, the absence of a word constrains what frames are available." href="https://en.wikipedia.org/wiki/Linguistic_relativity" link-text="Wikipedia: Linguistic relativity →">culture has no word to describe anxiety</tip>, then the people in that culture will experience anxiety, but they will have to express it in different forms, through different channels, in ways that may never cohere into something they can work with. Because if there is no first-class expression in the language, then many linguistic frames are simply not possible. The language did not support them.
 
