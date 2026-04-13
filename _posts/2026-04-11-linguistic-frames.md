@@ -8,9 +8,9 @@ hidden: false
 
 > this essay is a dedication to all the wonderful people in my life who have made me the person I am today. The synthesis of this thought would not have been possible without the range of experiences and ideas I have gotten to share with everyone who entered my life. 
 
-> this essay is reallly meta. It describes things about language and philosophy using language. That itself is also a problem. To truely understand this essay, the reader needs to play the language game with me in order to really grasp what is being said. The language itself is not sufficient to explain the nature of the thought in this essay. It requires a language game with the writer to grasp its essence. 
+> this essay is reallly meta. It describes things about language and philosophy _using language_. That is a problem. _To really understand the meaning of this essay_, the reader needs to play the language game with the writer. The language in this essay itself is not sufficient to explain the nature of the thought in this essay. It requires a language game with the writer to grasp its essence. 
 
-> AI Smell Alert: yes I used claude to help write this because text are just one form of describing what is said here. The language game that happens with the reader after the read is where the fun lives. 
+> AI Smell Alert: I used claude to help write this because text is just one way of describing what is said here. The language game that happens with the reader after the read is where the fun/learning lives.
 
 ## Part I: The Philosophy
 
