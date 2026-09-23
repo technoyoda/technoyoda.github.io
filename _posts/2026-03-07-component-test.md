@@ -18,7 +18,7 @@ Test page for the showcase components.
 studies/study-2/
 ├── environments/
 │   ├── naive.py          # Part 1: single-fetch env
-│   ├── multi_fetch.py    # Part 2: multi-fetch env
+│   ├── multi_fetch.py    # Part 2: multi-fetch envv
 │   ├── api_server.py     # Flask content proxy
 │   ├── injections.py     # 16 injection strategies
 │   └── articles/         # 20 local article .txt files
